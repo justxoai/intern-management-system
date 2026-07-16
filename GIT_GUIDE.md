@@ -1,47 +1,51 @@
 # Git Workflow Guide
 
-This document describes the Git workflow used in this project.
+This document describes the Git workflow used by the development team.
 
 ---
 
-# Branch Strategy
+# Git Branch Strategy
 
 ```
 main
 │
-├── develop
-│
-├── feature/login
-├── feature/intern-management
-├── feature/task-management
-├── feature/evaluation
-│
-├── fix/login-bug
-├── hotfix/security
+└── develop
+      │
+      ├── feature/authentication
+      ├── feature/intern-management
+      ├── feature/recruitment
+      ├── feature/mentor-management
+      ├── feature/task-management
+      └── feature/evaluation
 ```
 
-- **main**: Production
-- **develop**: Development
-- **feature/**: New features
-- **fix/**: Bug fixes
-- **hotfix/**: Urgent fixes
-- **chore/**: Maintenance
+Branch naming convention
+
+| Branch | Purpose |
+|---------|----------|
+| main | Stable release |
+| develop | Integration branch |
+| feature/* | New feature |
+| fix/* | Bug fix |
+| docs/* | Documentation |
+| refactor/* | Code improvement |
+| chore/* | Maintenance |
 
 ---
 
-# Clone Project
+# Clone Repository
 
 ```bash
-git clone https://github.com/username/internship-management-system.git
+git clone https://github.com/your-username/internship-management-system.git
 
 cd internship-management-system
 ```
 
 ---
 
-# Pull Latest Code
+# Synchronize Latest Code
 
-Always pull before starting work.
+Before starting any task
 
 ```bash
 git checkout develop
@@ -51,111 +55,65 @@ git pull origin develop
 
 ---
 
-# Create New Branch
-
-Naming convention
-
-```
-feature/<feature-name>
-
-fix/<bug-name>
-
-chore/<task-name>
-
-docs/<document>
-
-refactor/<module>
-```
-
-Example
+# Create a Feature Branch
 
 ```bash
 git checkout develop
 
 git pull origin develop
 
-git checkout -b feature/login
+git checkout -b feature/intern-management
 ```
 
-Push branch
+Push the new branch
 
 ```bash
-git push -u origin feature/login
+git push -u origin feature/intern-management
 ```
 
 ---
 
-# Git Commit Convention
+# Commit Convention
 
 Format
 
 ```
-type: message
+type: short description
 ```
 
-## feat
-
-New feature
+Examples
 
 ```bash
-git commit -m "feat: add login feature"
-```
+git commit -m "feat: add intern registration"
 
-## fix
+git commit -m "fix: correct login validation"
 
-Bug fix
-
-```bash
-git commit -m "fix: resolve login validation"
-```
-
-## docs
-
-Documentation
-
-```bash
 git commit -m "docs: update README"
-```
 
-## style
+git commit -m "refactor: simplify mentor service"
 
-Formatting
+git commit -m "style: format source code"
 
-```bash
-git commit -m "style: format code"
-```
+git commit -m "test: add login test"
 
-## refactor
-
-Refactoring
-
-```bash
-git commit -m "refactor: simplify user service"
-```
-
-## test
-
-Testing
-
-```bash
-git commit -m "test: add login unit tests"
-```
-
-## chore
-
-Configuration
-
-```bash
 git commit -m "chore: update dependencies"
 ```
 
+Available commit types
+
+- feat
+- fix
+- docs
+- style
+- refactor
+- test
+- chore
+
 ---
 
-# Daily Workflow
+# Daily Development Workflow
 
-## Step 1
-
-Pull newest code
+### 1. Update develop
 
 ```bash
 git checkout develop
@@ -165,25 +123,19 @@ git pull origin develop
 
 ---
 
-## Step 2
-
-Checkout your feature branch
+### 2. Switch to your branch
 
 ```bash
-git checkout feature/login
+git checkout feature/intern-management
 ```
 
 ---
 
-## Step 3
-
-Work on your code
+### 3. Develop your feature
 
 ---
 
-## Step 4
-
-Check changes
+### 4. Check modified files
 
 ```bash
 git status
@@ -191,9 +143,7 @@ git status
 
 ---
 
-## Step 5
-
-Stage changes
+### 5. Stage changes
 
 ```bash
 git add .
@@ -207,27 +157,23 @@ git add src/
 
 ---
 
-## Step 6
-
-Commit
+### 6. Commit
 
 ```bash
-git commit -m "feat: implement login API"
+git commit -m "feat: implement intern search"
 ```
 
 ---
 
-## Step 7
-
-Push
+### 7. Push
 
 ```bash
-git push origin feature/login
+git push origin feature/intern-management
 ```
 
 ---
 
-# Merge Branch
+# Merge Feature Branch
 
 Switch to develop
 
@@ -235,7 +181,7 @@ Switch to develop
 git checkout develop
 ```
 
-Pull latest
+Update develop
 
 ```bash
 git pull origin develop
@@ -244,7 +190,7 @@ git pull origin develop
 Merge
 
 ```bash
-git merge feature/login
+git merge feature/intern-management
 ```
 
 Push
@@ -253,51 +199,43 @@ Push
 git push origin develop
 ```
 
-Delete local branch
+Delete merged branch
 
 ```bash
-git branch -d feature/login
-```
+git branch -d feature/intern-management
 
-Delete remote branch
-
-```bash
-git push origin --delete feature/login
+git push origin --delete feature/intern-management
 ```
 
 ---
 
 # Rebase
 
-Update branch using rebase
+Synchronize feature branch with develop
 
 ```bash
-git checkout feature/login
+git checkout feature/intern-management
 
 git fetch origin
 
 git rebase origin/develop
 ```
 
-Resolve conflicts
+If conflicts occur
 
 ```bash
 git add .
-```
 
-Continue
-
-```bash
 git rebase --continue
 ```
 
-Cancel
+Abort rebase
 
 ```bash
 git rebase --abort
 ```
 
-Push after rebase
+After successful rebase
 
 ```bash
 git push --force-with-lease
@@ -305,17 +243,17 @@ git push --force-with-lease
 
 ---
 
-# Merge Conflict
+# Resolving Merge Conflicts
 
-Check files
+Check conflicting files
 
 ```bash
 git status
 ```
 
-Resolve conflict manually.
+Resolve conflicts manually.
 
-After fixing
+Then
 
 ```bash
 git add .
@@ -327,110 +265,59 @@ git commit
 
 # Pull Request
 
-1. Push feature branch
+1. Push your feature branch
 
 ```bash
-git push origin feature/login
+git push origin feature/intern-management
 ```
 
-2. Open GitHub
+2. Open GitHub.
 
-3. Click
+3. Create a Pull Request.
 
-```
-Compare & Pull Request
-```
-
-4. Select
+Target branch
 
 ```
-base: develop
-
-compare: feature/login
-```
-
-5. Fill
-
-- Title
-
-```
-feat: Login feature
-```
-
-- Description
-
-```
-## Summary
-
-- Add login API
-- JWT Authentication
-- Validation
-
-## Testing
-
-- Login successful
-- Login failed
-```
-
-6. Create Pull Request
-
-7. Review
-
-8. Merge
-
-```
-Squash and Merge
-```
-
-Delete branch afterwards.
-
----
-
-# Merge Request (GitLab)
-
-1. Push branch
-
-```bash
-git push origin feature/login
-```
-
-2. Open GitLab
-
-3. Create Merge Request
-
-```
-Source
-
-feature/login
-
-Target
-
 develop
 ```
 
-4. Assign reviewer
+Source branch
 
-5. Resolve comments
+```
+feature/intern-management
+```
 
-6. Merge
+Title example
+
+```
+feat: implement intern management module
+```
+
+Description should include
+
+- Summary
+- Implemented features
+- Testing results
+
+After review, merge the Pull Request and delete the feature branch.
 
 ---
 
-# Useful Commands
+# Useful Git Commands
 
-Check current branch
+Current branch
 
 ```bash
 git branch
 ```
 
-List all branches
+All branches
 
 ```bash
 git branch -a
 ```
 
-View commit history
+Commit history
 
 ```bash
 git log --oneline
@@ -442,19 +329,19 @@ Undo last commit
 git reset --soft HEAD~1
 ```
 
-Discard changes
+Discard local changes
 
 ```bash
 git restore .
 ```
 
-Remove staged files
+Unstage files
 
 ```bash
 git restore --staged .
 ```
 
-Fetch latest branches
+Fetch remote branches
 
 ```bash
 git fetch --all
@@ -465,29 +352,29 @@ git fetch --all
 # Recommended Workflow
 
 ```
-develop
-      │
-      ├───────────────┐
-      │               │
-feature/login   feature/task
-      │               │
-      └────PR─────────┘
-             │
-         develop
-             │
-        release
-             │
-            main
+main
+ │
+ └────────────── develop
+                     │
+      ┌──────────────┴──────────────┐
+      │                             │
+feature/authentication      feature/task-management
+      │                             │
+      └──────── Pull Request ───────┘
+                     │
+                 develop
+                     │
+                    main
 ```
 
 ---
 
 # Best Practices
 
-- Pull before coding.
-- One feature per branch.
-- Commit frequently with meaningful messages.
-- Never commit directly to `main`.
-- Create Pull Requests for all feature branches.
-- Resolve conflicts before merging.
-- Delete merged branches.
+- Pull the latest code before starting work.
+- Create one feature per branch.
+- Write clear and meaningful commit messages.
+- Do not commit directly to `main`.
+- Create a Pull Request for every completed feature.
+- Resolve merge conflicts before merging.
+- Delete merged branches regularly.

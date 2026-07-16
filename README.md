@@ -1,71 +1,97 @@
 # Internship Management System
 
-A simple Internship Management System built with **Java**, **Spring Boot**, and **Servlet** to help companies manage internship programs efficiently.
+A web-based **Internship Management System** developed using **Java Servlet**, **JSP**, and **MySQL**. The system helps Human Resources (HR) manage internship applications, intern profiles, mentors, assigned tasks, and internship evaluations through a centralized platform.
 
-## Project Overview
-
-This project digitizes the basic internship management workflow, allowing Human Resources (HR) to manage intern information, assign mentors, track internship progress, and perform evaluations.
-
-The project was developed by **2 members** over approximately **1 month** as a practice project for learning Java Web technologies.
+This project was developed by **2 members** over approximately **1 month** as a Java Web practice project.
 
 ---
 
 # Product Vision
 
-Build a lightweight internship management system that simplifies intern management and improves collaboration between HR, mentors, and interns.
+Build a lightweight internship management system that digitizes the internship process, improves collaboration between HR, mentors, and interns, and simplifies internship management through a centralized web application.
 
 ---
 
 # Objectives
 
-- Manage intern information digitally.
-- Assign interns to mentors.
-- Track internship tasks and progress.
-- Evaluate internship performance.
-- Generate simple management reports.
+* Digitize intern profile management.
+* Simplify internship recruitment and approval.
+* Assign mentors to interns.
+* Track internship tasks and weekly reports.
+* Evaluate intern performance.
+* Manage user accounts and permissions.
 
 ---
 
 # Core Features
 
-## Authentication
+## Authentication & Authorization
 
-- Login
-- Logout
-- Role-based Authorization
+The system supports role-based authentication for different users.
 
-Roles:
+### Roles
 
-- Admin
-- HR
-- Mentor
-- Intern
+* Admin
+* HR
+* Mentor
+* Intern
+
+### Features
+
+* Login
+* Logout
+* Session Management
+* Role-based Authorization
 
 ---
 
-## Intern Management
+## Intern Profile Management
 
-- Add intern
-- Edit intern
-- Delete intern
-- Search interns
-- View intern details
+HR can
+
+* Add new intern profiles
+* Update intern information
+* Search interns
+* Filter interns by university or major
+
+Intern can
+
+* Upload CV
+* Upload internship documents
+
+HR can
+
+* Review and approve uploaded documents
+
+---
+
+## Recruitment Management
+
+Intern can
+
+* Register an account
+* Submit internship applications
+* Confirm internship contracts
+
+HR can
+
+* Review applications
+* Approve or reject applications
+* Upload internship contracts
+
+System can
+
+* Send email notifications (optional)
 
 ---
 
 ## Mentor Management
 
-- Create mentor
-- Assign mentor to intern
-- View assigned interns
+HR can
 
----
-
-## Internship Program
-
-- Create internship program
-- Assign interns to program
-- View internship schedule
+* Add mentors
+* Assign mentors to interns
+* View mentor assignments
 
 ---
 
@@ -73,106 +99,125 @@ Roles:
 
 Mentor can
 
-- Create task
-- Update task
-- Mark task completed
+* Create internship tasks
+* Monitor task progress
+* Review weekly reports
 
 Intern can
 
-- View assigned tasks
-- Update progress
+* View assigned tasks
+* Update task progress
+* Submit weekly reports
 
 ---
 
-## Evaluation
+## Internship Evaluation
 
 Mentor can
 
-- Evaluate intern
-- Add comments
+* Evaluate intern performance
+* Leave comments and feedback
 
 HR can
 
-- View evaluation results
+* View final evaluation results
 
 ---
 
-## Dashboard
+## User Management
 
-- Total interns
-- Total mentors
-- Internship status
-- Simple statistics
+Admin can
+
+* Create user accounts
+* Assign user roles
+* Manage system permissions
 
 ---
 
-# Technologies
+# Technology Stack
 
-Backend
+## Backend
 
-- Java 17
-- Spring Boot
-- Spring MVC
-- Spring Data JPA
-- Spring Security
-- Java Servlet
+* Java 17
+* Java Servlet
+* JSP (JavaServer Pages)
+* JDBC
 
-Database
+## Database
 
-- MySQL
+* MySQL
 
-Frontend
+## Web Server
 
-- Thymeleaf
-- HTML
-- CSS
-- Bootstrap
-- JavaScript
+* Apache Tomcat 10
 
-Build Tool
+## Frontend
 
-- Maven
+* HTML5
+* CSS3
+* Bootstrap 5
+* JavaScript
 
-Version Control
+## Build Tool
 
-- Git
-- GitHub
+* Maven
+
+## Version Control
+
+* Git
+* GitHub
 
 ---
 
 # Project Structure
 
 ```
-src
- ├── controller
- ├── service
- ├── repository
- ├── entity
- ├── dto
- ├── config
- ├── security
- ├── exception
- └── util
+InternshipManagementSystem
+│
+├── src
+│   ├── controller
+│   ├── dao
+│   ├── model
+│   ├── service
+│   ├── filter
+│   ├── listener
+│   ├── util
+│   └── config
+│
+├── webapp
+│   ├── assets
+│   │   ├── css
+│   │   ├── js
+│   │   └── images
+│   ├── views
+│   └── WEB-INF
+│
+├── database
+│   └── internship_management.sql
+│
+├── pom.xml
+└── README.md
 ```
 
 ---
 
 # Development Team
 
-| Member | Responsibility |
-|---------|----------------|
-| Member 1 | Authentication, Intern Management |
-| Member 2 | Mentor, Task, Evaluation |
+| Member   | Responsibility                                                  |
+| -------- | --------------------------------------------------------------- |
+| Member 1 | Authentication, Recruitment, Intern Profile Management          |
+| Member 2 | Mentor Management, Task Management, Evaluation, User Management |
 
 ---
 
 # Future Improvements
 
-- Email notification
-- Attendance management
-- Report export (Excel/PDF)
-- Mobile application
-- HRM integration
+* Email notification service
+* Attendance management
+* Dashboard and analytics
+* Export reports (Excel/PDF)
+* Mobile application
+* HRM system integration
 
 ---
 
@@ -180,41 +225,86 @@ src
 
 ## Requirements
 
-- JDK 17+
-- Maven
-- MySQL
+Before running the project, make sure the following software is installed:
 
-## Clone
+* Java JDK 17
+* Apache Tomcat 10+
+* Apache Maven
+* MySQL 8.0+
+
+---
+
+## Clone Repository
 
 ```bash
-git clone https://github.com/username/internship-management-system.git
+git clone https://github.com/your-username/internship-management-system.git
+
+cd internship-management-system
 ```
+
+---
 
 ## Configure Database
 
-Update
+1. Create a new MySQL database.
 
-```
-application.properties
-```
-
-```properties
-spring.datasource.url=
-spring.datasource.username=
-spring.datasource.password=
+```sql
+CREATE DATABASE internship_management;
 ```
 
-## Run
+2. Import the SQL script located in:
+
+```
+database/internship_management.sql
+```
+
+3. Update your database configuration in the project.
+
+Example:
+
+```java
+private static final String URL = "jdbc:mysql://localhost:3306/internship_management";
+private static final String USERNAME = "root";
+private static final String PASSWORD = "your_password";
+```
+
+---
+
+## Build Project
 
 ```bash
-mvn spring-boot:run
+mvn clean package
 ```
 
-Open
+---
+
+## Deploy
+
+Deploy the generated **WAR** file to Apache Tomcat.
+
+Example directory:
 
 ```
-http://localhost:8080
+apache-tomcat/webapps/
 ```
+
+Start Tomcat and open:
+
+```
+http://localhost:8080/InternshipManagementSystem
+```
+
+---
+
+# Future Development
+
+Possible enhancements include:
+
+* QR Code attendance
+* Email notification automation
+* Internship statistics dashboard
+* Online document approval
+* Integration with HR Management Systems (HRM)
 
 ---
 
