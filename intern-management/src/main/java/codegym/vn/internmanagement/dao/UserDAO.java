@@ -1,8 +1,5 @@
 package codegym.vn.internmanagement.dao;
 
-import codegym.vn.internmanagement.entity.User;
-import codegym.vn.internmanagement.util.DBConnection;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,15 +8,14 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Data Access Object for User entity.
- * Handles database operations for user management and authentication.
- */
+import codegym.vn.internmanagement.entity.User;
+import codegym.vn.internmanagement.util.DBConnection;
+
+
 public class UserDAO {
 
     /**
-     * Retrieve all users from the database.
-     *
+     
      * @return List of User objects
      */
     public List<User> findAll() {
@@ -115,8 +111,7 @@ public class UserDAO {
     }
 
     /**
-     * Check if an email address already exists in the database.
-     *
+   
      * @param email Email to check
      * @return true if exists, false otherwise
      */

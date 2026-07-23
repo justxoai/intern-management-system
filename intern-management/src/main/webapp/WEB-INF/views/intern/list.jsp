@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,7 +15,6 @@
         <a href="${pageContext.request.contextPath}/hr/interns/create" class="btn btn-primary">+ Add Intern Profile</a>
     </div>
 
-    <!-- Search & Filter Form (Task 5) -->
     <div class="card shadow-sm mb-4">
         <div class="card-body">
             <form action="${pageContext.request.contextPath}/hr/interns" method="get" class="row g-3">
@@ -95,6 +94,7 @@
                             </td>
                             <td class="text-center">
                                 <a href="${pageContext.request.contextPath}/hr/interns/edit?id=${item.id}" class="btn btn-sm btn-outline-warning">Edit</a>
+                                <a href="${pageContext.request.contextPath}/hr/interns/delete?id=${item.id}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this intern?');">Delete</a>
                             </td>
                         </tr>
                     </c:forEach>

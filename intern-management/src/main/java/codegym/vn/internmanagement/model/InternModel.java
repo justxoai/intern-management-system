@@ -2,43 +2,23 @@ package codegym.vn.internmanagement.model;
 
 import codegym.vn.internmanagement.dao.InternDAO;
 import codegym.vn.internmanagement.entity.Intern;
-
 import java.util.List;
 
-/**
- * Model/Service layer handling business logic and validation for Intern profile operations.
- */
 public class InternModel {
 
-    private final InternDAO internDAO;
+    private final InternDAO internDAO = new InternDAO();
 
-    public InternModel() {
-        this.internDAO = new InternDAO();
-    }
-
-    public InternModel(InternDAO internDAO) {
-        this.internDAO = internDAO;
-    }
-
-    /**
-     * Create a new Intern profile with input validation.
-     * Validation rules:
-     * - Student code, University, Major, Email are required.
-     *
-     * @param intern Intern entity
-     * @return Error message if validation fails, or null if creation succeeds.
-     */
     public String createIntern(Intern intern) {
-        if (intern.getStudentCode() == null || intern.getStudentCode().trim().isEmpty()) {
+        if (isBlank(intern.getStudentCode())) {
             return "Student code is required.";
         }
-        if (intern.getUniversity() == null || intern.getUniversity().trim().isEmpty()) {
+        if (isBlank(intern.getUniversity())) {
             return "University is required.";
         }
-        if (intern.getMajor() == null || intern.getMajor().trim().isEmpty()) {
+        if (isBlank(intern.getMajor())) {
             return "Major is required.";
         }
-        if (intern.getEmail() == null || intern.getEmail().trim().isEmpty()) {
+        if (isBlank(intern.getEmail())) {
             return "Email is required.";
         }
 
@@ -46,30 +26,18 @@ public class InternModel {
         return inserted ? null : "Failed to create intern profile.";
     }
 
-    /**
-     * Retrieve Intern profile by ID.
-     *
-     * @param id Intern ID
-     * @return Intern object or null
-     */
     public Intern getInternById(Long id) {
-        if (id == null || id <= 0) {
+        if (!isValidId(id)) {
             return null;
         }
         return internDAO.findById(id);
     }
 
-    /**
-     * Update an existing intern profile.
-     *
-     * @param intern Intern entity
-     * @return Error message if validation fails, or null if update succeeds.
-     */
     public String updateIntern(Intern intern) {
-        if (intern.getId() == null) {
-            return "Intern ID is missing.";
+        if (!isValidId(intern.getId())) {
+            return "Intern ID is missing or invalid.";
         }
-        if (intern.getStudentCode() == null || intern.getStudentCode().trim().isEmpty()) {
+        if (isBlank(intern.getStudentCode())) {
             return "Student code is required.";
         }
 
@@ -77,16 +45,23 @@ public class InternModel {
         return updated ? null : "Failed to update intern profile.";
     }
 
-    /**
-     * Search and filter interns by keyword, university, major, and status.
-     *
-     * @param keyword    Keyword string
-     * @param university University filter
-     * @param major      Major filter
-     * @param status     Status filter
-     * @return List of matching Interns
-     */
     public List<Intern> searchInterns(String keyword, String university, String major, String status) {
         return internDAO.search(keyword, university, major, status);
+    }
+
+    public String deleteIntern(Long id) {
+        if (!isValidId(id)) {
+            return "Intern ID is missing or invalid.";
+        }
+        boolean deleted = internDAO.delete(id);
+        return deleted ? null : "Failed to delete intern profile.";
+    }
+
+    private boolean isBlank(String value) {
+        return value == null || value.trim().isEmpty();
+    }
+
+    private boolean isValidId(Long id) {
+        return id != null && id > 0;
     }
 }

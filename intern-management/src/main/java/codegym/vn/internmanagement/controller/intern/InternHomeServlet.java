@@ -1,4 +1,4 @@
-package codegym.vn.internmanagement.controller.auth;
+package codegym.vn.internmanagement.controller.intern;
 
 import java.io.IOException;
 
@@ -8,15 +8,12 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/logout")
-public class LogoutServlet extends HttpServlet {
+@WebServlet("/intern")
+public class InternHomeServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        if (request.getSession(false) != null) {
-            request.getSession(false).invalidate();
-        }
-        response.sendRedirect(request.getContextPath() + "/login");
+        request.getRequestDispatcher("/WEB-INF/views/intern/home.jsp").forward(request, response);
     }
 }

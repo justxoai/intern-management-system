@@ -12,18 +12,9 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Data Access Object for Intern entity.
- * Supports CRUD, profile management, and dynamic searching/filtering.
- */
+
 public class InternDAO {
 
-    /**
-     * Insert a new intern profile.
-     *
-     * @param intern Intern entity
-     * @return true if successful, false otherwise
-     */
     public boolean insert(Intern intern) {
         String sql = "INSERT INTO interns (user_id, student_code, university, major, date_of_birth, gender, address, phone, email, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -48,12 +39,6 @@ public class InternDAO {
         return false;
     }
 
-    /**
-     * Find intern profile by ID.
-     *
-     * @param id Intern ID
-     * @return Intern object or null
-     */
     public Intern findById(Long id) {
         String sql = "SELECT i.*, u.full_name FROM interns i LEFT JOIN users u ON i.user_id = u.id WHERE i.id = ?";
 
@@ -73,12 +58,6 @@ public class InternDAO {
         return null;
     }
 
-    /**
-     * Update existing intern profile.
-     *
-     * @param intern Intern entity with updated fields
-     * @return true if successful, false otherwise
-     */
     public boolean update(Intern intern) {
         String sql = "UPDATE interns SET student_code = ?, university = ?, major = ?, date_of_birth = ?, gender = ?, address = ?, phone = ?, email = ?, status = ? WHERE id = ?";
 
@@ -103,15 +82,6 @@ public class InternDAO {
         return false;
     }
 
-    /**
-     * Search and filter interns dynamically.
-     *
-     * @param keyword    Keyword to match student_code, full_name, or email
-     * @param university University filter
-     * @param major      Major filter
-     * @param status     Status filter
-     * @return List of matching Intern objects
-     */
     public List<Intern> search(String keyword, String university, String major, String status) {
         List<Intern> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT i.*, u.full_name FROM interns i LEFT JOIN users u ON i.user_id = u.id WHERE 1=1 ");
@@ -187,9 +157,23 @@ public class InternDAO {
         try {
             intern.setFullName(rs.getString("full_name"));
         } catch (SQLException ignored) {
-            // Column may not be in ResultSet if join wasn't performed
         }
 
         return intern;
+    }
+
+    public boolean delete(Long id) {
+        String sql = "DELETE FROM interns WHERE id = ?";
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setLong(1, id);
+
+            return statement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

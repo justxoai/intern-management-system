@@ -15,7 +15,7 @@ import java.io.IOException;
 
 /**
  * Filter handling role-based authorization for administrative and user endpoints.
- * URL Permission Rules:
+ * URL permission rules:
  * - /admin/* -> ADMIN only
  * - /hr/* -> ADMIN or HR
  * - /mentor/* -> ADMIN or MENTOR
@@ -55,21 +55,34 @@ public class AuthorizationFilter implements Filter {
             return;
         }
 
-        if (path.startsWith("/hr/") && !"ADMIN".equals(role) && !"HR".equals(role)) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied: HR role required.");
+        if (isUnder(path, "/hr") && !hasRole(role, "ADMIN", "HR")) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "HR access required.");
             return;
         }
 
-        if (path.startsWith("/mentor/") && !"ADMIN".equals(role) && !"MENTOR".equals(role)) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied: Mentor role required.");
+        if (isUnder(path, "/mentor") && !hasRole(role, "ADMIN", "MENTOR")) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Mentor access required.");
             return;
         }
 
-        if (path.startsWith("/intern/") && !"ADMIN".equals(role) && !"INTERN".equals(role)) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied: Intern role required.");
+        if (isUnder(path, "/intern") && !hasRole(role, "ADMIN", "INTERN")) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Intern access required.");
             return;
         }
 
         chain.doFilter(req, res);
+    }
+
+    private boolean isUnder(String path, String area) {
+        return path.equals(area) || path.startsWith(area + "/");
+    }
+
+    private boolean hasRole(String role, String... allowedRoles) {
+        for (String allowedRole : allowedRoles) {
+            if (allowedRole.equals(role)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -138,7 +138,7 @@ Admin can
 
 ## Backend
 
-* Java 17
+* Java 25 (LTS)
 * Java Servlet
 * JSP (JavaServer Pages)
 * JDBC
@@ -227,10 +227,26 @@ InternshipManagementSystem
 
 Before running the project, make sure the following software is installed:
 
-* Java JDK 17
+* Java JDK 25 (LTS)
 * Apache Tomcat 10+
 * Apache Maven
 * MySQL 8.0+
+
+---
+
+## Database connection
+
+1. Run `database/internship_management.sql` to create the schema.
+2. In `database/create_app_user.sql`, replace the password placeholder and run it with an administrator account.
+3. Configure the application without committing credentials:
+
+```bash
+export DB_USERNAME=intern_app
+export DB_PASSWORD='your-strong-password'
+export DB_URL='jdbc:mysql://localhost:3306/internship_management?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true'
+```
+
+HR intern management is available at `/hr/interns`. Intern self-service starts at `/intern`.
 
 ---
 
