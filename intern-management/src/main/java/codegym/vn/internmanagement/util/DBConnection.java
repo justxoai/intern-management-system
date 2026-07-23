@@ -12,8 +12,10 @@ public class DBConnection {
                     + "?useSSL=false"
                     + "&serverTimezone=UTC"
                     + "&allowPublicKeyRetrieval=true");
-    private static final String USERNAME = requiredEnvironment("DB_USERNAME");
-    private static final String PASSWORD = requiredEnvironment("DB_PASSWORD");
+
+    private static final String USERNAME = System.getenv().getOrDefault("DB_USERNAME", "root");
+
+    private static final String PASSWORD = System.getenv().getOrDefault("DB_PASSWORD", "1234@Abc");
 
     static {
         try {
@@ -23,20 +25,7 @@ public class DBConnection {
         }
     }
 
-    public static Connection getConnection()
-            throws SQLException {
-        return DriverManager.getConnection(
-                URL,
-                USERNAME,
-                PASSWORD
-        );
-    }
-
-    private static String requiredEnvironment(String name) {
-        String value = System.getenv(name);
-        if (value == null || value.isBlank()) {
-            throw new IllegalStateException(name + " environment variable is required.");
-        }
-        return value;
+    public static Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(URL, USERNAME, PASSWORD);
     }
 }
