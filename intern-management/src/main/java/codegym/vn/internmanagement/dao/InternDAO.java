@@ -176,4 +176,27 @@ public class InternDAO {
         }
         return false;
     }
+
+    /**
+     * Find all interns assigned to a specific mentor.
+     * Uses mentor_assignments JOIN mentors to resolve mentor user_id -> mentors.id.
+     */
+    public List<Intern> findByMentorId(Long mentorUserId) {
+        List<Intern> list = new ArrayList<>();
+        String sql = "SELECT i.*, u.full_name " +
+                     "FROM interns i " +
+                     "LEFT JOIN users u ON i.user_id = u.id " +
+                     "JOIN mentor_assignments ma ON i.id = ma.intern_id " +
+                     "JOIN mentors m ON ma.mentor_id = m.id " +
+                     "WHERE m.user_id = ? AND ma.status = 'ACTIVE' " +
+                     "ORDER BY i.id DESC";
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, mentorUserId);
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) list.add(mapResultSetToIntern(rs));
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+        return list;
+    }
 }
