@@ -9,5 +9,8 @@
         <module name="intern-management" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="intern-management (1)" target="17" />
+    </bytecodeTargetLevel>
   </component>
 </project>
