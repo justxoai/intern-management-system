@@ -1,8 +1,5 @@
 package codegym.vn.internmanagement.dao;
 
-import codegym.vn.internmanagement.entity.Intern;
-import codegym.vn.internmanagement.util.DBConnection;
-
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -12,6 +9,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import codegym.vn.internmanagement.entity.Intern;
+import codegym.vn.internmanagement.util.DBConnection;
 
 public class InternDAO {
 
