@@ -97,8 +97,25 @@ public class MentorController extends HttpServlet {
     }
 
     private void assignMentor(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        Long mentorId = Long.parseLong(request.getParameter("mentorId"));
-        Long internId = Long.parseLong(request.getParameter("internId"));
+        String mentorIdStr = request.getParameter("mentorId");
+        String internIdStr = request.getParameter("internId");
+
+        if (mentorIdStr == null || mentorIdStr.isBlank() || internIdStr == null || internIdStr.isBlank()) {
+            request.setAttribute("error", "Both mentor and intern must be selected.");
+            showAssignForm(request, response);
+            return;
+        }
+
+        Long mentorId;
+        Long internId;
+        try {
+            mentorId = Long.parseLong(mentorIdStr.trim());
+            internId = Long.parseLong(internIdStr.trim());
+        } catch (NumberFormatException e) {
+            request.setAttribute("error", "Invalid mentor or intern id.");
+            showAssignForm(request, response);
+            return;
+        }
 
         String error = mentorModel.assignMentor(mentorId, internId);
         if (error != null) {
