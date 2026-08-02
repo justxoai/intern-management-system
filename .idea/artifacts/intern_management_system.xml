@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="intern-management:war">
+    <output-path>$PROJECT_DIR$/target/intern-management-1.0-SNAPSHOT.war</output-path>
+    <root id="root">
+      <element type="module-output" module-name="intern-management" />
+    </root>
+  </artifact>
+</component>

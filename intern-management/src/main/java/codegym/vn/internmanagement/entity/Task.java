@@ -1,55 +1,99 @@
 package codegym.vn.internmanagement.entity;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
-/**
- * Entity representing the 'tasks' table.
- */
 public class Task {
 
     private Long id;
-    private String title;
-    private String description;
-    private Long internId;
+
     private Long mentorId;
-    private String status; // TODO, IN_PROGRESS, DONE
+
+    private Long internId;
+
+    private String title;
+
+    private String description;
+
+    private LocalDate startDate;
+
     private LocalDate dueDate;
-    private LocalDateTime createdAt;
 
-    // Joined display fields
-    private String internName;
-    private String mentorName;
+    private String status;
 
-    public Task() {}
+    private Integer progress;
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Task() {
+    }
 
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public Long getInternId() { return internId; }
-    public void setInternId(Long internId) { this.internId = internId; }
+    public Long getMentorId() {
+        return mentorId;
+    }
 
-    public Long getMentorId() { return mentorId; }
-    public void setMentorId(Long mentorId) { this.mentorId = mentorId; }
+    public void setMentorId(Long mentorId) {
+        this.mentorId = mentorId;
+    }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public Long getInternId() {
+        return internId;
+    }
 
-    public LocalDate getDueDate() { return dueDate; }
-    public void setDueDate(LocalDate dueDate) { this.dueDate = dueDate; }
+    public void setInternId(Long internId) {
+        this.internId = internId;
+    }
 
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public String getTitle() {
+        return title;
+    }
 
-    public String getInternName() { return internName; }
-    public void setInternName(String internName) { this.internName = internName; }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-    public String getMentorName() { return mentorName; }
-    public void setMentorName(String mentorName) { this.mentorName = mentorName; }
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDate getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Integer getProgress() {
+        return progress;
+    }
+
+    public void setProgress(Integer progress) {
+        this.progress = progress;
+    }
 }

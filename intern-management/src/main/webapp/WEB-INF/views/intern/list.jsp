@@ -12,7 +12,10 @@
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Intern Profiles</h2>
-        <a href="${pageContext.request.contextPath}/hr/interns/create" class="btn btn-primary">+ Add Intern Profile</a>
+        <div>
+            <a href="${pageContext.request.contextPath}/hr/interns/create" class="btn btn-primary">+ Add Intern Profile</a>
+            <a href="${pageContext.request.contextPath}/hr/mentors" class="btn btn-outline-secondary ms-2">Manage Mentors</a>
+        </div>
     </div>
 
     <div class="card shadow-sm mb-4">

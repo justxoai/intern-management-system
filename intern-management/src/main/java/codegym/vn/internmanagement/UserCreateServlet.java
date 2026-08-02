@@ -1,20 +1,15 @@
-package codegym.vn.internmanagement.controller.admin;
+package codegym.vn.internmanagement;
+
+import java.io.IOException;
 
 import codegym.vn.internmanagement.entity.User;
 import codegym.vn.internmanagement.model.UserModel;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
-/**
- * Controller handling creation of user accounts (HR, MENTOR, INTERN) by ADMIN.
- * GET  /admin/users/create -> Display user creation form
- * POST /admin/users/create -> Process form submission, validate, save, and redirect
- */
 @WebServlet("/admin/users/create")
 public class UserCreateServlet extends HttpServlet {
 
