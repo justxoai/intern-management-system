@@ -1,5 +1,7 @@
 package codegym.vn.internmanagement.filter;
 
+import java.io.IOException;
+
 import codegym.vn.internmanagement.entity.User;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
@@ -10,8 +12,6 @@ import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-
-import java.io.IOException;
 
 /**
  * Filter handling role-based authorization for administrative and user endpoints.
@@ -34,7 +34,6 @@ public class AuthorizationFilter implements Filter {
         String contextPath = request.getContextPath();
         String path = uri.substring(contextPath.length());
 
-        // Skip static assets or public auth endpoints
         if (path.startsWith("/assets/") || path.equals("/login") || path.equals("/logout") || path.equals("/index.jsp") || path.equals("/")) {
             chain.doFilter(req, res);
             return;

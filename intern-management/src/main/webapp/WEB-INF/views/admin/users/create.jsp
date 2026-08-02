@@ -48,9 +48,9 @@
                 <div class="mb-3">
                     <label class="form-label">Role *</label>
                     <select name="role" class="form-select" required>
-                        <option value="HR"     ${(not empty user.role ? user.role : param.role) == 'HR'     ? 'selected' : ''}>HR</option>
-                        <option value="MENTOR" ${(not empty user.role ? user.role : param.role) == 'MENTOR' ? 'selected' : ''}>MENTOR</option>
-                        <option value="INTERN" ${(not empty user.role ? user.role : param.role) == 'INTERN' ? 'selected' : ''}>INTERN</option>
+                        <option value="HR" ${user.role == 'HR' ? 'selected' : ''}>HR</option>
+                        <option value="MENTOR" ${user.role == 'MENTOR' ? 'selected' : ''}>MENTOR</option>
+                        <option value="INTERN" ${user.role == 'INTERN' ? 'selected' : ''}>INTERN</option>
                     </select>
                 </div>
 
