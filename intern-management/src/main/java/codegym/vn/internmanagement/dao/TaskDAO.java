@@ -36,6 +36,29 @@ public class TaskDAO {
         return list;
     }
 
+    /**
+     * Find all tasks assigned to a specific intern (intern_id = interns.id).
+     */
+    public List<Task> findByInternId(Long internId) {
+        List<Task> list = new ArrayList<>();
+        String sql = "SELECT t.*, u.full_name AS intern_name, mu.full_name AS mentor_name " +
+                     "FROM tasks t " +
+                     "LEFT JOIN interns i  ON t.intern_id  = i.id " +
+                     "LEFT JOIN users u    ON i.user_id    = u.id " +
+                     "LEFT JOIN mentors m  ON t.mentor_id  = m.id " +
+                     "LEFT JOIN users mu   ON m.user_id    = mu.id " +
+                     "WHERE t.intern_id = ? ORDER BY t.created_at DESC";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, internId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) list.add(mapRow(rs));
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+        return list;
+    }
+
+
     public Task findById(Long id) {
         String sql = "SELECT t.*, u.full_name AS intern_name " +
                      "FROM tasks t " +
@@ -97,6 +120,21 @@ public class TaskDAO {
     }
 
     /**
+     * Intern updates their own task progress (status + 0-100 percent).
+     */
+    public boolean updateProgress(Long taskId, String status, int progress) {
+        String sql = "UPDATE tasks SET status=?, progress=? WHERE id=?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, status);
+            ps.setInt(2, Math.min(100, Math.max(0, progress)));
+            ps.setLong(3, taskId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) { e.printStackTrace(); }
+        return false;
+    }
+
+    /**
      * Resolve a user's mentor record ID (mentors.id) from their users.id.
      * Returns null if no mentor record found.
      */
@@ -120,11 +158,13 @@ public class TaskDAO {
         t.setInternId(rs.getLong("intern_id"));
         t.setMentorId(rs.getLong("mentor_id"));
         t.setStatus(rs.getString("status"));
+        t.setProgress(rs.getInt("progress"));
         Date due = rs.getDate("due_date");
         if (due != null) t.setDueDate(due.toLocalDate());
         Timestamp created = rs.getTimestamp("created_at");
         if (created != null) t.setCreatedAt(created.toLocalDateTime());
-        try { t.setInternName(rs.getString("intern_name")); } catch (SQLException ignored) {}
+        try { t.setInternName(rs.getString("intern_name")); }  catch (SQLException ignored) {}
+        try { t.setMentorName(rs.getString("mentor_name")); } catch (SQLException ignored) {}
         return t;
     }
 }

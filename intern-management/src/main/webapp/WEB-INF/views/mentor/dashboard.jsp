@@ -6,126 +6,286 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Mentor Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Mentor Dashboard — Intern Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background: #f0f4f8; }
-        .topbar { background: linear-gradient(135deg, #145222 0%, #198754 100%); padding: 16px 32px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 12px rgba(0,0,0,0.15); }
-        .topbar-title { color: #fff; font-size: 1.25rem; font-weight: 700; }
-        .page-heading { font-size: 1.6rem; font-weight: 700; color: #145222; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --sidebar-w: 250px;
+            --sidebar-bg: #0f2318;
+            --accent: #10b981;
+            --accent2: #34d399;
+            --task-col: #0891b2;
+            --page-bg: #f0fdf6;
+            --card-bg: #fff;
+            --text-primary: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+        body { font-family: 'Inter', sans-serif; background: var(--page-bg); display: flex; min-height: 100vh; }
 
-        .section-card { border-radius: 14px; border: none; box-shadow: 0 2px 16px rgba(0,0,0,0.08); margin-bottom: 28px; overflow: hidden; }
-        .section-header { padding: 14px 22px; display: flex; align-items: center; justify-content: space-between; }
-        .sh-intern { background: linear-gradient(90deg, #6f42c1, #9b72e6); }
-        .sh-task   { background: linear-gradient(90deg, #0891b2, #22d3ee); }
-        .section-title { color: #fff; font-size: 1rem; font-weight: 600; }
-        .count-badge { background: rgba(255,255,255,.25); color: #fff; border-radius: 20px; padding: 2px 10px; font-size: .8rem; font-weight: 600; }
+        /* Sidebar */
+        .sidebar { width: var(--sidebar-w); background: var(--sidebar-bg); display: flex; flex-direction: column; flex-shrink: 0; position: fixed; height: 100vh; overflow-y: auto; z-index: 100; }
+        .sidebar-brand { padding: 28px 22px 20px; border-bottom: 1px solid rgba(255,255,255,.08); }
+        .sidebar-brand .brand-icon { width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, #10b981, #34d399); display: flex; align-items: center; justify-content: center; font-size: 1.15rem; color: #fff; margin-bottom: 10px; }
+        .sidebar-brand h1 { color: #fff; font-size: .95rem; font-weight: 700; line-height: 1.3; }
+        .sidebar-brand span { color: rgba(255,255,255,.4); font-size: .72rem; }
+        .sidebar-section-label { padding: 18px 22px 6px; font-size: .67rem; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; color: rgba(255,255,255,.3); }
+        .sidebar-nav { list-style: none; padding: 0 12px; }
+        .sidebar-nav li a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; margin-bottom: 2px; text-decoration: none; color: rgba(255,255,255,.65); font-size: .84rem; font-weight: 500; transition: background .15s, color .15s; }
+        .sidebar-nav li a:hover { background: rgba(255,255,255,.07); color: #fff; }
+        .sidebar-nav li a.active { background: rgba(16,185,129,.2); color: #fff; border-left: 3px solid var(--accent); }
+        .sidebar-nav li a i { font-size: 1rem; width: 20px; }
+        .sidebar-footer { margin-top: auto; padding: 16px 22px; border-top: 1px solid rgba(255,255,255,.08); }
+        .sidebar-user { display: flex; align-items: center; gap: 10px; }
+        .avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #10b981, #34d399); display: flex; align-items: center; justify-content: center; font-size: .85rem; color: #fff; font-weight: 700; flex-shrink: 0; }
+        .sidebar-user-info { flex: 1; min-width: 0; }
+        .sidebar-user-name { color: #fff; font-size: .82rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .sidebar-user-role { color: rgba(255,255,255,.4); font-size: .7rem; }
+        .logout-btn { color: rgba(255,255,255,.4); font-size: 1rem; text-decoration: none; transition: color .15s; }
+        .logout-btn:hover { color: #f87171; }
 
-        .filter-bar { background: #f8f9fa; padding: 14px 22px; border-bottom: 1px solid #e9ecef; }
-        .filter-label { font-size: .72rem; font-weight: 700; color: #6c757d; text-transform: uppercase; margin-bottom: 3px; }
+        /* Main */
+        .main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; }
+        .topbar { background: var(--card-bg); padding: 16px 32px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 50; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+        .page-title { font-size: 1.2rem; font-weight: 700; color: var(--text-primary); }
+        .page-sub { font-size: .8rem; color: var(--text-muted); margin-top: 1px; }
+        .content { padding: 28px 32px; flex: 1; }
 
-        .user-table { margin: 0; }
-        .user-table thead th { font-size: .73rem; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: #495057; border: none; padding: 10px 14px; background: #f1f3f5; }
-        .user-table tbody td { padding: 11px 14px; vertical-align: middle; font-size: .87rem; border-color: #f1f3f5; }
-        .user-table tbody tr:hover { background: #f8f9ff; }
+        /* Stats */
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 28px; }
+        .stat-card { background: var(--card-bg); border-radius: 14px; padding: 20px 22px; border: 1px solid var(--border); display: flex; align-items: center; gap: 16px; box-shadow: 0 1px 6px rgba(0,0,0,.05); transition: box-shadow .2s, transform .2s; }
+        .stat-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,.10); transform: translateY(-2px); }
+        .stat-icon { width: 50px; height: 50px; border-radius: 13px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
+        .si-green { background: linear-gradient(135deg,#10b981,#34d399); color:#fff; box-shadow: 0 4px 12px rgba(16,185,129,.3); }
+        .si-cyan  { background: linear-gradient(135deg,#0891b2,#22d3ee); color:#fff; box-shadow: 0 4px 12px rgba(8,145,178,.3); }
+        .si-amber { background: linear-gradient(135deg,#f59e0b,#fbbf24); color:#fff; box-shadow: 0 4px 12px rgba(245,158,11,.3); }
+        .stat-count { font-size: 2rem; font-weight: 800; color: var(--text-primary); line-height: 1; }
+        .stat-label { font-size: .78rem; color: var(--text-muted); margin-top: 4px; font-weight: 500; }
 
-        .status-todo       { background: #f1f5f9; color: #475569; font-size: .72rem; padding: 3px 9px; border-radius: 20px; font-weight: 600; }
-        .status-inprogress { background: #fef9c3; color: #92400e; font-size: .72rem; padding: 3px 9px; border-radius: 20px; font-weight: 600; }
-        .status-done       { background: #dcfce7; color: #14532d; font-size: .72rem; padding: 3px 9px; border-radius: 20px; font-weight: 600; }
-        .status-pending    { background: #fef9c3; color: #92400e; font-size: .72rem; padding: 3px 9px; border-radius: 20px; font-weight: 600; }
-        .status-approved   { background: #dcfce7; color: #14532d; font-size: .72rem; padding: 3px 9px; border-radius: 20px; font-weight: 600; }
-        .status-interning  { background: #dbeafe; color: #1e40af; font-size: .72rem; padding: 3px 9px; border-radius: 20px; font-weight: 600; }
-        .status-completed  { background: #ede9fe; color: #4c1d95; font-size: .72rem; padding: 3px 9px; border-radius: 20px; font-weight: 600; }
+        /* Section card */
+        .sec-card { background: var(--card-bg); border-radius: 16px; border: 1px solid var(--border); margin-bottom: 24px; overflow: hidden; box-shadow: 0 1px 6px rgba(0,0,0,.05); }
+        .sec-header { padding: 16px 22px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
+        .sec-header-left { display: flex; align-items: center; gap: 10px; }
+        .sec-icon { width: 36px; height: 36px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: .95rem; }
+        .si-interns { background: #f0fdf4; color: #10b981; }
+        .si-tasks   { background: #ecfeff; color: #0891b2; }
+        .sec-title { font-size: .95rem; font-weight: 700; color: var(--text-primary); }
+        .sec-count { font-size: .72rem; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
+        .count-intern { background: #f0fdf4; color: #10b981; }
+        .count-task   { background: #ecfeff; color: #0891b2; }
 
-        .btn-action { font-size: .78rem; padding: 4px 11px; }
+        /* Filter */
+        .filter-bar { background: #f8fafc; padding: 12px 22px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-end; gap: 10px; flex-wrap: wrap; }
+        .filter-group { display: flex; flex-direction: column; gap: 4px; }
+        .filter-label { font-size: .68rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .4px; }
+        .filter-input, .filter-select { padding: 7px 10px; border: 1.5px solid var(--border); border-radius: 8px; font-family: 'Inter', sans-serif; font-size: .81rem; color: var(--text-primary); background: #fff; outline: none; transition: border-color .2s; min-width: 110px; }
+        .filter-input:focus, .filter-select:focus { border-color: var(--accent); }
+        .btn-filter { padding: 7px 16px; border-radius: 8px; border: none; cursor: pointer; font-family: 'Inter', sans-serif; font-size: .81rem; font-weight: 600; display: flex; align-items: center; gap: 5px; text-decoration: none; transition: opacity .15s; }
+        .btn-filter:hover { opacity: .85; }
+        .btn-filter.green { background: var(--accent);   color: #fff; }
+        .btn-filter.cyan  { background: var(--task-col); color: #fff; }
+        .btn-filter.ghost { background: var(--border);   color: var(--text-muted); }
+        .btn-assign { padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; font-family: 'Inter', sans-serif; font-size: .82rem; font-weight: 600; display: flex; align-items: center; gap: 6px; text-decoration: none; transition: opacity .15s, box-shadow .2s; background: linear-gradient(135deg,#0891b2,#22d3ee); color: #fff; box-shadow: 0 2px 10px rgba(8,145,178,.35); }
+        .btn-assign:hover { opacity: .88; }
 
-        /* Add Task modal */
-        .modal-header-task { background: linear-gradient(90deg, #0891b2, #22d3ee); color: #fff; }
+        /* Table */
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table thead th { padding: 11px 16px; text-align: left; font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--text-muted); background: #f8fafc; border-bottom: 1px solid var(--border); }
+        .data-table tbody td { padding: 13px 16px; font-size: .85rem; color: var(--text-primary); border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+        .data-table tbody tr:last-child td { border-bottom: none; }
+        .data-table tbody tr:hover td { background: #f0fdf4; }
+
+        .user-cell { display: flex; align-items: center; gap: 10px; }
+        .user-avatar { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .82rem; font-weight: 700; color: #fff; flex-shrink: 0; }
+        .ua-green { background: linear-gradient(135deg, #10b981, #34d399); }
+        .ua-cyan  { background: linear-gradient(135deg, #0891b2, #22d3ee); }
+        .user-name  { font-weight: 600; font-size: .85rem; }
+        .user-email { font-size: .75rem; color: var(--text-muted); }
+
+        .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 20px; font-size: .7rem; font-weight: 600; }
+        .badge-pending   { background: #fefce8; color: #a16207; }
+        .badge-approved  { background: #f0fdf4; color: #16a34a; }
+        .badge-interning { background: #eff6ff; color: #1d4ed8; }
+        .badge-completed { background: #f5f3ff; color: #7c3aed; }
+        .badge-todo      { background: #f1f5f9; color: #475569; }
+        .badge-inprog    { background: #fefce8; color: #a16207; }
+        .badge-done      { background: #f0fdf4; color: #16a34a; }
+
+        /* Progress bar */
+        .progress-wrap { display: flex; align-items: center; gap: 8px; }
+        .progress-bar-outer { flex: 1; height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden; min-width: 60px; }
+        .progress-bar-inner { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #10b981, #34d399); }
+        .progress-pct { font-size: .72rem; color: var(--text-muted); min-width: 28px; }
+
+        .action-group { display: flex; align-items: center; gap: 6px; }
+        .btn-icon { width: 30px; height: 30px; border-radius: 7px; border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: .85rem; cursor: pointer; text-decoration: none; background: #fff; transition: all .15s; }
+        .btn-icon.edit   { color: var(--task-col); } .btn-icon.edit:hover   { background: #ecfeff; border-color: var(--task-col); }
+        .btn-icon.delete { color: #ef4444; }          .btn-icon.delete:hover { background: #fef2f2; border-color: #ef4444; }
+
+        .empty-state { padding: 36px; text-align: center; color: var(--text-muted); font-size: .87rem; }
+        .empty-state i { font-size: 2rem; margin-bottom: 8px; display: block; opacity: .4; }
+
+        /* Modal */
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 200; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
+        .modal-overlay.open { display: flex; }
+        .modal-box { background: #fff; border-radius: 18px; width: 560px; max-width: 95vw; box-shadow: 0 20px 60px rgba(0,0,0,.25); overflow: hidden; animation: slideUp .25s ease; }
+        @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .modal-header { padding: 20px 24px; background: linear-gradient(135deg,#0891b2,#22d3ee); display: flex; align-items: center; justify-content: space-between; }
+        .modal-header h3 { color: #fff; font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .modal-close { background: none; border: none; color: rgba(255,255,255,.8); font-size: 1.3rem; cursor: pointer; }
+        .modal-close:hover { color: #fff; }
+        .modal-body { padding: 24px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+        .form-group.full { grid-column: 1/-1; }
+        .form-label { font-size: .77rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .4px; }
+        .form-input, .form-select, .form-textarea {
+            padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 9px;
+            font-family: 'Inter', sans-serif; font-size: .85rem; color: var(--text-primary);
+            background: #fff; outline: none; transition: border-color .2s;
+        }
+        .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--task-col); box-shadow: 0 0 0 3px rgba(8,145,178,.1); }
+        .form-textarea { resize: vertical; min-height: 80px; }
+        .modal-footer { padding: 16px 24px; background: #f8fafc; display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid var(--border); }
+        .btn-submit { padding: 9px 24px; border-radius: 9px; border: none; cursor: pointer; font-family: 'Inter', sans-serif; font-size: .85rem; font-weight: 600; background: linear-gradient(135deg,#0891b2,#22d3ee); color: #fff; box-shadow: 0 2px 10px rgba(8,145,178,.3); transition: opacity .15s; }
+        .btn-submit:hover { opacity: .88; }
+        .btn-cancel { padding: 9px 20px; border-radius: 9px; border: 1.5px solid var(--border); cursor: pointer; font-family: 'Inter', sans-serif; font-size: .85rem; font-weight: 600; background: #fff; color: var(--text-muted); transition: border-color .15s; }
+        .btn-cancel:hover { border-color: #94a3b8; }
     </style>
 </head>
 <body>
 
-<!-- Top Bar -->
-<div class="topbar">
-    <span class="topbar-title"><i class="bi bi-mortarboard-fill me-2"></i>Mentor Portal</span>
-    <span style="color:rgba(255,255,255,.85); font-size:.88rem;">
-        <i class="bi bi-person-circle me-1"></i>${sessionScope.currentUser.fullName}
-        &nbsp;|&nbsp;
-        <a href="${pageContext.request.contextPath}/logout" class="text-white" style="opacity:.8">Logout</a>
-    </span>
-</div>
+<!-- Sidebar -->
+<aside class="sidebar">
+    <div class="sidebar-brand">
+        <div class="brand-icon"><i class="bi bi-mortarboard-fill"></i></div>
+        <h1>Mentor<br>Portal</h1>
+        <span>Intern Management</span>
+    </div>
+    <div class="sidebar-section-label">Overview</div>
+    <ul class="sidebar-nav">
+        <li><a href="${pageContext.request.contextPath}/mentor/dashboard" class="active">
+            <i class="bi bi-grid"></i> Dashboard
+        </a></li>
+    </ul>
+    <div class="sidebar-section-label">Actions</div>
+    <ul class="sidebar-nav">
+        <li><a href="#" onclick="openModal();return false;">
+            <i class="bi bi-plus-circle"></i> Assign New Task
+        </a></li>
+    </ul>
+    <div class="sidebar-footer">
+        <div class="sidebar-user">
+            <div class="avatar">${fn:substring(sessionScope.currentUser.fullName, 0, 1)}</div>
+            <div class="sidebar-user-info">
+                <div class="sidebar-user-name">${sessionScope.currentUser.fullName}</div>
+                <div class="sidebar-user-role">Mentor</div>
+            </div>
+            <a href="${pageContext.request.contextPath}/logout" class="logout-btn" title="Logout">
+                <i class="bi bi-box-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</aside>
 
-<div class="container-lg py-4">
-    <div class="mb-4">
-        <h1 class="page-heading mb-0"><i class="bi bi-clipboard-data me-2"></i>Intern Management</h1>
-        <small class="text-muted">Your assigned interns and their task assignments</small>
+<!-- Main -->
+<div class="main">
+    <div class="topbar">
+        <div>
+            <div class="page-title">Intern Management</div>
+            <div class="page-sub">Your assigned interns and task tracking</div>
+        </div>
+        <button onclick="openModal()" class="btn-assign">
+            <i class="bi bi-plus-lg"></i> Assign Task
+        </button>
     </div>
 
-    <%-- Success/Error flash --%>
-    <c:if test="${not empty param.msg}">
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            ${param.msg} <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    </c:if>
+    <div class="content">
 
-    <%-- ==================== MY INTERNS SECTION ==================== --%>
-    <div class="section-card">
-        <div class="section-header sh-intern">
-            <div class="d-flex align-items-center gap-2">
-                <i class="bi bi-people text-white fs-5"></i>
-                <span class="section-title">My Interns</span>
-                <span class="count-badge">${fn:length(myInterns)}</span>
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon si-green"><i class="bi bi-people"></i></div>
+                <div>
+                    <div class="stat-count">${fn:length(myInterns)}</div>
+                    <div class="stat-label">My Interns</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon si-cyan"><i class="bi bi-list-task"></i></div>
+                <div>
+                    <div class="stat-count">${fn:length(tasks)}</div>
+                    <div class="stat-label">Total Tasks</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon si-amber"><i class="bi bi-hourglass-split"></i></div>
+                <div>
+                    <%-- Count in-progress tasks --%>
+                    <c:set var="inProgressCount" value="0"/>
+                    <c:forEach var="t" items="${tasks}">
+                        <c:if test="${t.status == 'IN_PROGRESS'}">
+                            <c:set var="inProgressCount" value="${inProgressCount + 1}"/>
+                        </c:if>
+                    </c:forEach>
+                    <div class="stat-count">${inProgressCount}</div>
+                    <div class="stat-label">In Progress</div>
+                </div>
             </div>
         </div>
 
-        <form class="filter-bar" method="get" action="${pageContext.request.contextPath}/mentor/dashboard">
-            <div class="row g-2 align-items-end">
-                <div class="col-md-4">
-                    <div class="filter-label">Search (Code / Name / Email)</div>
-                    <input type="text" class="form-control form-control-sm" name="internKeyword" value="${internKeyword}" placeholder="Search intern...">
-                </div>
-                <div class="col-md-2">
-                    <div class="filter-label">Task Status Filter</div>
-                    <select class="form-select form-select-sm" name="taskStatus">
-                        <option value="">All Tasks</option>
-                        <option value="TODO"        ${taskStatus == 'TODO'        ? 'selected' : ''}>TODO</option>
-                        <option value="IN_PROGRESS" ${taskStatus == 'IN_PROGRESS' ? 'selected' : ''}>IN PROGRESS</option>
-                        <option value="DONE"        ${taskStatus == 'DONE'        ? 'selected' : ''}>DONE</option>
-                    </select>
-                </div>
-                <div class="col-auto">
-                    <button type="submit" class="btn btn-sm px-3" style="background:#6f42c1;color:#fff"><i class="bi bi-search me-1"></i>Filter</button>
-                    <a href="${pageContext.request.contextPath}/mentor/dashboard" class="btn btn-outline-secondary btn-sm ms-1">Clear</a>
+        <%-- MY INTERNS SECTION --%>
+        <div class="sec-card">
+            <div class="sec-header">
+                <div class="sec-header-left">
+                    <div class="sec-icon si-interns"><i class="bi bi-people"></i></div>
+                    <span class="sec-title">My Interns</span>
+                    <span class="sec-count count-intern">${fn:length(myInterns)}</span>
                 </div>
             </div>
-        </form>
-
-        <div class="table-responsive">
-            <table class="table user-table">
+            <form class="filter-bar" method="get" action="${pageContext.request.contextPath}/mentor/dashboard">
+                <div class="filter-group">
+                    <span class="filter-label">Search</span>
+                    <input class="filter-input" type="text" name="internKeyword" value="${internKeyword}" placeholder="Code / Name / Email" style="width:200px">
+                </div>
+                <button type="submit" class="btn-filter green"><i class="bi bi-search"></i> Filter</button>
+                <a href="${pageContext.request.contextPath}/mentor/dashboard" class="btn-filter ghost">Clear</a>
+            </form>
+            <table class="data-table">
                 <thead><tr>
-                    <th>Code</th><th>Full Name</th><th>University</th><th>Major</th><th>Email</th><th>Intern Status</th>
+                    <th>Intern</th><th>Code</th><th>Major / University</th><th>Email</th><th>Status</th>
                 </tr></thead>
                 <tbody>
                     <c:choose>
                         <c:when test="${empty myInterns}">
-                            <tr><td colspan="6" class="text-center text-muted py-4"><i class="bi bi-inbox me-2"></i>No interns assigned to you yet.</td></tr>
+                            <tr><td colspan="5"><div class="empty-state"><i class="bi bi-inbox"></i>No interns assigned to you yet.<br><small>Contact HR to get interns assigned to your mentorship.</small></div></td></tr>
                         </c:when>
                         <c:otherwise>
                             <c:forEach var="i" items="${myInterns}">
                                 <tr>
-                                    <td><code>${i.studentCode}</code></td>
-                                    <td><strong>${i.fullName != null ? i.fullName : '-'}</strong></td>
-                                    <td>${i.university}</td>
-                                    <td>${i.major}</td>
-                                    <td>${i.email}</td>
+                                    <td>
+                                        <div class="user-cell">
+                                            <div class="user-avatar ua-green">${fn:substring(i.fullName != null ? i.fullName : 'I', 0, 1)}</div>
+                                            <div>
+                                                <div class="user-name">${not empty i.fullName ? i.fullName : '—'}</div>
+                                                <div class="user-email">${i.email}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><code style="background:#f0fdf4;padding:2px 7px;border-radius:5px;font-size:.75rem;color:#059669">${i.studentCode}</code></td>
+                                    <td>
+                                        <div style="font-size:.82rem;font-weight:500">${i.university}</div>
+                                        <div style="font-size:.73rem;color:var(--text-muted)">${i.major}</div>
+                                    </td>
+                                    <td style="color:var(--text-muted)">${i.email}</td>
                                     <td>
                                         <c:choose>
-                                            <c:when test="${i.status == 'APPROVED'}"><span class="status-approved">APPROVED</span></c:when>
-                                            <c:when test="${i.status == 'INTERNING'}"><span class="status-interning">INTERNING</span></c:when>
-                                            <c:when test="${i.status == 'COMPLETED'}"><span class="status-completed">COMPLETED</span></c:when>
-                                            <c:otherwise><span class="status-pending">${i.status}</span></c:otherwise>
+                                            <c:when test="${i.status == 'APPROVED'}"><span class="badge badge-approved"><i class="bi bi-check-circle-fill" style="font-size:.6rem"></i>Approved</span></c:when>
+                                            <c:when test="${i.status == 'INTERNING'}"><span class="badge badge-interning"><i class="bi bi-play-circle-fill" style="font-size:.6rem"></i>Interning</span></c:when>
+                                            <c:when test="${i.status == 'COMPLETED'}"><span class="badge badge-completed"><i class="bi bi-patch-check-fill" style="font-size:.6rem"></i>Completed</span></c:when>
+                                            <c:otherwise><span class="badge badge-pending"><i class="bi bi-clock-fill" style="font-size:.6rem"></i>Pending</span></c:otherwise>
                                         </c:choose>
                                     </td>
                                 </tr>
@@ -135,61 +295,80 @@
                 </tbody>
             </table>
         </div>
-    </div>
 
-    <%-- ==================== TASKS SECTION ==================== --%>
-    <div class="section-card">
-        <div class="section-header sh-task">
-            <div class="d-flex align-items-center gap-2">
-                <i class="bi bi-list-task text-white fs-5"></i>
-                <span class="section-title">Task Assignment</span>
-                <span class="count-badge">${fn:length(tasks)}</span>
+        <%-- TASKS SECTION --%>
+        <div class="sec-card">
+            <div class="sec-header">
+                <div class="sec-header-left">
+                    <div class="sec-icon si-tasks"><i class="bi bi-list-task"></i></div>
+                    <span class="sec-title">Task Assignment</span>
+                    <span class="sec-count count-task">${fn:length(tasks)}</span>
+                </div>
+                <button onclick="openModal()" class="btn-assign">
+                    <i class="bi bi-plus-lg"></i> Assign Task
+                </button>
             </div>
-            <button type="button" class="btn btn-light btn-sm fw-semibold" data-bs-toggle="modal" data-bs-target="#addTaskModal">
-                <i class="bi bi-plus-lg me-1"></i>Assign Task
-            </button>
-        </div>
-
-        <div class="table-responsive">
-            <table class="table user-table">
+            <form class="filter-bar" method="get" action="${pageContext.request.contextPath}/mentor/dashboard">
+                <div class="filter-group">
+                    <span class="filter-label">Task Status</span>
+                    <select class="filter-select" name="taskStatus" style="width:150px">
+                        <option value="">All Status</option>
+                        <option value="TODO"        ${taskStatus == 'TODO'        ? 'selected' : ''}>Todo</option>
+                        <option value="IN_PROGRESS" ${taskStatus == 'IN_PROGRESS' ? 'selected' : ''}>In Progress</option>
+                        <option value="COMPLETED"   ${taskStatus == 'COMPLETED'   ? 'selected' : ''}>Completed</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-filter cyan"><i class="bi bi-funnel"></i> Filter</button>
+                <a href="${pageContext.request.contextPath}/mentor/dashboard" class="btn-filter ghost">Clear</a>
+            </form>
+            <table class="data-table">
                 <thead><tr>
-                    <th>Title</th><th>Assigned Intern</th><th>Status</th><th>Due Date</th><th>Created</th><th class="text-center">Actions</th>
+                    <th>Task</th><th>Assigned Intern</th><th>Status</th><th>Due Date</th><th>Actions</th>
                 </tr></thead>
                 <tbody>
                     <c:choose>
                         <c:when test="${empty tasks}">
-                            <tr><td colspan="6" class="text-center text-muted py-4"><i class="bi bi-inbox me-2"></i>No tasks assigned yet. Click "Assign Task" to start.</td></tr>
+                            <tr><td colspan="5"><div class="empty-state"><i class="bi bi-clipboard-x"></i>No tasks assigned yet. Click "Assign Task" to start.</div></td></tr>
                         </c:when>
                         <c:otherwise>
                             <c:forEach var="t" items="${tasks}">
                                 <tr>
-                                    <td><strong>${t.title}</strong>
+                                    <td>
+                                        <div class="user-name">${t.title}</div>
                                         <c:if test="${not empty t.description}">
-                                            <div class="text-muted" style="font-size:.78rem;">${t.description}</div>
+                                            <div class="user-email" style="max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.description}</div>
                                         </c:if>
                                     </td>
-                                    <td>${not empty t.internName ? t.internName : '-'}</td>
+                                    <td>
+                                        <c:if test="${not empty t.internName}">
+                                            <div class="user-cell">
+                                                <div class="user-avatar ua-green" style="width:26px;height:26px;font-size:.7rem">${fn:substring(t.internName,0,1)}</div>
+                                                <span style="font-size:.82rem">${t.internName}</span>
+                                            </div>
+                                        </c:if>
+                                        <c:if test="${empty t.internName}"><span style="color:var(--text-muted);font-size:.8rem">—</span></c:if>
+                                    </td>
                                     <td>
                                         <c:choose>
-                                            <c:when test="${t.status == 'DONE'}"><span class="status-done">DONE</span></c:when>
-                                            <c:when test="${t.status == 'IN_PROGRESS'}"><span class="status-inprogress">IN PROGRESS</span></c:when>
-                                            <c:otherwise><span class="status-todo">TODO</span></c:otherwise>
+                                            <c:when test="${t.status == 'COMPLETED'}"><span class="badge badge-done"><i class="bi bi-check2-all" style="font-size:.7rem"></i>Done</span></c:when>
+                                            <c:when test="${t.status == 'IN_PROGRESS'}"><span class="badge badge-inprog"><i class="bi bi-arrow-repeat" style="font-size:.7rem"></i>In Progress</span></c:when>
+                                            <c:otherwise><span class="badge badge-todo"><i class="bi bi-circle" style="font-size:.6rem"></i>Todo</span></c:otherwise>
                                         </c:choose>
                                     </td>
-                                    <td>${t.dueDate != null ? t.dueDate : '-'}</td>
-                                    <td>${t.createdAt}</td>
-                                    <td class="text-center">
-                                        <a href="${pageContext.request.contextPath}/mentor/dashboard/task/edit?id=${t.id}"
-                                           class="btn btn-outline-primary btn-action me-1">
-                                            <i class="bi bi-pencil"></i> Edit
-                                        </a>
-                                        <form method="post" action="${pageContext.request.contextPath}/mentor/dashboard/task/delete" class="d-inline"
-                                              onsubmit="return confirm('Delete task: ${t.title}?')">
-                                            <input type="hidden" name="id" value="${t.id}">
-                                            <button type="submit" class="btn btn-outline-danger btn-action">
-                                                <i class="bi bi-trash"></i> Delete
-                                            </button>
-                                        </form>
+                                    <td style="color:var(--text-muted);font-size:.82rem">
+                                        <c:choose>
+                                            <c:when test="${not empty t.dueDate}"><i class="bi bi-calendar3" style="font-size:.75rem;margin-right:4px"></i>${t.dueDate}</c:when>
+                                            <c:otherwise>—</c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    <td>
+                                        <div class="action-group">
+                                            <a href="${pageContext.request.contextPath}/mentor/dashboard/task/edit?id=${t.id}" class="btn-icon edit" title="Edit"><i class="bi bi-pencil"></i></a>
+                                            <form method="post" action="${pageContext.request.contextPath}/mentor/dashboard/task/delete" style="display:inline" onsubmit="return confirm('Delete task: ${t.title}?')">
+                                                <input type="hidden" name="id" value="${t.id}">
+                                                <button type="submit" class="btn-icon delete" title="Delete"><i class="bi bi-trash"></i></button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -198,60 +377,65 @@
                 </tbody>
             </table>
         </div>
+
     </div>
 </div>
 
-<!-- Add Task Modal -->
-<div class="modal fade" id="addTaskModal" tabindex="-1" aria-labelledby="addTaskModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header modal-header-task">
-                <h5 class="modal-title" id="addTaskModalLabel"><i class="bi bi-plus-circle me-2"></i>Assign New Task</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <form method="post" action="${pageContext.request.contextPath}/mentor/dashboard/task/create">
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Task Title <span class="text-danger">*</span></label>
-                        <input type="text" name="title" class="form-control" required placeholder="e.g. Complete API Integration">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Description</label>
-                        <textarea name="description" class="form-control" rows="3" placeholder="Task details..."></textarea>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-semibold">Assign to Intern <span class="text-danger">*</span></label>
-                            <select name="internId" class="form-select" required>
-                                <option value="">-- Select Intern --</option>
-                                <c:forEach var="i" items="${allMyInterns}">
-                                    <option value="${i.id}">${i.studentCode} - ${i.fullName != null ? i.fullName : i.email}</option>
-                                </c:forEach>
-                            </select>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <label class="form-label fw-semibold">Status</label>
-                            <select name="status" class="form-select">
-                                <option value="TODO">TODO</option>
-                                <option value="IN_PROGRESS">IN PROGRESS</option>
-                                <option value="DONE">DONE</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <label class="form-label fw-semibold">Due Date</label>
-                            <input type="date" name="dueDate" class="form-control">
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary"><i class="bi bi-check-circle me-1"></i>Assign Task</button>
-                </div>
-            </form>
+<!-- Assign Task Modal -->
+<div class="modal-overlay" id="taskModal">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3><i class="bi bi-plus-circle"></i> Assign New Task</h3>
+            <button class="modal-close" onclick="closeModal()">&#x2715;</button>
         </div>
+        <form method="post" action="${pageContext.request.contextPath}/mentor/dashboard/task/create">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Task Title *</label>
+                    <input type="text" name="title" class="form-input" required placeholder="e.g. Implement Login Module">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea name="description" class="form-textarea" placeholder="Task details and requirements..."></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Assign to Intern *</label>
+                        <select name="internId" class="form-select" required>
+                            <option value="">— Select Intern —</option>
+                            <c:forEach var="i" items="${allMyInterns}">
+                                <option value="${i.id}">${i.studentCode} — ${not empty i.fullName ? i.fullName : i.email}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <select name="status" class="form-select">
+                            <option value="TODO">Todo</option>
+                            <option value="IN_PROGRESS">In Progress</option>
+                            <option value="COMPLETED">Completed</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Due Date</label>
+                    <input type="date" name="dueDate" class="form-input">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+                <button type="submit" class="btn-submit"><i class="bi bi-check-lg"></i> Assign Task</button>
+            </div>
+        </form>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function openModal()  { document.getElementById('taskModal').classList.add('open'); }
+    function closeModal() { document.getElementById('taskModal').classList.remove('open'); }
+    document.getElementById('taskModal').addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+    });
+</script>
 </body>
 </html>

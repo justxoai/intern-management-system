@@ -42,7 +42,7 @@ public class LoginServlet extends HttpServlet {
             case "ADMIN"  -> "/admin/users";
             case "HR"     -> "/hr/dashboard";
             case "MENTOR" -> "/mentor/dashboard";
-            case "INTERN" -> "/intern";
+            case "INTERN" -> "/intern/documents";
             default -> "/login";
         };
         response.sendRedirect(request.getContextPath() + landingPage);

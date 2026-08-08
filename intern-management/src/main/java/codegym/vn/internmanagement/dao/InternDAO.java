@@ -199,4 +199,19 @@ public class InternDAO {
         } catch (SQLException e) { e.printStackTrace(); }
         return list;
     }
+
+    /**
+     * Find intern profile by their users.id (used after login to get intern's record).
+     */
+    public Intern findByUserId(Long userId) {
+        String sql = "SELECT i.*, u.full_name FROM interns i LEFT JOIN users u ON i.user_id = u.id WHERE i.user_id = ?";
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, userId);
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) return mapResultSetToIntern(rs);
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+        return null;
+    }
 }

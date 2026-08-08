@@ -6,201 +6,403 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>User Information - Admin Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Admin Dashboard — User Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         :root {
-            --primary: #1e3a5f;
-            --accent:  #2d6bcf;
-            --hr-color:     #0d6efd;
-            --mentor-color: #198754;
-            --intern-color: #6f42c1;
+            --sidebar-w: 250px;
+            --sidebar-bg: #0d1b2e;
+            --sidebar-hover: rgba(255,255,255,.07);
+            --sidebar-active: rgba(99,179,237,.15);
+            --sidebar-active-border: #63b3ed;
+            --accent: #3b82f6;
+            --accent2: #8b5cf6;
+            --hr-col: #3b82f6;
+            --mentor-col: #10b981;
+            --intern-col: #8b5cf6;
+            --page-bg: #f1f5f9;
+            --card-bg: #fff;
+            --text-primary: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
         }
-        body { font-family: 'Inter', sans-serif; background: #f0f4f8; }
+        body { font-family: 'Inter', sans-serif; background: var(--page-bg); display: flex; min-height: 100vh; }
 
-        /* Top bar */
+        /* ── Sidebar ── */
+        .sidebar {
+            width: var(--sidebar-w); background: var(--sidebar-bg);
+            display: flex; flex-direction: column; flex-shrink: 0;
+            position: fixed; height: 100vh; overflow-y: auto; z-index: 100;
+        }
+        .sidebar-brand {
+            padding: 28px 22px 20px;
+            border-bottom: 1px solid rgba(255,255,255,.08);
+        }
+        .sidebar-brand .brand-icon {
+            width: 40px; height: 40px; border-radius: 10px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.15rem; color: #fff; margin-bottom: 10px;
+        }
+        .sidebar-brand h1 { color: #fff; font-size: .95rem; font-weight: 700; line-height: 1.3; }
+        .sidebar-brand span { color: rgba(255,255,255,.4); font-size: .72rem; }
+
+        .sidebar-section-label {
+            padding: 18px 22px 6px;
+            font-size: .67rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: .8px; color: rgba(255,255,255,.3);
+        }
+        .sidebar-nav { list-style: none; padding: 0 12px; }
+        .sidebar-nav li a {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 12px; border-radius: 8px; margin-bottom: 2px;
+            text-decoration: none; color: rgba(255,255,255,.65); font-size: .84rem; font-weight: 500;
+            transition: background .15s, color .15s;
+        }
+        .sidebar-nav li a:hover { background: var(--sidebar-hover); color: #fff; }
+        .sidebar-nav li a.active {
+            background: var(--sidebar-active); color: #fff;
+            border-left: 3px solid var(--sidebar-active-border);
+        }
+        .sidebar-nav li a i { font-size: 1rem; width: 20px; }
+
+        .sidebar-footer {
+            margin-top: auto; padding: 16px 22px;
+            border-top: 1px solid rgba(255,255,255,.08);
+        }
+        .sidebar-user { display: flex; align-items: center; gap: 10px; }
+        .avatar {
+            width: 34px; height: 34px; border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            display: flex; align-items: center; justify-content: center;
+            font-size: .85rem; color: #fff; font-weight: 700; flex-shrink: 0;
+        }
+        .sidebar-user-info { flex: 1; min-width: 0; }
+        .sidebar-user-name { color: #fff; font-size: .82rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .sidebar-user-role { color: rgba(255,255,255,.4); font-size: .7rem; }
+        .logout-btn { color: rgba(255,255,255,.4); font-size: 1rem; text-decoration: none; transition: color .15s; }
+        .logout-btn:hover { color: #f87171; }
+
+        /* ── Main ── */
+        .main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; }
+
         .topbar {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            padding: 18px 32px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+            background: var(--card-bg); padding: 16px 32px;
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+            position: sticky; top: 0; z-index: 50;
+            box-shadow: 0 1px 4px rgba(0,0,0,.06);
         }
-        .topbar-title { color: #fff; font-size: 1.3rem; font-weight: 700; letter-spacing: .5px; }
-        .topbar-user { color: rgba(255,255,255,.85); font-size: .9rem; }
+        .page-title { font-size: 1.2rem; font-weight: 700; color: var(--text-primary); }
+        .page-sub   { font-size: .8rem; color: var(--text-muted); margin-top: 1px; }
+        .topbar-actions { display: flex; align-items: center; gap: 10px; }
+        .topbar-badge {
+            background: #eff6ff; color: #2563eb; border-radius: 20px;
+            padding: 4px 12px; font-size: .75rem; font-weight: 600;
+        }
 
-        /* Page heading */
-        .page-heading { font-size: 1.6rem; font-weight: 700; color: var(--primary); }
+        /* Content */
+        .content { padding: 28px 32px; flex: 1; }
+
+        /* Stats row */
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 28px; }
+        .stat-card {
+            background: var(--card-bg); border-radius: 14px;
+            padding: 20px 22px; border: 1px solid var(--border);
+            display: flex; align-items: center; gap: 16px;
+            box-shadow: 0 1px 6px rgba(0,0,0,.05);
+            transition: box-shadow .2s;
+        }
+        .stat-card:hover { box-shadow: 0 4px 18px rgba(0,0,0,.10); }
+        .stat-icon {
+            width: 48px; height: 48px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0;
+        }
+        .stat-icon.hr     { background: #eff6ff; color: var(--hr-col); }
+        .stat-icon.mentor { background: #f0fdf4; color: var(--mentor-col); }
+        .stat-icon.intern { background: #f5f3ff; color: var(--intern-col); }
+        .stat-count { font-size: 2rem; font-weight: 800; color: var(--text-primary); line-height: 1; }
+        .stat-label { font-size: .78rem; color: var(--text-muted); margin-top: 3px; font-weight: 500; }
 
         /* Section card */
-        .section-card {
-            border-radius: 14px;
-            border: none;
-            box-shadow: 0 2px 16px rgba(0,0,0,0.08);
-            margin-bottom: 28px;
-            overflow: hidden;
+        .sec-card {
+            background: var(--card-bg); border-radius: 16px;
+            border: 1px solid var(--border); margin-bottom: 24px;
+            overflow: hidden; box-shadow: 0 1px 6px rgba(0,0,0,.05);
+            scroll-margin-top: 82px;
         }
-        .section-header {
-            padding: 14px 22px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid rgba(255,255,255,.2);
+        .sec-header {
+            padding: 16px 22px; display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 1px solid var(--border);
         }
-        .section-header-hr     { background: linear-gradient(90deg, #0d6efd, #4d94ff); }
-        .section-header-mentor { background: linear-gradient(90deg, #198754, #28c76f); }
-        .section-header-intern { background: linear-gradient(90deg, #6f42c1, #9b72e6); }
-        .section-title { color: #fff; font-size: 1rem; font-weight: 600; letter-spacing: .3px; }
+        .sec-header-left { display: flex; align-items: center; gap: 10px; }
+        .sec-dot {
+            width: 10px; height: 10px; border-radius: 50%;
+        }
+        .dot-hr     { background: var(--hr-col); }
+        .dot-mentor { background: var(--mentor-col); }
+        .dot-intern { background: var(--intern-col); }
+        .sec-title { font-size: .95rem; font-weight: 700; color: var(--text-primary); }
+        .sec-count {
+            font-size: .72rem; font-weight: 600; padding: 2px 9px; border-radius: 20px;
+        }
+        .count-hr     { background: #eff6ff; color: var(--hr-col); }
+        .count-mentor { background: #f0fdf4; color: var(--mentor-col); }
+        .count-intern { background: #f5f3ff; color: var(--intern-col); }
 
         /* Filter bar */
-        .filter-bar { background: #f8f9fa; padding: 14px 22px; border-bottom: 1px solid #e9ecef; }
-        .filter-bar .form-control,
-        .filter-bar .form-select { font-size: .82rem; }
-        .filter-label { font-size: .75rem; font-weight: 600; color: #6c757d; text-transform: uppercase; margin-bottom: 3px; }
+        .filter-bar {
+            background: #f8fafc; padding: 12px 22px; border-bottom: 1px solid var(--border);
+            display: flex; align-items: flex-end; gap: 10px; flex-wrap: wrap;
+        }
+        .filter-group { display: flex; flex-direction: column; gap: 4px; }
+        .filter-label { font-size: .68rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .4px; }
+        .filter-input, .filter-select {
+            padding: 7px 10px; border: 1.5px solid var(--border); border-radius: 8px;
+            font-family: 'Inter', sans-serif; font-size: .81rem; color: var(--text-primary);
+            background: #fff; outline: none; transition: border-color .2s;
+            min-width: 110px;
+        }
+        .filter-input:focus, .filter-select:focus { border-color: var(--accent); }
+
+        .btn-filter {
+            padding: 7px 16px; border-radius: 8px; border: none; cursor: pointer;
+            font-family: 'Inter', sans-serif; font-size: .81rem; font-weight: 600;
+            display: flex; align-items: center; gap: 5px;
+            transition: opacity .15s;
+        }
+        .btn-filter:hover { opacity: .85; }
+        .btn-filter.primary { background: var(--accent); color: #fff; }
+        .btn-filter.ghost   { background: var(--border); color: var(--text-muted); }
+        .btn-add {
+            padding: 7px 15px; border-radius: 8px; border: none; cursor: pointer;
+            font-family: 'Inter', sans-serif; font-size: .81rem; font-weight: 600;
+            display: flex; align-items: center; gap: 5px; text-decoration: none;
+            transition: opacity .15s, box-shadow .2s;
+        }
+        .btn-add:hover { opacity: .88; }
+        .btn-add.hr     { background: var(--hr-col);     color: #fff; box-shadow: 0 2px 8px rgba(59,130,246,.3); }
+        .btn-add.mentor { background: var(--mentor-col); color: #fff; box-shadow: 0 2px 8px rgba(16,185,129,.3); }
+        .btn-add.intern { background: var(--intern-col); color: #fff; box-shadow: 0 2px 8px rgba(139,92,246,.3); }
 
         /* Table */
-        .user-table { margin: 0; }
-        .user-table thead tr { background: #f1f3f5; }
-        .user-table thead th {
-            font-size: .75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: .6px;
-            color: #495057;
-            border: none;
-            padding: 10px 14px;
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table thead th {
+            padding: 11px 16px; text-align: left;
+            font-size: .7rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: .5px; color: var(--text-muted);
+            background: #f8fafc; border-bottom: 1px solid var(--border);
         }
-        .user-table tbody td { padding: 11px 14px; vertical-align: middle; font-size: .87rem; border-color: #f1f3f5; }
-        .user-table tbody tr:hover { background: #f8f9ff; }
+        .data-table tbody td {
+            padding: 13px 16px; font-size: .85rem; color: var(--text-primary);
+            border-bottom: 1px solid #f1f5f9; vertical-align: middle;
+        }
+        .data-table tbody tr:last-child td { border-bottom: none; }
+        .data-table tbody tr:hover td { background: #f8fafc; }
 
-        .badge-role { font-size: .72rem; padding: 4px 10px; border-radius: 20px; font-weight: 600; }
-        .badge-active   { background: #d1fae5; color: #065f46; }
-        .badge-inactive { background: #fee2e2; color: #991b1b; }
+        .user-cell { display: flex; align-items: center; gap: 10px; }
+        .user-avatar {
+            width: 32px; height: 32px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: .78rem; font-weight: 700; color: #fff; flex-shrink: 0;
+        }
+        .ua-hr     { background: linear-gradient(135deg, #3b82f6, #60a5fa); }
+        .ua-mentor { background: linear-gradient(135deg, #10b981, #34d399); }
+        .ua-intern { background: linear-gradient(135deg, #8b5cf6, #a78bfa); }
+        .user-name { font-weight: 600; font-size: .85rem; }
+        .user-email { font-size: .75rem; color: var(--text-muted); }
 
-        .btn-edit   { font-size: .78rem; padding: 4px 12px; }
-        .btn-delete { font-size: .78rem; padding: 4px 12px; }
+        .badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 3px 10px; border-radius: 20px; font-size: .7rem; font-weight: 600;
+        }
+        .badge-active   { background: #f0fdf4; color: #16a34a; }
+        .badge-inactive { background: #fef2f2; color: #dc2626; }
 
-        /* Count badge */
-        .count-badge { background: rgba(255,255,255,.25); color: #fff; border-radius: 20px; padding: 2px 10px; font-size: .8rem; font-weight: 600; }
+        .action-group { display: flex; align-items: center; gap: 6px; }
+        .btn-icon {
+            width: 30px; height: 30px; border-radius: 7px; border: 1.5px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            font-size: .85rem; cursor: pointer; text-decoration: none; background: #fff;
+            transition: all .15s;
+        }
+        .btn-icon.edit   { color: var(--accent); } .btn-icon.edit:hover   { background: #eff6ff; border-color: var(--accent); }
+        .btn-icon.delete { color: #ef4444; }        .btn-icon.delete:hover { background: #fef2f2; border-color: #ef4444; }
+
+        .empty-state { padding: 36px; text-align: center; color: var(--text-muted); font-size: .87rem; }
+        .empty-state i { font-size: 2rem; margin-bottom: 8px; display: block; opacity: .4; }
     </style>
 </head>
 <body>
 
-<!-- Top Bar -->
-<div class="topbar">
-    <span class="topbar-title"><i class="bi bi-shield-check me-2"></i>Internship Management System — Admin</span>
-    <span class="topbar-user">
-        <i class="bi bi-person-circle me-1"></i>${sessionScope.currentUser.fullName}
-        &nbsp;|&nbsp;
-        <a href="${pageContext.request.contextPath}/logout" class="text-white text-decoration-underline" style="opacity:.8">Logout</a>
-    </span>
-</div>
-
-<div class="container-lg py-4">
-
-    <!-- Page Heading -->
-    <div class="d-flex align-items-center justify-content-between mb-4">
-        <h1 class="page-heading mb-0"><i class="bi bi-people me-2" style="color:var(--accent)"></i>User Information</h1>
+<!-- ── Sidebar ── -->
+<aside class="sidebar">
+    <div class="sidebar-brand">
+        <div class="brand-icon"><i class="bi bi-shield-check"></i></div>
+        <h1>Internship<br>Management</h1>
+        <span>Admin Panel</span>
     </div>
 
-    <%-- ==================== HR SECTION ==================== --%>
-    <div class="section-card">
-        <div class="section-header section-header-hr">
-            <div class="d-flex align-items-center gap-2">
-                <i class="bi bi-person-badge text-white fs-5"></i>
-                <span class="section-title">Human Resources (HR)</span>
-                <span class="count-badge">${fn:length(hrUsers)}</span>
+    <div class="sidebar-section-label">Management</div>
+    <ul class="sidebar-nav">
+        <li><a href="${pageContext.request.contextPath}/admin/users" class="active">
+            <i class="bi bi-people"></i> User Accounts
+        </a></li>
+    </ul>
+
+    <div class="sidebar-section-label">Quick Links</div>
+    <ul class="sidebar-nav">
+        <li><a href="${pageContext.request.contextPath}/admin/users/create">
+            <i class="bi bi-person-plus"></i> Add New User
+        </a></li>
+        <li><a href="#section-hr" onclick="scrollTo('section-hr')">
+            <i class="bi bi-building"></i> HR Section
+        </a></li>
+        <li><a href="#section-mentor" onclick="scrollTo('section-mentor')">
+            <i class="bi bi-mortarboard"></i> Mentor Section
+        </a></li>
+        <li><a href="#section-intern" onclick="scrollTo('section-intern')">
+            <i class="bi bi-person-workspace"></i> Intern Section
+        </a></li>
+    </ul>
+
+    <div class="sidebar-footer">
+        <div class="sidebar-user">
+            <div class="avatar">${fn:substring(sessionScope.currentUser.fullName, 0, 1)}</div>
+            <div class="sidebar-user-info">
+                <div class="sidebar-user-name">${sessionScope.currentUser.fullName}</div>
+                <div class="sidebar-user-role">Administrator</div>
             </div>
-            <a href="${pageContext.request.contextPath}/admin/users/create?role=HR"
-               class="btn btn-light btn-sm fw-semibold">
-                <i class="bi bi-plus-lg me-1"></i>Add HR
+            <a href="${pageContext.request.contextPath}/logout" class="logout-btn" title="Logout">
+                <i class="bi bi-box-arrow-right"></i>
             </a>
         </div>
+    </div>
+</aside>
 
-        <!-- HR Filter -->
-        <form class="filter-bar" method="get" action="${pageContext.request.contextPath}/admin/users" id="hrFilterForm">
-            <input type="hidden" name="activeTab" value="hr">
-            <div class="row g-2 align-items-end">
-                <div class="col-md-2">
-                    <div class="filter-label">ID</div>
-                    <input type="text" class="form-control form-control-sm" name="hrId" value="${hrId}" placeholder="e.g. 1">
-                </div>
-                <div class="col-md-3">
-                    <div class="filter-label">Name</div>
-                    <input type="text" class="form-control form-control-sm" name="hrName" value="${hrName}" placeholder="Full name...">
-                </div>
-                <div class="col-md-3">
-                    <div class="filter-label">Email</div>
-                    <input type="text" class="form-control form-control-sm" name="hrEmail" value="${hrEmail}" placeholder="email@...">
-                </div>
-                <div class="col-md-2">
-                    <div class="filter-label">Phone</div>
-                    <input type="text" class="form-control form-control-sm" name="hrPhone" value="${hrPhone}" placeholder="090...">
-                </div>
-                <div class="col-md-2">
-                    <div class="filter-label">Status</div>
-                    <select class="form-select form-select-sm" name="hrStatus">
-                        <option value="">All</option>
-                        <option value="ACTIVE"   ${hrStatus == 'ACTIVE'   ? 'selected' : ''}>ACTIVE</option>
-                        <option value="INACTIVE" ${hrStatus == 'INACTIVE' ? 'selected' : ''}>INACTIVE</option>
-                    </select>
-                </div>
-                <div class="col-auto">
-                    <button type="submit" class="btn btn-primary btn-sm px-3">
-                        <i class="bi bi-search me-1"></i>Search
-                    </button>
-                    <a href="${pageContext.request.contextPath}/admin/users" class="btn btn-outline-secondary btn-sm ms-1">Clear</a>
+<!-- ── Main Content ── -->
+<div class="main">
+    <!-- Topbar -->
+    <div class="topbar">
+        <div>
+            <div class="page-title">User Management</div>
+            <div class="page-sub">Manage all HR, Mentor, and Intern accounts</div>
+        </div>
+        <div class="topbar-actions">
+            <span class="topbar-badge"><i class="bi bi-circle-fill me-1" style="font-size:.45rem;color:#22c55e"></i>System Online</span>
+            <a href="${pageContext.request.contextPath}/admin/users/create"
+               style="padding:8px 16px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);color:#fff;border-radius:9px;text-decoration:none;font-size:.82rem;font-weight:600;display:flex;align-items:center;gap:6px;">
+                <i class="bi bi-plus-lg"></i> New User
+            </a>
+        </div>
+    </div>
+
+    <div class="content">
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon hr"><i class="bi bi-person-badge"></i></div>
+                <div>
+                    <div class="stat-count">${fn:length(hrUsers)}</div>
+                    <div class="stat-label">HR Accounts</div>
                 </div>
             </div>
-        </form>
+            <div class="stat-card">
+                <div class="stat-icon mentor"><i class="bi bi-mortarboard"></i></div>
+                <div>
+                    <div class="stat-count">${fn:length(mentorUsers)}</div>
+                    <div class="stat-label">Mentor Accounts</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon intern"><i class="bi bi-person-workspace"></i></div>
+                <div>
+                    <div class="stat-count">${fn:length(internUsers)}</div>
+                    <div class="stat-label">Intern Accounts</div>
+                </div>
+            </div>
+        </div>
 
-        <!-- HR Table -->
-        <div class="table-responsive">
-            <table class="table user-table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Full Name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>Status</th>
-                        <th>Created At</th>
-                        <th class="text-center">Actions</th>
-                    </tr>
-                </thead>
+        <%-- ===== HR SECTION ===== --%>
+        <div class="sec-card" id="section-hr">
+            <div class="sec-header">
+                <div class="sec-header-left">
+                    <span class="sec-dot dot-hr"></span>
+                    <span class="sec-title">Human Resources</span>
+                    <span class="sec-count count-hr">${fn:length(hrUsers)}</span>
+                </div>
+                <a href="${pageContext.request.contextPath}/admin/users/create?role=HR" class="btn-add hr">
+                    <i class="bi bi-plus-lg"></i> Add HR
+                </a>
+            </div>
+            <form class="filter-bar" method="get" action="${pageContext.request.contextPath}/admin/users">
+                <div class="filter-group">
+                    <span class="filter-label">ID</span>
+                    <input class="filter-input" type="text" name="hrId" value="${hrId}" placeholder="e.g. 2" style="width:80px">
+                </div>
+                <div class="filter-group">
+                    <span class="filter-label">Name</span>
+                    <input class="filter-input" type="text" name="hrName" value="${hrName}" placeholder="Full name">
+                </div>
+                <div class="filter-group">
+                    <span class="filter-label">Email</span>
+                    <input class="filter-input" type="text" name="hrEmail" value="${hrEmail}" placeholder="email@...">
+                </div>
+                <div class="filter-group">
+                    <span class="filter-label">Phone</span>
+                    <input class="filter-input" type="text" name="hrPhone" value="${hrPhone}" placeholder="090...">
+                </div>
+                <div class="filter-group">
+                    <span class="filter-label">Status</span>
+                    <select class="filter-select" name="hrStatus" style="width:110px">
+                        <option value="">All</option>
+                        <option value="ACTIVE"   ${hrStatus == 'ACTIVE'   ? 'selected' : ''}>Active</option>
+                        <option value="INACTIVE" ${hrStatus == 'INACTIVE' ? 'selected' : ''}>Inactive</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-filter primary"><i class="bi bi-search"></i> Search</button>
+                <a href="${pageContext.request.contextPath}/admin/users" class="btn-filter ghost" style="text-decoration:none">Clear</a>
+            </form>
+            <table class="data-table">
+                <thead><tr>
+                    <th>User</th><th>Phone</th><th>Status</th><th>Created</th><th>Actions</th>
+                </tr></thead>
                 <tbody>
                     <c:choose>
                         <c:when test="${empty hrUsers}">
-                            <tr><td colspan="7" class="text-center text-muted py-4"><i class="bi bi-inbox me-2"></i>No HR accounts found.</td></tr>
+                            <tr><td colspan="5"><div class="empty-state"><i class="bi bi-inbox"></i>No HR accounts found.</div></td></tr>
                         </c:when>
                         <c:otherwise>
                             <c:forEach var="u" items="${hrUsers}">
                                 <tr>
-                                    <td><span class="text-muted">#${u.id}</span></td>
-                                    <td><strong>${u.fullName}</strong></td>
-                                    <td>${u.email}</td>
-                                    <td>${u.phone}</td>
+                                    <td>
+                                        <div class="user-cell">
+                                            <div class="user-avatar ua-hr">${fn:substring(u.fullName,0,1)}</div>
+                                            <div>
+                                                <div class="user-name">${u.fullName}</div>
+                                                <div class="user-email">${u.email}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="color:var(--text-muted)">${u.phone}</td>
                                     <td>
                                         <c:choose>
-                                            <c:when test="${u.status == 'ACTIVE'}"><span class="badge badge-active">Active</span></c:when>
-                                            <c:otherwise><span class="badge badge-inactive">${u.status}</span></c:otherwise>
+                                            <c:when test="${u.status == 'ACTIVE'}"><span class="badge badge-active"><i class="bi bi-circle-fill" style="font-size:.4rem"></i>Active</span></c:when>
+                                            <c:otherwise><span class="badge badge-inactive"><i class="bi bi-circle-fill" style="font-size:.4rem"></i>${u.status}</span></c:otherwise>
                                         </c:choose>
                                     </td>
-                                    <td>${u.createdAt}</td>
-                                    <td class="text-center">
-                                        <a href="${pageContext.request.contextPath}/admin/users/edit?id=${u.id}" class="btn btn-outline-primary btn-edit me-1">
-                                            <i class="bi bi-pencil"></i> Edit
-                                        </a>
-                                        <form method="post" action="${pageContext.request.contextPath}/admin/users/delete" class="d-inline"
-                                              onsubmit="return confirm('Delete HR account ${u.fullName}?')">
-                                            <input type="hidden" name="id" value="${u.id}">
-                                            <button type="submit" class="btn btn-outline-danger btn-delete">
-                                                <i class="bi bi-trash"></i> Delete
-                                            </button>
-                                        </form>
+                                    <td style="color:var(--text-muted);font-size:.78rem">${u.createdAt}</td>
+                                    <td>
+                                        <div class="action-group">
+                                            <a href="${pageContext.request.contextPath}/admin/users/edit?id=${u.id}" class="btn-icon edit" title="Edit"><i class="bi bi-pencil"></i></a>
+                                            <form method="post" action="${pageContext.request.contextPath}/admin/users/delete" style="display:inline" onsubmit="return confirm('Delete ${u.fullName}?')">
+                                                <input type="hidden" name="id" value="${u.id}">
+                                                <button type="submit" class="btn-icon delete" title="Delete"><i class="bi bi-trash"></i></button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -209,103 +411,84 @@
                 </tbody>
             </table>
         </div>
-    </div>
 
-    <%-- ==================== MENTOR SECTION ==================== --%>
-    <div class="section-card">
-        <div class="section-header section-header-mentor">
-            <div class="d-flex align-items-center gap-2">
-                <i class="bi bi-mortarboard text-white fs-5"></i>
-                <span class="section-title">Mentors</span>
-                <span class="count-badge">${fn:length(mentorUsers)}</span>
+        <%-- ===== MENTOR SECTION ===== --%>
+        <div class="sec-card" id="section-mentor">
+            <div class="sec-header">
+                <div class="sec-header-left">
+                    <span class="sec-dot dot-mentor"></span>
+                    <span class="sec-title">Mentors</span>
+                    <span class="sec-count count-mentor">${fn:length(mentorUsers)}</span>
+                </div>
+                <a href="${pageContext.request.contextPath}/admin/users/create?role=MENTOR" class="btn-add mentor">
+                    <i class="bi bi-plus-lg"></i> Add Mentor
+                </a>
             </div>
-            <a href="${pageContext.request.contextPath}/admin/users/create?role=MENTOR"
-               class="btn btn-light btn-sm fw-semibold">
-                <i class="bi bi-plus-lg me-1"></i>Add Mentor
-            </a>
-        </div>
-
-        <!-- Mentor Filter -->
-        <form class="filter-bar" method="get" action="${pageContext.request.contextPath}/admin/users" id="mentorFilterForm">
-            <input type="hidden" name="activeTab" value="mentor">
-            <div class="row g-2 align-items-end">
-                <div class="col-md-2">
-                    <div class="filter-label">ID</div>
-                    <input type="text" class="form-control form-control-sm" name="mentorId" value="${mentorId}" placeholder="e.g. 1">
+            <form class="filter-bar" method="get" action="${pageContext.request.contextPath}/admin/users">
+                <div class="filter-group">
+                    <span class="filter-label">ID</span>
+                    <input class="filter-input" type="text" name="mentorId" value="${mentorId}" placeholder="e.g. 3" style="width:80px">
                 </div>
-                <div class="col-md-3">
-                    <div class="filter-label">Name</div>
-                    <input type="text" class="form-control form-control-sm" name="mentorName" value="${mentorName}" placeholder="Full name...">
+                <div class="filter-group">
+                    <span class="filter-label">Name</span>
+                    <input class="filter-input" type="text" name="mentorName" value="${mentorName}" placeholder="Full name">
                 </div>
-                <div class="col-md-3">
-                    <div class="filter-label">Email</div>
-                    <input type="text" class="form-control form-control-sm" name="mentorEmail" value="${mentorEmail}" placeholder="email@...">
+                <div class="filter-group">
+                    <span class="filter-label">Email</span>
+                    <input class="filter-input" type="text" name="mentorEmail" value="${mentorEmail}" placeholder="email@...">
                 </div>
-                <div class="col-md-2">
-                    <div class="filter-label">Phone</div>
-                    <input type="text" class="form-control form-control-sm" name="mentorPhone" value="${mentorPhone}" placeholder="090...">
+                <div class="filter-group">
+                    <span class="filter-label">Phone</span>
+                    <input class="filter-input" type="text" name="mentorPhone" value="${mentorPhone}" placeholder="090...">
                 </div>
-                <div class="col-md-2">
-                    <div class="filter-label">Status</div>
-                    <select class="form-select form-select-sm" name="mentorStatus">
+                <div class="filter-group">
+                    <span class="filter-label">Status</span>
+                    <select class="filter-select" name="mentorStatus" style="width:110px">
                         <option value="">All</option>
-                        <option value="ACTIVE"   ${mentorStatus == 'ACTIVE'   ? 'selected' : ''}>ACTIVE</option>
-                        <option value="INACTIVE" ${mentorStatus == 'INACTIVE' ? 'selected' : ''}>INACTIVE</option>
+                        <option value="ACTIVE"   ${mentorStatus == 'ACTIVE'   ? 'selected' : ''}>Active</option>
+                        <option value="INACTIVE" ${mentorStatus == 'INACTIVE' ? 'selected' : ''}>Inactive</option>
                     </select>
                 </div>
-                <div class="col-auto">
-                    <button type="submit" class="btn btn-success btn-sm px-3">
-                        <i class="bi bi-search me-1"></i>Search
-                    </button>
-                    <a href="${pageContext.request.contextPath}/admin/users" class="btn btn-outline-secondary btn-sm ms-1">Clear</a>
-                </div>
-            </div>
-        </form>
-
-        <!-- Mentor Table -->
-        <div class="table-responsive">
-            <table class="table user-table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Full Name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>Status</th>
-                        <th>Created At</th>
-                        <th class="text-center">Actions</th>
-                    </tr>
-                </thead>
+                <button type="submit" class="btn-filter primary" style="background:var(--mentor-col)"><i class="bi bi-search"></i> Search</button>
+                <a href="${pageContext.request.contextPath}/admin/users" class="btn-filter ghost" style="text-decoration:none">Clear</a>
+            </form>
+            <table class="data-table">
+                <thead><tr>
+                    <th>User</th><th>Phone</th><th>Status</th><th>Created</th><th>Actions</th>
+                </tr></thead>
                 <tbody>
                     <c:choose>
                         <c:when test="${empty mentorUsers}">
-                            <tr><td colspan="7" class="text-center text-muted py-4"><i class="bi bi-inbox me-2"></i>No Mentor accounts found.</td></tr>
+                            <tr><td colspan="5"><div class="empty-state"><i class="bi bi-inbox"></i>No Mentor accounts found.</div></td></tr>
                         </c:when>
                         <c:otherwise>
                             <c:forEach var="u" items="${mentorUsers}">
                                 <tr>
-                                    <td><span class="text-muted">#${u.id}</span></td>
-                                    <td><strong>${u.fullName}</strong></td>
-                                    <td>${u.email}</td>
-                                    <td>${u.phone}</td>
+                                    <td>
+                                        <div class="user-cell">
+                                            <div class="user-avatar ua-mentor">${fn:substring(u.fullName,0,1)}</div>
+                                            <div>
+                                                <div class="user-name">${u.fullName}</div>
+                                                <div class="user-email">${u.email}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="color:var(--text-muted)">${u.phone}</td>
                                     <td>
                                         <c:choose>
-                                            <c:when test="${u.status == 'ACTIVE'}"><span class="badge badge-active">Active</span></c:when>
-                                            <c:otherwise><span class="badge badge-inactive">${u.status}</span></c:otherwise>
+                                            <c:when test="${u.status == 'ACTIVE'}"><span class="badge badge-active"><i class="bi bi-circle-fill" style="font-size:.4rem"></i>Active</span></c:when>
+                                            <c:otherwise><span class="badge badge-inactive"><i class="bi bi-circle-fill" style="font-size:.4rem"></i>${u.status}</span></c:otherwise>
                                         </c:choose>
                                     </td>
-                                    <td>${u.createdAt}</td>
-                                    <td class="text-center">
-                                        <a href="${pageContext.request.contextPath}/admin/users/edit?id=${u.id}" class="btn btn-outline-primary btn-edit me-1">
-                                            <i class="bi bi-pencil"></i> Edit
-                                        </a>
-                                        <form method="post" action="${pageContext.request.contextPath}/admin/users/delete" class="d-inline"
-                                              onsubmit="return confirm('Delete Mentor account ${u.fullName}?')">
-                                            <input type="hidden" name="id" value="${u.id}">
-                                            <button type="submit" class="btn btn-outline-danger btn-delete">
-                                                <i class="bi bi-trash"></i> Delete
-                                            </button>
-                                        </form>
+                                    <td style="color:var(--text-muted);font-size:.78rem">${u.createdAt}</td>
+                                    <td>
+                                        <div class="action-group">
+                                            <a href="${pageContext.request.contextPath}/admin/users/edit?id=${u.id}" class="btn-icon edit" title="Edit"><i class="bi bi-pencil"></i></a>
+                                            <form method="post" action="${pageContext.request.contextPath}/admin/users/delete" style="display:inline" onsubmit="return confirm('Delete ${u.fullName}?')">
+                                                <input type="hidden" name="id" value="${u.id}">
+                                                <button type="submit" class="btn-icon delete" title="Delete"><i class="bi bi-trash"></i></button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -314,107 +497,88 @@
                 </tbody>
             </table>
         </div>
-    </div>
 
-    <%-- ==================== INTERN SECTION ==================== --%>
-    <div class="section-card">
-        <div class="section-header section-header-intern">
-            <div class="d-flex align-items-center gap-2">
-                <i class="bi bi-person-workspace text-white fs-5"></i>
-                <span class="section-title">Interns</span>
-                <span class="count-badge">${fn:length(internUsers)}</span>
+        <%-- ===== INTERN SECTION ===== --%>
+        <div class="sec-card" id="section-intern">
+            <div class="sec-header">
+                <div class="sec-header-left">
+                    <span class="sec-dot dot-intern"></span>
+                    <span class="sec-title">Interns</span>
+                    <span class="sec-count count-intern">${fn:length(internUsers)}</span>
+                </div>
+                <a href="${pageContext.request.contextPath}/admin/users/create?role=INTERN" class="btn-add intern">
+                    <i class="bi bi-plus-lg"></i> Add Intern
+                </a>
             </div>
-            <a href="${pageContext.request.contextPath}/admin/users/create?role=INTERN"
-               class="btn btn-light btn-sm fw-semibold">
-                <i class="bi bi-plus-lg me-1"></i>Add Intern
-            </a>
-        </div>
-
-        <!-- Intern Filter -->
-        <form class="filter-bar" method="get" action="${pageContext.request.contextPath}/admin/users" id="internFilterForm">
-            <input type="hidden" name="activeTab" value="intern">
-            <div class="row g-2 align-items-end">
-                <div class="col-md-2">
-                    <div class="filter-label">ID / Code</div>
-                    <input type="text" class="form-control form-control-sm" name="internId" value="${internId}" placeholder="ID or code...">
+            <form class="filter-bar" method="get" action="${pageContext.request.contextPath}/admin/users">
+                <div class="filter-group">
+                    <span class="filter-label">ID / Code</span>
+                    <input class="filter-input" type="text" name="internId" value="${internId}" placeholder="ID or code" style="width:95px">
                 </div>
-                <div class="col-md-2">
-                    <div class="filter-label">Name</div>
-                    <input type="text" class="form-control form-control-sm" name="internName" value="${internName}" placeholder="Full name...">
+                <div class="filter-group">
+                    <span class="filter-label">Name</span>
+                    <input class="filter-input" type="text" name="internName" value="${internName}" placeholder="Full name">
                 </div>
-                <div class="col-md-2">
-                    <div class="filter-label">Email</div>
-                    <input type="text" class="form-control form-control-sm" name="internEmail" value="${internEmail}" placeholder="email@...">
+                <div class="filter-group">
+                    <span class="filter-label">Email</span>
+                    <input class="filter-input" type="text" name="internEmail" value="${internEmail}" placeholder="email@...">
                 </div>
-                <div class="col-md-2">
-                    <div class="filter-label">Phone</div>
-                    <input type="text" class="form-control form-control-sm" name="internPhone" value="${internPhone}" placeholder="090...">
+                <div class="filter-group">
+                    <span class="filter-label">Phone</span>
+                    <input class="filter-input" type="text" name="internPhone" value="${internPhone}" placeholder="090...">
                 </div>
-                <div class="col-md-2">
-                    <div class="filter-label">Major / Business</div>
-                    <input type="text" class="form-control form-control-sm" name="internMajor" value="${internMajor}" placeholder="Major...">
+                <div class="filter-group">
+                    <span class="filter-label">Major</span>
+                    <input class="filter-input" type="text" name="internMajor" value="${internMajor}" placeholder="e.g. CS">
                 </div>
-                <div class="col-md-2">
-                    <div class="filter-label">University</div>
-                    <input type="text" class="form-control form-control-sm" name="internUniversity" value="${internUniversity}" placeholder="University...">
+                <div class="filter-group">
+                    <span class="filter-label">University</span>
+                    <input class="filter-input" type="text" name="internUniversity" value="${internUniversity}" placeholder="University">
                 </div>
-                <div class="col-auto">
-                    <button type="submit" class="btn btn-sm px-3" style="background:#6f42c1;color:#fff">
-                        <i class="bi bi-search me-1"></i>Search
-                    </button>
-                    <a href="${pageContext.request.contextPath}/admin/users" class="btn btn-outline-secondary btn-sm ms-1">Clear</a>
-                </div>
-            </div>
-        </form>
-
-        <!-- Intern Table -->
-        <div class="table-responsive">
-            <table class="table user-table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Code</th>
-                        <th>Full Name</th>
-                        <th>Major</th>
-                        <th>University</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>Status</th>
-                        <th class="text-center">Actions</th>
-                    </tr>
-                </thead>
+                <button type="submit" class="btn-filter primary" style="background:var(--intern-col)"><i class="bi bi-search"></i> Search</button>
+                <a href="${pageContext.request.contextPath}/admin/users" class="btn-filter ghost" style="text-decoration:none">Clear</a>
+            </form>
+            <table class="data-table">
+                <thead><tr>
+                    <th>User</th><th>Code</th><th>Major / University</th><th>Phone</th><th>Status</th><th>Actions</th>
+                </tr></thead>
                 <tbody>
                     <c:choose>
                         <c:when test="${empty internUsers}">
-                            <tr><td colspan="9" class="text-center text-muted py-4"><i class="bi bi-inbox me-2"></i>No Intern accounts found.</td></tr>
+                            <tr><td colspan="6"><div class="empty-state"><i class="bi bi-inbox"></i>No Intern accounts found.</div></td></tr>
                         </c:when>
                         <c:otherwise>
                             <c:forEach var="u" items="${internUsers}">
                                 <tr>
-                                    <td><span class="text-muted">#${u.id}</span></td>
-                                    <td><code>${not empty u.studentCode ? u.studentCode : 'N/A'}</code></td>
-                                    <td><strong>${u.fullName}</strong></td>
-                                    <td>${not empty u.major ? u.major : 'N/A'}</td>
-                                    <td>${not empty u.university ? u.university : 'N/A'}</td>
-                                    <td>${u.email}</td>
-                                    <td>${u.phone}</td>
+                                    <td>
+                                        <div class="user-cell">
+                                            <div class="user-avatar ua-intern">${fn:substring(u.fullName,0,1)}</div>
+                                            <div>
+                                                <div class="user-name">${u.fullName}</div>
+                                                <div class="user-email">${u.email}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><code style="background:#f1f5f9;padding:2px 6px;border-radius:5px;font-size:.75rem">${not empty u.studentCode ? u.studentCode : 'N/A'}</code></td>
+                                    <td>
+                                        <div style="font-size:.82rem;font-weight:500">${not empty u.major ? u.major : '-'}</div>
+                                        <div style="font-size:.73rem;color:var(--text-muted)">${not empty u.university ? u.university : '-'}</div>
+                                    </td>
+                                    <td style="color:var(--text-muted)">${u.phone}</td>
                                     <td>
                                         <c:choose>
-                                            <c:when test="${u.status == 'ACTIVE'}"><span class="badge badge-active">Active</span></c:when>
-                                            <c:otherwise><span class="badge badge-inactive">${u.status}</span></c:otherwise>
+                                            <c:when test="${u.status == 'ACTIVE'}"><span class="badge badge-active"><i class="bi bi-circle-fill" style="font-size:.4rem"></i>Active</span></c:when>
+                                            <c:otherwise><span class="badge badge-inactive"><i class="bi bi-circle-fill" style="font-size:.4rem"></i>${u.status}</span></c:otherwise>
                                         </c:choose>
                                     </td>
-                                    <td class="text-center">
-                                        <a href="${pageContext.request.contextPath}/admin/users/edit?id=${u.id}" class="btn btn-outline-primary btn-edit me-1">
-                                            <i class="bi bi-pencil"></i> Edit
-                                        </a>
-                                        <form method="post" action="${pageContext.request.contextPath}/admin/users/delete" class="d-inline"
-                                              onsubmit="return confirm('Delete Intern account ${u.fullName}?')">
-                                            <input type="hidden" name="id" value="${u.id}">
-                                            <button type="submit" class="btn btn-outline-danger btn-delete">
-                                                <i class="bi bi-trash"></i> Delete
-                                            </button>
-                                        </form>
+                                    <td>
+                                        <div class="action-group">
+                                            <a href="${pageContext.request.contextPath}/admin/users/edit?id=${u.id}" class="btn-icon edit" title="Edit"><i class="bi bi-pencil"></i></a>
+                                            <form method="post" action="${pageContext.request.contextPath}/admin/users/delete" style="display:inline" onsubmit="return confirm('Delete ${u.fullName}?')">
+                                                <input type="hidden" name="id" value="${u.id}">
+                                                <button type="submit" class="btn-icon delete" title="Delete"><i class="bi bi-trash"></i></button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -423,10 +587,23 @@
                 </tbody>
             </table>
         </div>
-    </div>
 
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </div><!-- /content -->
+</div><!-- /main -->
+<script>
+    function scrollTo(id) {
+        var el = document.getElementById(id);
+        if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+        return false;
+    }
+    // Auto-scroll if URL has a hash (e.g. #section-hr)
+    window.addEventListener('DOMContentLoaded', function() {
+        var hash = window.location.hash;
+        if (hash) {
+            var el = document.querySelector(hash);
+            if (el) setTimeout(function(){ el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 200);
+        }
+    });
+</script>
 </body>
 </html>

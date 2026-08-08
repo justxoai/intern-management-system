@@ -13,7 +13,8 @@ public class Task {
     private String description;
     private Long internId;
     private Long mentorId;
-    private String status; // TODO, IN_PROGRESS, DONE
+    private String status; // TODO, IN_PROGRESS, COMPLETED
+    private int progress;  // 0-100
     private LocalDate dueDate;
     private LocalDateTime createdAt;
 
@@ -40,6 +41,9 @@ public class Task {
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+
+    public int getProgress() { return progress; }
+    public void setProgress(int progress) { this.progress = progress; }
 
     public LocalDate getDueDate() { return dueDate; }
     public void setDueDate(LocalDate dueDate) { this.dueDate = dueDate; }

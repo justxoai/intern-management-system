@@ -201,6 +201,13 @@
         <h2 class="login-heading">Welcome back 👋</h2>
         <p class="login-sub">Sign in to access your dashboard</p>
 
+        <c:if test="${param.registered == '1'}">
+            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:10px;color:#15803d;font-size:.86rem;font-weight:500;margin-bottom:16px">
+                <i class="bi bi-check-circle-fill"></i>
+                Registration successful! Please sign in with your new account.
+            </div>
+        </c:if>
+
         <c:if test="${not empty error}">
             <div class="error-alert">
                 <i class="bi bi-exclamation-circle-fill"></i>
@@ -262,6 +269,9 @@
         </div>
 
         <p class="footer-note">© 2026 Internship Management System. All rights reserved.</p>
+        <p class="footer-note" style="margin-top:8px">
+            New intern? <a href="${pageContext.request.contextPath}/register" style="color:var(--accent);font-weight:600;text-decoration:none">Register here →</a>
+        </p>
     </div>
 </div>
 

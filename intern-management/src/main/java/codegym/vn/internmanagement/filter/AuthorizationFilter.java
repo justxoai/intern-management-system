@@ -35,7 +35,10 @@ public class AuthorizationFilter implements Filter {
         String path = uri.substring(contextPath.length());
 
         // Skip static assets or public auth endpoints
-        if (path.startsWith("/assets/") || path.equals("/login") || path.equals("/logout") || path.equals("/index.jsp") || path.equals("/")) {
+        if (path.startsWith("/assets/") || path.startsWith("/uploads/")
+                || path.equals("/login")   || path.equals("/logout")
+                || path.equals("/register")
+                || path.equals("/index.jsp") || path.equals("/")) {
             chain.doFilter(req, res);
             return;
         }
