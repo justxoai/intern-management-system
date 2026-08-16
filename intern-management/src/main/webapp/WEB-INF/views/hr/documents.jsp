@@ -109,28 +109,18 @@
 <aside class="sidebar">
     <div class="sidebar-brand">
         <div class="brand-icon"><i class="bi bi-building"></i></div>
-        <h1>Human Resource<br>Portal</h1>
-        <span>HR Management</span>
+        <h1>Human Resource</h1>
     </div>
-    <div class="sidebar-section-label">Overview</div>
+    <div class="sidebar-section-label">Management</div>
     <ul class="sidebar-nav">
         <li><a href="${pageContext.request.contextPath}/hr/dashboard">
             <i class="bi bi-grid"></i> Dashboard
         </a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/applications">
+            <i class="bi bi-clipboard-check"></i> Applications
+        </a></li>
         <li><a href="${pageContext.request.contextPath}/hr/documents" class="active">
             <i class="bi bi-folder-check"></i> Document Review
-        </a></li>
-        <li><a href="${pageContext.request.contextPath}/hr/contracts">
-            <i class="bi bi-file-earmark-text"></i> Contracts
-        </a></li>
-    </ul>
-    <div class="sidebar-section-label">Manage</div>
-    <ul class="sidebar-nav">
-        <li><a href="${pageContext.request.contextPath}/hr/dashboard">
-            <i class="bi bi-people"></i> Intern Profiles
-        </a></li>
-        <li><a href="${pageContext.request.contextPath}/hr/interns/create">
-            <i class="bi bi-person-plus"></i> Add Intern Profile
         </a></li>
     </ul>
     <div class="sidebar-footer">

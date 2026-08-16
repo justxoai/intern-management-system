@@ -2,7 +2,6 @@ package codegym.vn.internmanagement.controller.intern;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.List;
 
 import codegym.vn.internmanagement.entity.Intern;
 import codegym.vn.internmanagement.model.InternModel;
@@ -33,7 +32,7 @@ public class InternController extends HttpServlet {
         } else if ("/hr/interns/delete".equals(path)) {
             deleteIntern(request, response);
         } else {
-            listInterns(request, response);
+            response.sendRedirect(request.getContextPath() + "/hr/dashboard");
         }
     }
 
@@ -50,73 +49,89 @@ public class InternController extends HttpServlet {
         }
     }
 
-    private void listInterns(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String keyword = request.getParameter("keyword");
-        String university = request.getParameter("university");
-        String major = request.getParameter("major");
-        String status = request.getParameter("status");
-
-        List<Intern> interns = internModel.searchInterns(keyword, university, major, status);
-
-        request.setAttribute("interns", interns);
-        request.setAttribute("keyword", keyword);
-        request.setAttribute("university", university);
-        request.setAttribute("major", major);
-        request.setAttribute("status", status);
-
-        request.getRequestDispatcher("/WEB-INF/views/intern/list.jsp").forward(request, response);
-    }
-
     private void showCreateForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.getRequestDispatcher("/WEB-INF/views/intern/create.jsp").forward(request, response);
     }
 
     private void showEditForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String idStr = request.getParameter("id");
-        if (idStr == null || idStr.isEmpty()) {
-            response.sendRedirect(request.getContextPath() + "/hr/interns");
+        if (idStr == null || idStr.trim().isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/hr/dashboard");
             return;
         }
 
-        Long id = Long.parseLong(idStr);
-        Intern intern = internModel.getInternById(id);
+        try {
+            Long id = Long.parseLong(idStr.trim());
+            Intern intern = internModel.getInternById(id);
 
-        if (intern == null) {
-            response.sendRedirect(request.getContextPath() + "/hr/interns");
-            return;
+            if (intern == null) {
+                response.sendRedirect(request.getContextPath() + "/hr/dashboard");
+                return;
+            }
+
+            request.setAttribute("intern", intern);
+            request.getRequestDispatcher("/WEB-INF/views/intern/edit.jsp").forward(request, response);
+        } catch (NumberFormatException e) {
+            response.sendRedirect(request.getContextPath() + "/hr/dashboard");
         }
-
-        request.setAttribute("intern", intern);
-        request.getRequestDispatcher("/WEB-INF/views/intern/edit.jsp").forward(request, response);
     }
 
     private void deleteIntern(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String idStr = request.getParameter("id");
-        if (idStr != null && !idStr.isEmpty()) {
-            Long id = Long.parseLong(idStr);
-            internModel.deleteIntern(id);
+        if (idStr != null && !idStr.trim().isEmpty()) {
+            try {
+                Long id = Long.parseLong(idStr.trim());
+                internModel.deleteIntern(id);
+            } catch (Exception ignored) {}
         }
-        response.sendRedirect(request.getContextPath() + "/hr/interns");
+        response.sendRedirect(request.getContextPath() + "/hr/dashboard?success=Intern+profile+deleted");
     }
 
     private void createIntern(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Intern intern = new Intern();
-        intern.setStudentCode(request.getParameter("studentCode"));
-        intern.setUniversity(request.getParameter("university"));
-        intern.setMajor(request.getParameter("major"));
-        String dobStr = request.getParameter("dateOfBirth");
-        if (dobStr != null && !dobStr.isEmpty()) {
-            intern.setDateOfBirth(LocalDate.parse(dobStr));
+        intern.setStudentCode(trim(request.getParameter("studentCode")));
+        intern.setUniversity(trim(request.getParameter("university")));
+        intern.setMajor(trim(request.getParameter("major")));
+        String dobStr = trim(request.getParameter("dateOfBirth"));
+        if (!dobStr.isEmpty()) {
+            try { intern.setDateOfBirth(LocalDate.parse(dobStr)); } catch (Exception ignored) {}
         }
-        intern.setGender(request.getParameter("gender"));
-        intern.setAddress(request.getParameter("address"));
-        intern.setPhone(request.getParameter("phone"));
-        intern.setEmail(request.getParameter("email"));
-        String status = request.getParameter("status");
-        intern.setStatus(status != null ? status : "PENDING");
-        String userIdStr = request.getParameter("userId");
-        if (userIdStr != null && !userIdStr.isEmpty()) {
-            intern.setUserId(Long.parseLong(userIdStr));
+        intern.setGender(trim(request.getParameter("gender")));
+        intern.setAddress(trim(request.getParameter("address")));
+        intern.setPhone(trim(request.getParameter("phone")));
+        intern.setEmail(trim(request.getParameter("email")));
+        String status = trim(request.getParameter("status"));
+        intern.setStatus(!status.isEmpty() ? status : "PENDING");
+
+        String userIdStr = trim(request.getParameter("userId"));
+        if (!userIdStr.isEmpty()) {
+            try { intern.setUserId(Long.parseLong(userIdStr)); } catch (Exception ignored) {}
+        }
+
+        // Basic validation
+        if (intern.getStudentCode() == null || intern.getStudentCode().isEmpty()) {
+            request.setAttribute("error", "Student Code is required.");
+            request.setAttribute("intern", intern);
+            request.getRequestDispatcher("/WEB-INF/views/intern/create.jsp").forward(request, response);
+            return;
+        }
+        if (intern.getUniversity() == null || intern.getUniversity().isEmpty()) {
+            request.setAttribute("error", "University is required.");
+            request.setAttribute("intern", intern);
+            request.getRequestDispatcher("/WEB-INF/views/intern/create.jsp").forward(request, response);
+            return;
+        }
+        if (intern.getMajor() == null || intern.getMajor().isEmpty()) {
+            request.setAttribute("error", "Major is required.");
+            request.setAttribute("intern", intern);
+            request.getRequestDispatcher("/WEB-INF/views/intern/create.jsp").forward(request, response);
+            return;
+        }
+        if (intern.getEmail() == null || intern.getEmail().isEmpty()) {
+            request.setAttribute("error", "Email is required.");
+            request.setAttribute("intern", intern);
+            request.getRequestDispatcher("/WEB-INF/views/intern/create.jsp").forward(request, response);
+            return;
         }
 
         String error = internModel.createIntern(intern);
@@ -126,28 +141,45 @@ public class InternController extends HttpServlet {
             request.setAttribute("intern", intern);
             request.getRequestDispatcher("/WEB-INF/views/intern/create.jsp").forward(request, response);
         } else {
-            response.sendRedirect(request.getContextPath() + "/hr/interns");
+            response.sendRedirect(request.getContextPath() + "/hr/dashboard?success=Intern+profile+created");
         }
     }
 
     private void updateIntern(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String idStr = request.getParameter("id");
-        Long id = Long.parseLong(idStr);
-        Intern intern = internModel.getInternById(id);
+        String idStr = trim(request.getParameter("id"));
+        if (idStr.isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/hr/dashboard");
+            return;
+        }
 
-        if (intern != null) {
-            intern.setStudentCode(request.getParameter("studentCode"));
-            intern.setUniversity(request.getParameter("university"));
-            intern.setMajor(request.getParameter("major"));
-            String dobStr = request.getParameter("dateOfBirth");
-            if (dobStr != null && !dobStr.isEmpty()) {
-                intern.setDateOfBirth(LocalDate.parse(dobStr));
+        try {
+            Long id = Long.parseLong(idStr);
+            Intern intern = internModel.getInternById(id);
+
+            if (intern == null) {
+                response.sendRedirect(request.getContextPath() + "/hr/dashboard");
+                return;
             }
-            intern.setGender(request.getParameter("gender"));
-            intern.setAddress(request.getParameter("address"));
-            intern.setPhone(request.getParameter("phone"));
-            intern.setEmail(request.getParameter("email"));
-            intern.setStatus(request.getParameter("status"));
+
+            intern.setStudentCode(trim(request.getParameter("studentCode")));
+            intern.setUniversity(trim(request.getParameter("university")));
+            intern.setMajor(trim(request.getParameter("major")));
+            String dobStr = trim(request.getParameter("dateOfBirth"));
+            if (!dobStr.isEmpty()) {
+                try { intern.setDateOfBirth(LocalDate.parse(dobStr)); } catch (Exception ignored) {}
+            }
+            intern.setGender(trim(request.getParameter("gender")));
+            intern.setAddress(trim(request.getParameter("address")));
+            intern.setPhone(trim(request.getParameter("phone")));
+            intern.setEmail(trim(request.getParameter("email")));
+            intern.setStatus(trim(request.getParameter("status")));
+
+            if (intern.getStudentCode() == null || intern.getStudentCode().isEmpty()) {
+                request.setAttribute("error", "Student Code is required.");
+                request.setAttribute("intern", intern);
+                request.getRequestDispatcher("/WEB-INF/views/intern/edit.jsp").forward(request, response);
+                return;
+            }
 
             String error = internModel.updateIntern(intern);
 
@@ -157,7 +189,14 @@ public class InternController extends HttpServlet {
                 request.getRequestDispatcher("/WEB-INF/views/intern/edit.jsp").forward(request, response);
                 return;
             }
+
+            response.sendRedirect(request.getContextPath() + "/hr/dashboard?success=Intern+profile+updated");
+        } catch (NumberFormatException e) {
+            response.sendRedirect(request.getContextPath() + "/hr/dashboard");
         }
-        response.sendRedirect(request.getContextPath() + "/hr/interns");
+    }
+
+    private String trim(String v) {
+        return v == null ? "" : v.trim();
     }
 }

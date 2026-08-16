@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin Dashboard — User Management</title>
+    <title>Account Management — Admin Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
@@ -98,10 +98,6 @@
         .page-title { font-size: 1.2rem; font-weight: 700; color: var(--text-primary); }
         .page-sub   { font-size: .8rem; color: var(--text-muted); margin-top: 1px; }
         .topbar-actions { display: flex; align-items: center; gap: 10px; }
-        .topbar-badge {
-            background: #eff6ff; color: #2563eb; border-radius: 20px;
-            padding: 4px 12px; font-size: .75rem; font-weight: 600;
-        }
 
         /* Content */
         .content { padding: 28px 32px; flex: 1; }
@@ -138,16 +134,12 @@
             border-bottom: 1px solid var(--border);
         }
         .sec-header-left { display: flex; align-items: center; gap: 10px; }
-        .sec-dot {
-            width: 10px; height: 10px; border-radius: 50%;
-        }
+        .sec-dot { width: 10px; height: 10px; border-radius: 50%; }
         .dot-hr     { background: var(--hr-col); }
         .dot-mentor { background: var(--mentor-col); }
         .dot-intern { background: var(--intern-col); }
         .sec-title { font-size: .95rem; font-weight: 700; color: var(--text-primary); }
-        .sec-count {
-            font-size: .72rem; font-weight: 600; padding: 2px 9px; border-radius: 20px;
-        }
+        .sec-count { font-size: .72rem; font-weight: 600; padding: 2px 9px; border-radius: 20px; }
         .count-hr     { background: #eff6ff; color: var(--hr-col); }
         .count-mentor { background: #f0fdf4; color: var(--mentor-col); }
         .count-intern { background: #f5f3ff; color: var(--intern-col); }
@@ -159,13 +151,13 @@
         }
         .filter-group { display: flex; flex-direction: column; gap: 4px; }
         .filter-label { font-size: .68rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .4px; }
-        .filter-input, .filter-select {
+        .filter-input {
             padding: 7px 10px; border: 1.5px solid var(--border); border-radius: 8px;
             font-family: 'Inter', sans-serif; font-size: .81rem; color: var(--text-primary);
             background: #fff; outline: none; transition: border-color .2s;
-            min-width: 110px;
+            min-width: 140px;
         }
-        .filter-input:focus, .filter-select:focus { border-color: var(--accent); }
+        .filter-input:focus { border-color: var(--accent); }
 
         .btn-filter {
             padding: 7px 16px; border-radius: 8px; border: none; cursor: pointer;
@@ -211,15 +203,7 @@
         .ua-hr     { background: linear-gradient(135deg, #3b82f6, #60a5fa); }
         .ua-mentor { background: linear-gradient(135deg, #10b981, #34d399); }
         .ua-intern { background: linear-gradient(135deg, #8b5cf6, #a78bfa); }
-        .user-name { font-weight: 600; font-size: .85rem; }
-        .user-email { font-size: .75rem; color: var(--text-muted); }
-
-        .badge {
-            display: inline-flex; align-items: center; gap: 4px;
-            padding: 3px 10px; border-radius: 20px; font-size: .7rem; font-weight: 600;
-        }
-        .badge-active   { background: #f0fdf4; color: #16a34a; }
-        .badge-inactive { background: #fef2f2; color: #dc2626; }
+        .user-name { font-weight: 600; font-size: .85rem; color: var(--text-primary); }
 
         .action-group { display: flex; align-items: center; gap: 6px; }
         .btn-icon {
@@ -241,7 +225,7 @@
 <aside class="sidebar">
     <div class="sidebar-brand">
         <div class="brand-icon"><i class="bi bi-shield-check"></i></div>
-        <h1>Internship<br>Management</h1>
+        <h1>Account<br>Management</h1>
         <span>Admin Panel</span>
     </div>
 
@@ -250,20 +234,16 @@
         <li><a href="${pageContext.request.contextPath}/admin/users" class="active">
             <i class="bi bi-people"></i> User Accounts
         </a></li>
-    </ul>
-
-    <div class="sidebar-section-label">Quick Links</div>
-    <ul class="sidebar-nav">
         <li><a href="${pageContext.request.contextPath}/admin/users/create">
             <i class="bi bi-person-plus"></i> Add New User
         </a></li>
-        <li><a href="#section-hr" onclick="scrollTo('section-hr')">
+        <li><a href="#section-hr" onclick="return scrollToSection('section-hr')">
             <i class="bi bi-building"></i> HR Section
         </a></li>
-        <li><a href="#section-mentor" onclick="scrollTo('section-mentor')">
+        <li><a href="#section-mentor" onclick="return scrollToSection('section-mentor')">
             <i class="bi bi-mortarboard"></i> Mentor Section
         </a></li>
-        <li><a href="#section-intern" onclick="scrollTo('section-intern')">
+        <li><a href="#section-intern" onclick="return scrollToSection('section-intern')">
             <i class="bi bi-person-workspace"></i> Intern Section
         </a></li>
     </ul>
@@ -287,11 +267,10 @@
     <!-- Topbar -->
     <div class="topbar">
         <div>
-            <div class="page-title">User Management</div>
+            <div class="page-title">Account Management</div>
             <div class="page-sub">Manage all HR, Mentor, and Intern accounts</div>
         </div>
         <div class="topbar-actions">
-            <span class="topbar-badge"><i class="bi bi-circle-fill me-1" style="font-size:.45rem;color:#22c55e"></i>System Online</span>
             <a href="${pageContext.request.contextPath}/admin/users/create"
                style="padding:8px 16px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);color:#fff;border-radius:9px;text-decoration:none;font-size:.82rem;font-weight:600;display:flex;align-items:center;gap:6px;">
                 <i class="bi bi-plus-lg"></i> New User
@@ -338,14 +317,11 @@
                     <i class="bi bi-plus-lg"></i> Add HR
                 </a>
             </div>
+            <%-- Filter matches table header: Fullname, Email, Phone --%>
             <form class="filter-bar" method="get" action="${pageContext.request.contextPath}/admin/users">
                 <div class="filter-group">
-                    <span class="filter-label">ID</span>
-                    <input class="filter-input" type="text" name="hrId" value="${hrId}" placeholder="e.g. 2" style="width:80px">
-                </div>
-                <div class="filter-group">
-                    <span class="filter-label">Name</span>
-                    <input class="filter-input" type="text" name="hrName" value="${hrName}" placeholder="Full name">
+                    <span class="filter-label">Fullname</span>
+                    <input class="filter-input" type="text" name="hrName" value="${hrName}" placeholder="Search name...">
                 </div>
                 <div class="filter-group">
                     <span class="filter-label">Email</span>
@@ -355,25 +331,20 @@
                     <span class="filter-label">Phone</span>
                     <input class="filter-input" type="text" name="hrPhone" value="${hrPhone}" placeholder="090...">
                 </div>
-                <div class="filter-group">
-                    <span class="filter-label">Status</span>
-                    <select class="filter-select" name="hrStatus" style="width:110px">
-                        <option value="">All</option>
-                        <option value="ACTIVE"   ${hrStatus == 'ACTIVE'   ? 'selected' : ''}>Active</option>
-                        <option value="INACTIVE" ${hrStatus == 'INACTIVE' ? 'selected' : ''}>Inactive</option>
-                    </select>
-                </div>
                 <button type="submit" class="btn-filter primary"><i class="bi bi-search"></i> Search</button>
                 <a href="${pageContext.request.contextPath}/admin/users" class="btn-filter ghost" style="text-decoration:none">Clear</a>
             </form>
             <table class="data-table">
                 <thead><tr>
-                    <th>User</th><th>Phone</th><th>Status</th><th>Created</th><th>Actions</th>
+                    <th>Fullname</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Actions</th>
                 </tr></thead>
                 <tbody>
                     <c:choose>
                         <c:when test="${empty hrUsers}">
-                            <tr><td colspan="5"><div class="empty-state"><i class="bi bi-inbox"></i>No HR accounts found.</div></td></tr>
+                            <tr><td colspan="4"><div class="empty-state"><i class="bi bi-inbox"></i>No HR accounts found.</div></td></tr>
                         </c:when>
                         <c:otherwise>
                             <c:forEach var="u" items="${hrUsers}">
@@ -381,20 +352,11 @@
                                     <td>
                                         <div class="user-cell">
                                             <div class="user-avatar ua-hr">${fn:substring(u.fullName,0,1)}</div>
-                                            <div>
-                                                <div class="user-name">${u.fullName}</div>
-                                                <div class="user-email">${u.email}</div>
-                                            </div>
+                                            <div class="user-name">${u.fullName}</div>
                                         </div>
                                     </td>
-                                    <td style="color:var(--text-muted)">${u.phone}</td>
-                                    <td>
-                                        <c:choose>
-                                            <c:when test="${u.status == 'ACTIVE'}"><span class="badge badge-active"><i class="bi bi-circle-fill" style="font-size:.4rem"></i>Active</span></c:when>
-                                            <c:otherwise><span class="badge badge-inactive"><i class="bi bi-circle-fill" style="font-size:.4rem"></i>${u.status}</span></c:otherwise>
-                                        </c:choose>
-                                    </td>
-                                    <td style="color:var(--text-muted);font-size:.78rem">${u.createdAt}</td>
+                                    <td>${u.email}</td>
+                                    <td style="color:var(--text-muted)">${not empty u.phone ? u.phone : '-'}</td>
                                     <td>
                                         <div class="action-group">
                                             <a href="${pageContext.request.contextPath}/admin/users/edit?id=${u.id}" class="btn-icon edit" title="Edit"><i class="bi bi-pencil"></i></a>
@@ -424,14 +386,11 @@
                     <i class="bi bi-plus-lg"></i> Add Mentor
                 </a>
             </div>
+            <%-- Filter matches table header: Fullname, Email, Phone --%>
             <form class="filter-bar" method="get" action="${pageContext.request.contextPath}/admin/users">
                 <div class="filter-group">
-                    <span class="filter-label">ID</span>
-                    <input class="filter-input" type="text" name="mentorId" value="${mentorId}" placeholder="e.g. 3" style="width:80px">
-                </div>
-                <div class="filter-group">
-                    <span class="filter-label">Name</span>
-                    <input class="filter-input" type="text" name="mentorName" value="${mentorName}" placeholder="Full name">
+                    <span class="filter-label">Fullname</span>
+                    <input class="filter-input" type="text" name="mentorName" value="${mentorName}" placeholder="Search name...">
                 </div>
                 <div class="filter-group">
                     <span class="filter-label">Email</span>
@@ -441,25 +400,20 @@
                     <span class="filter-label">Phone</span>
                     <input class="filter-input" type="text" name="mentorPhone" value="${mentorPhone}" placeholder="090...">
                 </div>
-                <div class="filter-group">
-                    <span class="filter-label">Status</span>
-                    <select class="filter-select" name="mentorStatus" style="width:110px">
-                        <option value="">All</option>
-                        <option value="ACTIVE"   ${mentorStatus == 'ACTIVE'   ? 'selected' : ''}>Active</option>
-                        <option value="INACTIVE" ${mentorStatus == 'INACTIVE' ? 'selected' : ''}>Inactive</option>
-                    </select>
-                </div>
                 <button type="submit" class="btn-filter primary" style="background:var(--mentor-col)"><i class="bi bi-search"></i> Search</button>
                 <a href="${pageContext.request.contextPath}/admin/users" class="btn-filter ghost" style="text-decoration:none">Clear</a>
             </form>
             <table class="data-table">
                 <thead><tr>
-                    <th>User</th><th>Phone</th><th>Status</th><th>Created</th><th>Actions</th>
+                    <th>Fullname</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Actions</th>
                 </tr></thead>
                 <tbody>
                     <c:choose>
                         <c:when test="${empty mentorUsers}">
-                            <tr><td colspan="5"><div class="empty-state"><i class="bi bi-inbox"></i>No Mentor accounts found.</div></td></tr>
+                            <tr><td colspan="4"><div class="empty-state"><i class="bi bi-inbox"></i>No Mentor accounts found.</div></td></tr>
                         </c:when>
                         <c:otherwise>
                             <c:forEach var="u" items="${mentorUsers}">
@@ -467,20 +421,11 @@
                                     <td>
                                         <div class="user-cell">
                                             <div class="user-avatar ua-mentor">${fn:substring(u.fullName,0,1)}</div>
-                                            <div>
-                                                <div class="user-name">${u.fullName}</div>
-                                                <div class="user-email">${u.email}</div>
-                                            </div>
+                                            <div class="user-name">${u.fullName}</div>
                                         </div>
                                     </td>
-                                    <td style="color:var(--text-muted)">${u.phone}</td>
-                                    <td>
-                                        <c:choose>
-                                            <c:when test="${u.status == 'ACTIVE'}"><span class="badge badge-active"><i class="bi bi-circle-fill" style="font-size:.4rem"></i>Active</span></c:when>
-                                            <c:otherwise><span class="badge badge-inactive"><i class="bi bi-circle-fill" style="font-size:.4rem"></i>${u.status}</span></c:otherwise>
-                                        </c:choose>
-                                    </td>
-                                    <td style="color:var(--text-muted);font-size:.78rem">${u.createdAt}</td>
+                                    <td>${u.email}</td>
+                                    <td style="color:var(--text-muted)">${not empty u.phone ? u.phone : '-'}</td>
                                     <td>
                                         <div class="action-group">
                                             <a href="${pageContext.request.contextPath}/admin/users/edit?id=${u.id}" class="btn-icon edit" title="Edit"><i class="bi bi-pencil"></i></a>
@@ -510,14 +455,11 @@
                     <i class="bi bi-plus-lg"></i> Add Intern
                 </a>
             </div>
+            <%-- Filter matches table header: Fullname, Email, Phone, Major, University --%>
             <form class="filter-bar" method="get" action="${pageContext.request.contextPath}/admin/users">
                 <div class="filter-group">
-                    <span class="filter-label">ID / Code</span>
-                    <input class="filter-input" type="text" name="internId" value="${internId}" placeholder="ID or code" style="width:95px">
-                </div>
-                <div class="filter-group">
-                    <span class="filter-label">Name</span>
-                    <input class="filter-input" type="text" name="internName" value="${internName}" placeholder="Full name">
+                    <span class="filter-label">Fullname</span>
+                    <input class="filter-input" type="text" name="internName" value="${internName}" placeholder="Search name...">
                 </div>
                 <div class="filter-group">
                     <span class="filter-label">Email</span>
@@ -540,7 +482,12 @@
             </form>
             <table class="data-table">
                 <thead><tr>
-                    <th>User</th><th>Code</th><th>Major / University</th><th>Phone</th><th>Status</th><th>Actions</th>
+                    <th>Fullname</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Major</th>
+                    <th>University</th>
+                    <th>Actions</th>
                 </tr></thead>
                 <tbody>
                     <c:choose>
@@ -553,24 +500,15 @@
                                     <td>
                                         <div class="user-cell">
                                             <div class="user-avatar ua-intern">${fn:substring(u.fullName,0,1)}</div>
-                                            <div>
-                                                <div class="user-name">${u.fullName}</div>
-                                                <div class="user-email">${u.email}</div>
-                                            </div>
+                                            <div class="user-name">${u.fullName}</div>
                                         </div>
                                     </td>
-                                    <td><code style="background:#f1f5f9;padding:2px 6px;border-radius:5px;font-size:.75rem">${not empty u.studentCode ? u.studentCode : 'N/A'}</code></td>
+                                    <td>${u.email}</td>
+                                    <td style="color:var(--text-muted)">${not empty u.phone ? u.phone : '-'}</td>
                                     <td>
-                                        <div style="font-size:.82rem;font-weight:500">${not empty u.major ? u.major : '-'}</div>
-                                        <div style="font-size:.73rem;color:var(--text-muted)">${not empty u.university ? u.university : '-'}</div>
+                                        <div style="font-weight:500">${not empty u.major ? u.major : '-'}</div>
                                     </td>
-                                    <td style="color:var(--text-muted)">${u.phone}</td>
-                                    <td>
-                                        <c:choose>
-                                            <c:when test="${u.status == 'ACTIVE'}"><span class="badge badge-active"><i class="bi bi-circle-fill" style="font-size:.4rem"></i>Active</span></c:when>
-                                            <c:otherwise><span class="badge badge-inactive"><i class="bi bi-circle-fill" style="font-size:.4rem"></i>${u.status}</span></c:otherwise>
-                                        </c:choose>
-                                    </td>
+                                    <td style="color:var(--text-muted)">${not empty u.university ? u.university : '-'}</td>
                                     <td>
                                         <div class="action-group">
                                             <a href="${pageContext.request.contextPath}/admin/users/edit?id=${u.id}" class="btn-icon edit" title="Edit"><i class="bi bi-pencil"></i></a>
@@ -591,9 +529,12 @@
     </div><!-- /content -->
 </div><!-- /main -->
 <script>
-    function scrollTo(id) {
+    function scrollToSection(id) {
         var el = document.getElementById(id);
-        if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+        if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            history.pushState(null, null, '#' + id);
+        }
         return false;
     }
     // Auto-scroll if URL has a hash (e.g. #section-hr)

@@ -135,6 +135,9 @@
         <li><a href="${pageContext.request.contextPath}/intern/contracts">
             <i class="bi bi-file-earmark-check"></i> My Contracts
         </a></li>
+        <li><a href="${pageContext.request.contextPath}/intern/tasks">
+            <i class="bi bi-list-task"></i> My Tasks
+        </a></li>
     </ul>
     <div class="sidebar-footer">
         <div class="sidebar-user">

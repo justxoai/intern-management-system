@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Sign In — Internship Management System</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -46,30 +46,20 @@
             bottom: -80px; right: -80px;
         }
         .brand-icon {
-            width: 72px; height: 72px;
+            width: 80px; height: 80px;
             background: rgba(255,255,255,.15);
-            border-radius: 20px;
+            border-radius: 24px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 2rem; color: #fff;
-            margin-bottom: 28px;
+            font-size: 2.4rem; color: #fff;
+            margin-bottom: 24px;
             backdrop-filter: blur(8px);
             border: 1px solid rgba(255,255,255,.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,.15);
         }
-        .brand-title { color: #fff; font-size: 1.9rem; font-weight: 700; text-align: center; margin-bottom: 12px; line-height: 1.2; }
-        .brand-sub   { color: rgba(255,255,255,.7); font-size: .95rem; text-align: center; line-height: 1.6; max-width: 340px; margin-bottom: 48px; }
-
-        .feature-list { list-style: none; width: 100%; max-width: 340px; }
-        .feature-list li {
-            display: flex; align-items: center; gap: 12px;
-            color: rgba(255,255,255,.85); font-size: .88rem;
-            padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,.1);
-        }
-        .feature-list li:last-child { border-bottom: none; }
-        .feature-list .fi {
-            width: 32px; height: 32px; border-radius: 8px;
-            background: rgba(255,255,255,.12);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1rem; flex-shrink: 0;
+        .brand-title {
+            color: #fff; font-size: 2.2rem; font-weight: 700;
+            text-align: center; line-height: 1.25;
+            letter-spacing: -.5px;
         }
 
         /* ── Right Panel ── */
@@ -84,8 +74,8 @@
 
         .login-box { width: 100%; max-width: 400px; }
 
-        .login-heading { font-size: 1.65rem; font-weight: 700; color: #0f2350; margin-bottom: 6px; }
-        .login-sub     { color: #64748b; font-size: .9rem; margin-bottom: 36px; }
+        .login-heading { font-size: 1.75rem; font-weight: 700; color: #0f2350; margin-bottom: 6px; letter-spacing: -.4px; }
+        .login-sub     { color: #64748b; font-size: .92rem; margin-bottom: 32px; }
 
         .form-group { margin-bottom: 20px; }
         .form-label {
@@ -139,27 +129,9 @@
         }
         .btn-login:active { transform: translateY(0); }
 
-        .divider { display: flex; align-items: center; gap: 12px; margin: 28px 0 20px; }
-        .divider hr { flex: 1; border: none; border-top: 1px solid #e2e8f0; }
-        .divider span { color: #94a3b8; font-size: .8rem; }
-
-        .demo-accounts { background: #f1f5f9; border-radius: 10px; padding: 16px 18px; }
-        .demo-title { font-size: .75rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: .4px; margin-bottom: 10px; }
-        .demo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .demo-item {
-            background: #fff; border-radius: 8px; padding: 10px 12px;
-            border: 1px solid #e2e8f0; cursor: pointer;
-            transition: border-color .2s, box-shadow .15s;
-        }
-        .demo-item:hover { border-color: #1565c0; box-shadow: 0 2px 8px rgba(21,101,192,.12); }
-        .demo-role { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; margin-bottom: 2px; }
-        .demo-creds { font-size: .78rem; color: #64748b; font-family: monospace; }
-        .role-admin  { color: #dc2626; }
-        .role-hr     { color: #0891b2; }
-        .role-mentor { color: #059669; }
-        .role-intern { color: #7c3aed; }
-
-        .footer-note { text-align: center; color: #94a3b8; font-size: .78rem; margin-top: 28px; }
+        .footer-note { text-align: center; color: #64748b; font-size: .87rem; margin-top: 24px; }
+        .footer-note a { color: #1565c0; font-weight: 600; text-decoration: none; }
+        .footer-note a:hover { text-decoration: underline; }
 
         @media (max-width: 768px) {
             body { grid-template-columns: 1fr; }
@@ -174,31 +146,12 @@
 <div class="left-panel">
     <div class="brand-icon"><i class="bi bi-mortarboard-fill"></i></div>
     <h1 class="brand-title">Internship<br>Management System</h1>
-    <p class="brand-sub">A unified platform for managing your internship program from onboarding to evaluation.</p>
-    <ul class="feature-list">
-        <li>
-            <span class="fi"><i class="bi bi-shield-check"></i></span>
-            Role-based access control
-        </li>
-        <li>
-            <span class="fi"><i class="bi bi-people"></i></span>
-            Intern & mentor management
-        </li>
-        <li>
-            <span class="fi"><i class="bi bi-list-task"></i></span>
-            Task assignment & tracking
-        </li>
-        <li>
-            <span class="fi"><i class="bi bi-bar-chart"></i></span>
-            Progress reports & evaluations
-        </li>
-    </ul>
 </div>
 
 <!-- Right login panel -->
 <div class="right-panel">
     <div class="login-box">
-        <h2 class="login-heading">Welcome back 👋</h2>
+        <h2 class="login-heading">Welcome back</h2>
         <p class="login-sub">Sign in to access your dashboard</p>
 
         <c:if test="${param.registered == '1'}">
@@ -231,7 +184,7 @@
                     <i class="bi bi-lock input-icon"></i>
                     <input type="password" id="password" name="password" class="form-input"
                            placeholder="Enter your password" required autocomplete="current-password">
-                    <button type="button" class="toggle-pass" onclick="togglePassword()" id="toggleBtn">
+                    <button type="button" class="toggle-pass" onclick="togglePassword()" id="toggleBtn" title="Toggle password visibility">
                         <i class="bi bi-eye" id="eyeIcon"></i>
                     </button>
                 </div>
@@ -242,35 +195,8 @@
             </button>
         </form>
 
-        <div class="divider">
-            <hr><span>Quick access demo accounts</span><hr>
-        </div>
-
-        <div class="demo-accounts">
-            <div class="demo-title">Demo Credentials (all passwords: 123456)</div>
-            <div class="demo-grid">
-                <div class="demo-item" onclick="fillLogin('admin','123456')">
-                    <div class="demo-role role-admin"><i class="bi bi-shield-fill me-1"></i>Admin</div>
-                    <div class="demo-creds">admin / 123456</div>
-                </div>
-                <div class="demo-item" onclick="fillLogin('hr01','123456')">
-                    <div class="demo-role role-hr"><i class="bi bi-building me-1"></i>HR</div>
-                    <div class="demo-creds">hr01 / 123456</div>
-                </div>
-                <div class="demo-item" onclick="fillLogin('mentor01','123456')">
-                    <div class="demo-role role-mentor"><i class="bi bi-mortarboard me-1"></i>Mentor</div>
-                    <div class="demo-creds">mentor01 / 123456</div>
-                </div>
-                <div class="demo-item" onclick="fillLogin('intern01','123456')">
-                    <div class="demo-role role-intern"><i class="bi bi-person-workspace me-1"></i>Intern</div>
-                    <div class="demo-creds">intern01 / 123456</div>
-                </div>
-            </div>
-        </div>
-
-        <p class="footer-note">© 2026 Internship Management System. All rights reserved.</p>
-        <p class="footer-note" style="margin-top:8px">
-            New intern? <a href="${pageContext.request.contextPath}/register" style="color:var(--accent);font-weight:600;text-decoration:none">Register here →</a>
+        <p class="footer-note">
+            New intern? <a href="${pageContext.request.contextPath}/register">Register here &rarr;</a>
         </p>
     </div>
 </div>
@@ -286,12 +212,6 @@
             pw.type = 'password';
             ico.className = 'bi bi-eye';
         }
-    }
-
-    function fillLogin(user, pass) {
-        document.getElementById('username').value = user;
-        document.getElementById('password').value = pass;
-        document.getElementById('loginBtn').focus();
     }
 
     // Prevent double-submit

@@ -17,7 +17,7 @@ public class DocumentDAO {
         String sql = "SELECT d.*, u.full_name AS intern_name, rv.full_name AS reviewer_name " +
                      "FROM documents d " +
                      "JOIN interns i ON d.intern_id = i.id " +
-                     "JOIN users u ON i.user_id = u.id " +
+                     "LEFT JOIN users u ON i.user_id = u.id " +
                      "LEFT JOIN users rv ON d.reviewed_by = rv.id " +
                      "WHERE d.intern_id = ? ORDER BY d.uploaded_at DESC";
         return query(sql, internId);
@@ -29,7 +29,7 @@ public class DocumentDAO {
             "SELECT d.*, u.full_name AS intern_name, rv.full_name AS reviewer_name " +
             "FROM documents d " +
             "JOIN interns i ON d.intern_id = i.id " +
-            "JOIN users u ON i.user_id = u.id " +
+            "LEFT JOIN users u ON i.user_id = u.id " +
             "LEFT JOIN users rv ON d.reviewed_by = rv.id WHERE 1=1");
         List<Object> params = new ArrayList<>();
         if (statusFilter != null && !statusFilter.isBlank()) {
@@ -64,15 +64,50 @@ public class DocumentDAO {
         return false;
     }
 
-    /** Approve or reject a document; records the reviewing HR user. */
+    /**
+     * Approve or reject a document; records the reviewing HR user.
+     * Synchronizes status with contracts table (if CONTRACT) and internship_applications table (if INTERNSHIP_APPLICATION).
+     */
     public boolean updateStatus(Long docId, String newStatus, Long reviewedByUserId) {
         String sql = "UPDATE documents SET status=?, reviewed_by=?, reviewed_at=NOW() WHERE id=?";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, newStatus);
-            ps.setLong(2, reviewedByUserId);
-            ps.setLong(3, docId);
-            return ps.executeUpdate() > 0;
+        try (Connection conn = DBConnection.getConnection()) {
+            conn.setAutoCommit(false);
+            try {
+                try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                    ps.setString(1, newStatus);
+                    ps.setLong(2, reviewedByUserId);
+                    ps.setLong(3, docId);
+                    ps.executeUpdate();
+                }
+
+                // If document is CONTRACT, update contracts table
+                String contractStatus = "APPROVED".equalsIgnoreCase(newStatus) ? "CONFIRMED" : "CANCELLED";
+                try (PreparedStatement psContract = conn.prepareStatement(
+                        "UPDATE contracts SET status=? WHERE document_id=?")) {
+                    psContract.setString(1, contractStatus);
+                    psContract.setLong(2, docId);
+                    psContract.executeUpdate();
+                }
+
+                // If document is INTERNSHIP_APPLICATION, update internship_applications table
+                try (PreparedStatement psApp = conn.prepareStatement(
+                        "UPDATE internship_applications a JOIN documents d ON a.intern_id = d.intern_id " +
+                        "SET a.status=?, a.reviewed_by=?, a.reviewed_at=NOW() " +
+                        "WHERE d.id=? AND d.document_type='INTERNSHIP_APPLICATION'")) {
+                    psApp.setString(1, newStatus);
+                    psApp.setLong(2, reviewedByUserId);
+                    psApp.setLong(3, docId);
+                    psApp.executeUpdate();
+                }
+
+                conn.commit();
+                return true;
+            } catch (SQLException e) {
+                conn.rollback();
+                e.printStackTrace();
+            } finally {
+                conn.setAutoCommit(true);
+            }
         } catch (SQLException e) { e.printStackTrace(); }
         return false;
     }

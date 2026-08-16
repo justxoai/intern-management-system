@@ -18,6 +18,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.regex.Pattern;
 
 /**
  * Public registration page for interns.
@@ -26,6 +27,11 @@ import java.time.LocalDate;
  */
 @WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
+
+    private static final Pattern EMAIL_PATTERN =
+            Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
+    private static final Pattern PHONE_PATTERN =
+            Pattern.compile("^(?:\\+84|0)[0-9]{9,10}$");
 
     private UserModel userModel;
     private UserDAO   userDAO;
@@ -60,15 +66,82 @@ public class RegisterServlet extends HttpServlet {
         String major       = trim(request.getParameter("major"));
         String dobStr      = trim(request.getParameter("dateOfBirth"));
         String gender      = trim(request.getParameter("gender"));
-        String address     = trim(request.getParameter("address"));
 
-        // --- Basic validation ---
-        if (!password.equals(confirm)) {
-            error(request, response, "Passwords do not match.", username, fullName, email);
+        // Helper to forward with preserved fields
+        FormData data = new FormData(username, fullName, email, phone, studentCode, university, major, dobStr, gender);
+
+        // --- Validation ---
+        if (username.isEmpty()) {
+            error(request, response, "Username is required.", data);
             return;
         }
-        if (university.isEmpty() || major.isEmpty()) {
-            error(request, response, "University and Major are required.", username, fullName, email);
+        if (fullName.isEmpty()) {
+            error(request, response, "Full Name is required.", data);
+            return;
+        }
+
+        // Password requirements: 1 Upper, 1 Normal, 1 Number, 1 Special Key, min 6 chars
+        if (password.isEmpty()) {
+            error(request, response, "Password is required.", data);
+            return;
+        }
+        boolean hasUpper   = password.chars().anyMatch(Character::isUpperCase);
+        boolean hasLower   = password.chars().anyMatch(Character::isLowerCase);
+        boolean hasDigit   = password.chars().anyMatch(Character::isDigit);
+        boolean hasSpecial = password.chars().anyMatch(ch -> !Character.isLetterOrDigit(ch));
+
+        if (password.length() < 6 || !hasUpper || !hasLower || !hasDigit || !hasSpecial) {
+            error(request, response, "Password must be at least 6 characters and include at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character.", data);
+            return;
+        }
+        if (!password.equals(confirm)) {
+            error(request, response, "Passwords do not match.", data);
+            return;
+        }
+
+        // Email validation
+        if (email.isEmpty()) {
+            error(request, response, "Email is required.", data);
+            return;
+        }
+        if (!EMAIL_PATTERN.matcher(email).matches()) {
+            error(request, response, "Please enter a valid email address.", data);
+            return;
+        }
+
+        // Phone validation
+        if (phone.isEmpty()) {
+            error(request, response, "Phone number is required.", data);
+            return;
+        }
+        if (!PHONE_PATTERN.matcher(phone).matches()) {
+            error(request, response, "Please enter a valid phone number (e.g. 0901234567 or +84901234567).", data);
+            return;
+        }
+
+        // Student Code validation
+        if (studentCode.isEmpty()) {
+            error(request, response, "Student Code is required.", data);
+            return;
+        }
+
+        // Academic validation
+        if (university.isEmpty()) {
+            error(request, response, "University is required.", data);
+            return;
+        }
+        if (major.isEmpty()) {
+            error(request, response, "Major is required.", data);
+            return;
+        }
+
+        // Uniqueness checks
+        if (userDAO.existsByUsername(username)) {
+            error(request, response, "Username is already taken.", data);
+            return;
+        }
+        if (userDAO.existsByEmail(email)) {
+            error(request, response, "Email is already registered.", data);
             return;
         }
 
@@ -83,14 +156,14 @@ public class RegisterServlet extends HttpServlet {
 
         String err = userModel.createUser(user);
         if (err != null) {
-            error(request, response, err, username, fullName, email);
+            error(request, response, err, data);
             return;
         }
 
         // Retrieve the new user to get generated ID
         User created = userDAO.findByUsername(username);
         if (created == null) {
-            error(request, response, "Registration failed. Please try again.", username, fullName, email);
+            error(request, response, "Registration failed. Please try again.", data);
             return;
         }
 
@@ -101,7 +174,7 @@ public class RegisterServlet extends HttpServlet {
         intern.setUniversity(university);
         intern.setMajor(major);
         intern.setGender(gender.isEmpty() ? null : gender);
-        intern.setAddress(address);
+        intern.setAddress("");
         intern.setPhone(phone);
         intern.setEmail(email);
         if (!dobStr.isEmpty()) {
@@ -130,13 +203,34 @@ public class RegisterServlet extends HttpServlet {
         } catch (SQLException e) { e.printStackTrace(); }
     }
 
-    private void error(HttpServletRequest req, HttpServletResponse res, String msg,
-                       String username, String fullName, String email)
+    private static class FormData {
+        final String username, fullName, email, phone, studentCode, university, major, dateOfBirth, gender;
+        FormData(String username, String fullName, String email, String phone, String studentCode,
+                 String university, String major, String dateOfBirth, String gender) {
+            this.username = username;
+            this.fullName = fullName;
+            this.email = email;
+            this.phone = phone;
+            this.studentCode = studentCode;
+            this.university = university;
+            this.major = major;
+            this.dateOfBirth = dateOfBirth;
+            this.gender = gender;
+        }
+    }
+
+    private void error(HttpServletRequest req, HttpServletResponse res, String msg, FormData data)
             throws ServletException, IOException {
         req.setAttribute("error", msg);
-        req.setAttribute("username", username);
-        req.setAttribute("fullName", fullName);
-        req.setAttribute("email", email);
+        req.setAttribute("username", data.username);
+        req.setAttribute("fullName", data.fullName);
+        req.setAttribute("email", data.email);
+        req.setAttribute("phone", data.phone);
+        req.setAttribute("studentCode", data.studentCode);
+        req.setAttribute("university", data.university);
+        req.setAttribute("major", data.major);
+        req.setAttribute("dateOfBirth", data.dateOfBirth);
+        req.setAttribute("gender", data.gender);
         req.getRequestDispatcher("/WEB-INF/views/auth/register.jsp").forward(req, res);
     }
 

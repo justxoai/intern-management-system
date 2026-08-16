@@ -111,7 +111,7 @@
 <aside class="sidebar">
     <div class="sidebar-brand">
         <div class="brand-icon"><i class="bi bi-shield-check"></i></div>
-        <h1>Internship<br>Management</h1>
+        <h1>Account<br>Management</h1>
         <span>Admin Panel</span>
     </div>
     <div class="sidebar-section-label">Management</div>
@@ -119,9 +119,6 @@
         <li><a href="${pageContext.request.contextPath}/admin/users">
             <i class="bi bi-people"></i> User Accounts
         </a></li>
-    </ul>
-    <div class="sidebar-section-label">Quick Links</div>
-    <ul class="sidebar-nav">
         <li><a href="${pageContext.request.contextPath}/admin/users/create" class="active">
             <i class="bi bi-person-plus"></i> Add New User
         </a></li>
@@ -191,8 +188,14 @@
                         <label class="form-label">Password <span class="required">*</span></label>
                         <div class="input-wrap">
                             <i class="bi bi-lock input-icon"></i>
-                            <input type="password" name="password" id="pwField" class="form-input" required placeholder="Min 6 characters" autocomplete="new-password">
+                            <input type="password" name="password" id="pwField" class="form-input" required placeholder="Min 6 characters" autocomplete="new-password" oninput="validatePwLive(this.value)">
                             <button type="button" class="toggle-pw" onclick="togglePw()"><i class="bi bi-eye" id="pwEye"></i></button>
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:6px;font-size:.72rem;color:#64748b">
+                            <span id="hintUpper"><i class="bi bi-circle" id="icoUpper"></i> 1 Uppercase</span>
+                            <span id="hintLower"><i class="bi bi-circle" id="icoLower"></i> 1 Normal</span>
+                            <span id="hintNum"><i class="bi bi-circle" id="icoNum"></i> 1 Number</span>
+                            <span id="hintSpec"><i class="bi bi-circle" id="icoSpec"></i> 1 Special key</span>
                         </div>
                     </div>
                 </div>
@@ -215,10 +218,10 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Phone</label>
+                        <label class="form-label">Phone <span class="required">*</span></label>
                         <div class="input-wrap">
                             <i class="bi bi-phone input-icon"></i>
-                            <input type="tel" name="phone" class="form-input" value="${user.phone}" placeholder="0900000000">
+                            <input type="tel" name="phone" class="form-input" value="${user.phone}" required placeholder="0901234567">
                         </div>
                     </div>
                 </div>
@@ -274,6 +277,27 @@
         var i = document.getElementById('pwEye');
         f.type = f.type === 'password' ? 'text' : 'password';
         i.className = f.type === 'password' ? 'bi bi-eye' : 'bi bi-eye-slash';
+    }
+
+    function setHintStatus(hintId, icoId, isValid) {
+        var hint = document.getElementById(hintId);
+        var ico  = document.getElementById(icoId);
+        if (isValid) {
+            hint.style.color = '#16a34a';
+            hint.style.fontWeight = '600';
+            ico.className = 'bi bi-check-circle-fill';
+        } else {
+            hint.style.color = '#64748b';
+            hint.style.fontWeight = 'normal';
+            ico.className = 'bi bi-circle';
+        }
+    }
+
+    function validatePwLive(val) {
+        setHintStatus('hintUpper', 'icoUpper', /[A-Z]/.test(val));
+        setHintStatus('hintLower', 'icoLower', /[a-z]/.test(val));
+        setHintStatus('hintNum',   'icoNum',   /[0-9]/.test(val));
+        setHintStatus('hintSpec',  'icoSpec',  /[^A-Za-z0-9]/.test(val));
     }
 
     document.getElementById('createForm').addEventListener('submit', function() {

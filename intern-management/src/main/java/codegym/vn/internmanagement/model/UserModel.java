@@ -1,5 +1,6 @@
 package codegym.vn.internmanagement.model;
 
+import codegym.vn.internmanagement.dao.MentorDAO;
 import codegym.vn.internmanagement.dao.UserDAO;
 import codegym.vn.internmanagement.entity.User;
 import codegym.vn.internmanagement.util.PasswordUtil;
@@ -78,6 +79,27 @@ public class UserModel {
         if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
             return "Email is required.";
         }
+        if (!user.getEmail().trim().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+            return "Please enter a valid email address.";
+        }
+
+        if (user.getPhone() == null || user.getPhone().trim().isEmpty()) {
+            return "Phone number is required.";
+        }
+        if (!user.getPhone().trim().matches("^(?:\\+84|0)[0-9]{9,10}$")) {
+            return "Please enter a valid phone number (e.g. 0901234567).";
+        }
+
+        // Validate password complexity: 1 Upper, 1 Lower, 1 Digit, 1 Special character, min 6 chars
+        String rawPassword = user.getPassword();
+        boolean hasUpper   = rawPassword.chars().anyMatch(Character::isUpperCase);
+        boolean hasLower   = rawPassword.chars().anyMatch(Character::isLowerCase);
+        boolean hasDigit   = rawPassword.chars().anyMatch(Character::isDigit);
+        boolean hasSpecial = rawPassword.chars().anyMatch(ch -> !Character.isLetterOrDigit(ch));
+
+        if (rawPassword.length() < 6 || !hasUpper || !hasLower || !hasDigit || !hasSpecial) {
+            return "Password must be at least 6 characters and contain at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character.";
+        }
 
         // Validate uniqueness
         if (userDAO.existsByUsername(user.getUsername())) {
@@ -94,10 +116,20 @@ public class UserModel {
         }
 
         // Hash password before saving to the database
-        user.setPassword(PasswordUtil.hashPassword(user.getPassword()));
+        user.setPassword(PasswordUtil.hashPassword(rawPassword));
 
         boolean inserted = userDAO.insert(user);
-        return inserted ? null : "Failed to create user account.";
+        if (!inserted) return "Failed to create user account.";
+
+        // #8 — Auto-create a mentors profile when role is MENTOR
+        if ("MENTOR".equalsIgnoreCase(role)) {
+            User created = userDAO.findByUsername(user.getUsername());
+            if (created != null) {
+                MentorDAO mentorDAO = new MentorDAO();
+                mentorDAO.insert(created.getId(), "", "", 5);
+            }
+        }
+        return null;
     }
 
     /**

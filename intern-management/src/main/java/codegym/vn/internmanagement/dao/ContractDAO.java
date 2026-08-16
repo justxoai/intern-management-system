@@ -15,10 +15,10 @@ public class ContractDAO {
     /** All contracts (HR view) with optional status filter. */
     public List<Contract> findAll(String statusFilter) {
         StringBuilder sql = new StringBuilder(
-            "SELECT c.*, i.student_code, u.full_name AS intern_name, d.file_name, d.file_path " +
+            "SELECT c.*, i.student_code, COALESCE(u.full_name, i.email) AS intern_name, d.file_name, d.file_path " +
             "FROM contracts c " +
             "JOIN interns i ON c.intern_id = i.id " +
-            "JOIN users u ON i.user_id = u.id " +
+            "LEFT JOIN users u ON i.user_id = u.id " +
             "LEFT JOIN documents d ON c.document_id = d.id " +
             "WHERE 1=1");
         List<Object> params = new ArrayList<>();
@@ -33,10 +33,10 @@ public class ContractDAO {
     /** All contracts for a specific intern (intern view). */
     public List<Contract> findByInternId(Long internId) {
         String sql =
-            "SELECT c.*, i.student_code, u.full_name AS intern_name, d.file_name, d.file_path " +
+            "SELECT c.*, i.student_code, COALESCE(u.full_name, i.email) AS intern_name, d.file_name, d.file_path " +
             "FROM contracts c " +
             "JOIN interns i ON c.intern_id = i.id " +
-            "JOIN users u ON i.user_id = u.id " +
+            "LEFT JOIN users u ON i.user_id = u.id " +
             "LEFT JOIN documents d ON c.document_id = d.id " +
             "WHERE c.intern_id = ? ORDER BY c.id DESC";
         return query(sql, internId);
@@ -63,24 +63,56 @@ public class ContractDAO {
         return -1;
     }
 
-    /** Intern confirms contract → status = CONFIRMED. */
+    /** Intern confirms contract → status = CONFIRMED. Also updates document status to APPROVED. */
     public boolean confirm(Long contractId) {
-        String sql = "UPDATE contracts SET status='CONFIRMED', confirmed_at=NOW() WHERE id=? AND status='PENDING'";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setLong(1, contractId);
-            return ps.executeUpdate() > 0;
+        try (Connection conn = DBConnection.getConnection()) {
+            conn.setAutoCommit(false);
+            try {
+                try (PreparedStatement ps = conn.prepareStatement(
+                        "UPDATE contracts SET status='CONFIRMED', confirmed_at=NOW() WHERE id=? AND status='PENDING'")) {
+                    ps.setLong(1, contractId);
+                    ps.executeUpdate();
+                }
+                try (PreparedStatement ps2 = conn.prepareStatement(
+                        "UPDATE documents d JOIN contracts c ON c.document_id = d.id SET d.status='APPROVED' WHERE c.id=?")) {
+                    ps2.setLong(1, contractId);
+                    ps2.executeUpdate();
+                }
+                conn.commit();
+                return true;
+            } catch (SQLException e) {
+                conn.rollback();
+                e.printStackTrace();
+            } finally {
+                conn.setAutoCommit(true);
+            }
         } catch (SQLException e) { e.printStackTrace(); }
         return false;
     }
 
-    /** HR cancels a contract. */
+    /** HR cancels a contract. Also updates document status to REJECTED. */
     public boolean cancel(Long contractId) {
-        String sql = "UPDATE contracts SET status='CANCELLED' WHERE id=?";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setLong(1, contractId);
-            return ps.executeUpdate() > 0;
+        try (Connection conn = DBConnection.getConnection()) {
+            conn.setAutoCommit(false);
+            try {
+                try (PreparedStatement ps = conn.prepareStatement(
+                        "UPDATE contracts SET status='CANCELLED' WHERE id=?")) {
+                    ps.setLong(1, contractId);
+                    ps.executeUpdate();
+                }
+                try (PreparedStatement ps2 = conn.prepareStatement(
+                        "UPDATE documents d JOIN contracts c ON c.document_id = d.id SET d.status='REJECTED' WHERE c.id=?")) {
+                    ps2.setLong(1, contractId);
+                    ps2.executeUpdate();
+                }
+                conn.commit();
+                return true;
+            } catch (SQLException e) {
+                conn.rollback();
+                e.printStackTrace();
+            } finally {
+                conn.setAutoCommit(true);
+            }
         } catch (SQLException e) { e.printStackTrace(); }
         return false;
     }
