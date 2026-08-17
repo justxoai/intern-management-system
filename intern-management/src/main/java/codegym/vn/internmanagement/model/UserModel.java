@@ -1,9 +1,11 @@
 package codegym.vn.internmanagement.model;
 
-import java.util.List;
-
+import codegym.vn.internmanagement.dao.MentorDAO;
 import codegym.vn.internmanagement.dao.UserDAO;
 import codegym.vn.internmanagement.entity.User;
+import codegym.vn.internmanagement.util.PasswordUtil;
+
+import java.util.List;
 
 /**
  * Model/Service layer handling business logic and validation for User operations.
@@ -27,6 +29,16 @@ public class UserModel {
      */
     public List<User> getAllUsers() {
         return userDAO.findAll();
+    }
+
+    /**
+     * Search users for Admin Dashboard including intern information.
+     *
+     * @param keyword search keyword
+     * @return List of Users matching criteria
+     */
+    public List<User> searchAdminUsers(String keyword) {
+        return userDAO.searchAdminUsers(keyword);
     }
 
     /**
@@ -54,6 +66,7 @@ public class UserModel {
      * @return Error message if validation fails, or null if creation succeeds.
      */
     public String createUser(User user) {
+        // Validate required fields
         if (user.getUsername() == null || user.getUsername().trim().isEmpty()) {
             return "Username is required.";
         }
@@ -66,7 +79,29 @@ public class UserModel {
         if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
             return "Email is required.";
         }
+        if (!user.getEmail().trim().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+            return "Please enter a valid email address.";
+        }
 
+        if (user.getPhone() == null || user.getPhone().trim().isEmpty()) {
+            return "Phone number is required.";
+        }
+        if (!user.getPhone().trim().matches("^(?:\\+84|0)[0-9]{9,10}$")) {
+            return "Please enter a valid phone number (e.g. 0901234567).";
+        }
+
+        // Validate password complexity: 1 Upper, 1 Lower, 1 Digit, 1 Special character, min 6 chars
+        String rawPassword = user.getPassword();
+        boolean hasUpper   = rawPassword.chars().anyMatch(Character::isUpperCase);
+        boolean hasLower   = rawPassword.chars().anyMatch(Character::isLowerCase);
+        boolean hasDigit   = rawPassword.chars().anyMatch(Character::isDigit);
+        boolean hasSpecial = rawPassword.chars().anyMatch(ch -> !Character.isLetterOrDigit(ch));
+
+        if (rawPassword.length() < 6 || !hasUpper || !hasLower || !hasDigit || !hasSpecial) {
+            return "Password must be at least 6 characters and contain at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character.";
+        }
+
+        // Validate uniqueness
         if (userDAO.existsByUsername(user.getUsername())) {
             return "Username is already taken.";
         }
@@ -74,13 +109,105 @@ public class UserModel {
             return "Email is already registered.";
         }
 
+        // Validate role
         String role = user.getRole();
         if (role == null || (!role.equals("HR") && !role.equals("MENTOR") && !role.equals("INTERN"))) {
             return "Invalid role specified.";
         }
 
+        // Hash password before saving to the database
+        user.setPassword(PasswordUtil.hashPassword(rawPassword));
+
         boolean inserted = userDAO.insert(user);
-        return inserted ? null : "Failed to create user account.";
+        if (!inserted) return "Failed to create user account.";
+
+        // #8 — Auto-create a mentors profile when role is MENTOR
+        if ("MENTOR".equalsIgnoreCase(role)) {
+            User created = userDAO.findByUsername(user.getUsername());
+            if (created != null) {
+                MentorDAO mentorDAO = new MentorDAO();
+                mentorDAO.insert(created.getId(), "", "", 5);
+            }
+        }
+
+        // Auto-create an interns profile when role is INTERN
+        if ("INTERN".equalsIgnoreCase(role)) {
+            User created = userDAO.findByUsername(user.getUsername());
+            if (created != null) {
+                codegym.vn.internmanagement.dao.InternDAO internDAO =
+                        new codegym.vn.internmanagement.dao.InternDAO();
+                codegym.vn.internmanagement.entity.Intern intern =
+                        new codegym.vn.internmanagement.entity.Intern();
+                intern.setUserId(created.getId());
+                intern.setStudentCode("");
+                intern.setUniversity("");
+                intern.setMajor("");
+                intern.setEmail(created.getEmail());
+                intern.setPhone(created.getPhone());
+                intern.setStatus("PENDING");
+                internDAO.insert(intern);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Update an existing user account with optional new password and username.
+     *
+     * @param user User entity with updated values
+     * @param password Optional new password (can be null/empty to keep existing)
+     * @return Error message if validation fails, or null if update succeeds.
+     */
+    public String updateUser(User user, String password) {
+        if (user.getId() == null || user.getId() <= 0) return "Invalid user ID.";
+        if (user.getFullName() == null || user.getFullName().trim().isEmpty()) return "Full Name is required.";
+        if (user.getEmail() == null || user.getEmail().trim().isEmpty()) return "Email is required.";
+        if (!user.getEmail().trim().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+            return "Please enter a valid email address.";
+        }
+
+        // Validate username
+        if (user.getUsername() == null || user.getUsername().trim().isEmpty()) {
+            return "Username is required.";
+        }
+        User existingUserWithUsername = userDAO.findByUsername(user.getUsername().trim());
+        if (existingUserWithUsername != null && !existingUserWithUsername.getId().equals(user.getId())) {
+            return "Username is already taken.";
+        }
+
+        // Validate role
+        String role = user.getRole();
+        if (role == null || (!role.equals("HR") && !role.equals("MENTOR") && !role.equals("INTERN") && !role.equals("ADMIN"))) {
+            return "Invalid role specified.";
+        }
+
+        // Validate password if provided
+        if (password != null && !password.trim().isEmpty()) {
+            if (password.trim().length() < 6) {
+                return "Password must be at least 6 characters.";
+            }
+            user.setPassword(PasswordUtil.hashPassword(password.trim()));
+            userDAO.updatePassword(user.getId(), user.getPassword());
+        }
+
+        userDAO.updateUsername(user.getId(), user.getUsername().trim());
+        return userDAO.update(user) ? null : "Failed to update user.";
+    }
+
+    public String updateUser(User user) {
+        return updateUser(user, null);
+    }
+
+    /**
+     * Delete a user by ID.
+     *
+     * @param id User ID
+     * @return true if deletion succeeded
+     */
+    public boolean deleteUser(Long id) {
+        if (id == null || id <= 0) return false;
+        return userDAO.delete(id);
     }
 
     /**
@@ -95,8 +222,11 @@ public class UserModel {
             return null;
         }
         User user = userDAO.findByUsername(username);
-        if (user != null && password.equals(user.getPassword())) {
-            return user;
+        if (user != null) {
+            // Verify using hash, or fallback to plain-text check for DB-seeded users
+            if (PasswordUtil.checkPassword(password, user.getPassword()) || password.equals(user.getPassword())) {
+                return user;
+            }
         }
         return null;
     }

@@ -15,7 +15,7 @@ public class DBConnection {
 
     private static final String USERNAME = System.getenv().getOrDefault("DB_USERNAME", "root");
 
-    private static final String PASSWORD = System.getenv().getOrDefault("DB_PASSWORD", "1234@Abc");
+    private static final String PASSWORD = System.getenv().getOrDefault("DB_PASSWORD", "12345");
 
     static {
         try {

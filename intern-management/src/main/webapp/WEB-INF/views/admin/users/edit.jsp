@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Create User Account — Admin</title>
+    <title>Edit User Account — Admin</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
@@ -57,7 +57,7 @@
         .form-card-title .icon { width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, #3b82f6, #8b5cf6); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1rem; }
         .form-card-sub { font-size: .83rem; color: var(--text-muted); margin-top: 6px; margin-left: 48px; }
 
-        .section-label { font-size: .71rem; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--accent); margin: 24px 0 14px; padding-bottom: 8px; border-bottom: 2px solid #eff6ff; display: flex; align-items: center; gap: 6px; }
+        .section-label { font-size: .71rem; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--accent); margin: 26px 0 14px; padding-bottom: 8px; border-bottom: 2px solid #eff6ff; display: flex; align-items: center; gap: 6px; }
         .section-label:first-of-type { margin-top: 0; }
 
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -79,21 +79,6 @@
         .toggle-pw { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #94a3b8; font-size: .9rem; }
         .toggle-pw:hover { color: var(--accent); }
 
-        /* Role selector cards */
-        .role-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
-        .role-card { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px 12px; border: 2px solid var(--border); border-radius: 12px; cursor: pointer; transition: all .2s; text-align: center; }
-        .role-card:hover { border-color: #c7d2fe; background: #f5f3ff; }
-        .role-card.selected-hr     { border-color: var(--hr-col);     background: #eff6ff; }
-        .role-card.selected-mentor { border-color: var(--mentor-col); background: #f0fdf4; }
-        .role-card.selected-intern { border-color: var(--intern-col); background: #f5f3ff; }
-        .role-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
-        .ri-hr     { background: #eff6ff; color: var(--hr-col); }
-        .ri-mentor { background: #f0fdf4; color: var(--mentor-col); }
-        .ri-intern { background: #f5f3ff; color: var(--intern-col); }
-        .role-label { font-size: .82rem; font-weight: 700; color: var(--text-primary); }
-        .role-desc  { font-size: .7rem; color: var(--text-muted); }
-        .role-radio { display: none; }
-
         .alert-error { background: #fef2f2; border: 1px solid #fecaca; border-radius: 10px; padding: 12px 16px; display: flex; align-items: center; gap: 10px; color: #dc2626; font-size: .85rem; margin-bottom: 20px; }
 
         .form-actions { display: flex; align-items: center; justify-content: flex-end; gap: 12px; margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--border); }
@@ -103,7 +88,7 @@
         .btn-save:hover { opacity: .88; transform: translateY(-1px); }
         .btn-save:active { transform: translateY(0); }
 
-        @media (max-width: 700px) { .form-grid, .role-grid { grid-template-columns: 1fr; } .form-card { padding: 24px 18px; } }
+        @media (max-width: 700px) { .form-grid { grid-template-columns: 1fr; } .form-card { padding: 24px 18px; } }
     </style>
 </head>
 <body>
@@ -119,7 +104,7 @@
         <li><a href="${pageContext.request.contextPath}/admin/users">
             <i class="bi bi-people"></i> User Accounts
         </a></li>
-        <li><a href="${pageContext.request.contextPath}/admin/users/create" class="active">
+        <li><a href="${pageContext.request.contextPath}/admin/users/create">
             <i class="bi bi-person-plus"></i> Add New User
         </a></li>
     </ul>
@@ -145,8 +130,8 @@
         </a>
         <div style="border-left:1px solid var(--border);height:28px;margin:0 4px"></div>
         <div>
-            <div class="page-title">Create User Account</div>
-            <div class="page-sub">Add a new HR, Mentor, or Intern account</div>
+            <div class="page-title">Edit User Account</div>
+            <div class="page-sub">Update account details, role, and login credentials</div>
         </div>
     </div>
 
@@ -154,46 +139,21 @@
         <div class="form-card">
             <div class="form-card-header">
                 <div class="form-card-title">
-                    <div class="icon"><i class="bi bi-person-plus-fill"></i></div>
-                    New User Account
+                    <div class="icon"><i class="bi bi-person-gear"></i></div>
+                    Edit User Account
                 </div>
-                <div class="form-card-sub">Fill in all required fields to create a new account. The user can log in immediately after creation.</div>
+                <div class="form-card-sub">All marked (*) fields are required.</div>
             </div>
 
             <c:if test="${not empty error}">
-                <div class="alert-error"><i class="bi bi-exclamation-circle-fill"></i>${error}</div>
+                <div class="alert-error"><i class="bi bi-exclamation-circle-fill"></i> ${error}</div>
             </c:if>
 
-            <form action="${pageContext.request.contextPath}/admin/users/create" method="post" id="createForm">
+            <form action="${pageContext.request.contextPath}/admin/users/edit" method="post" id="editForm">
+                <input type="hidden" name="id" value="${user.id}">
 
-                <%-- Account Info --%>
-                <div class="section-label"><i class="bi bi-lock"></i> Login Credentials</div>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label class="form-label">Username <span class="required">*</span></label>
-                        <div class="input-wrap">
-                            <i class="bi bi-at input-icon"></i>
-                            <input type="text" name="username" class="form-input" value="${user.username}" required placeholder="e.g. hr02" autocomplete="off">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Password <span class="required">*</span></label>
-                        <div class="input-wrap">
-                            <i class="bi bi-lock input-icon"></i>
-                            <input type="password" name="password" id="pwField" class="form-input" required placeholder="Min 6 characters" autocomplete="new-password" oninput="validatePwLive(this.value)">
-                            <button type="button" class="toggle-pw" onclick="togglePw()"><i class="bi bi-eye" id="pwEye"></i></button>
-                        </div>
-                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:6px;font-size:.72rem;color:#64748b">
-                            <span id="hintUpper"><i class="bi bi-circle" id="icoUpper"></i> 1 Uppercase</span>
-                            <span id="hintLower"><i class="bi bi-circle" id="icoLower"></i> 1 Normal</span>
-                            <span id="hintNum"><i class="bi bi-circle" id="icoNum"></i> 1 Number</span>
-                            <span id="hintSpec"><i class="bi bi-circle" id="icoSpec"></i> 1 Special key</span>
-                        </div>
-                    </div>
-                </div>
-
-                <%-- Personal Info --%>
-                <div class="section-label"><i class="bi bi-person"></i> Personal Information</div>
+                <%-- 1. Personal Information --%>
+                <div class="section-label"><i class="bi bi-person-fill"></i> Personal Information</div>
                 <div class="form-grid">
                     <div class="form-group full">
                         <label class="form-label">Full Name <span class="required">*</span></label>
@@ -203,39 +163,64 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Email <span class="required">*</span></label>
+                        <label class="form-label">Email Address <span class="required">*</span></label>
                         <div class="input-wrap">
                             <i class="bi bi-envelope input-icon"></i>
-                            <input type="email" name="email" class="form-input" value="${user.email}" required placeholder="example@email.com">
+                            <input type="email" name="email" class="form-input" value="${user.email}" required placeholder="user@company.com">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Phone <span class="required">*</span></label>
+                        <label class="form-label">Phone Number</label>
                         <div class="input-wrap">
-                            <i class="bi bi-phone input-icon"></i>
-                            <input type="tel" name="phone" class="form-input" value="${user.phone}" required placeholder="0901234567">
+                            <i class="bi bi-telephone input-icon"></i>
+                            <input type="tel" name="phone" class="form-input" value="${user.phone}" placeholder="e.g. 0901234567">
                         </div>
                     </div>
                 </div>
 
-                <%-- Role Selection --%>
-                <div class="section-label"><i class="bi bi-shield-halved"></i> Role Assignment</div>
-                <input type="hidden" name="role" id="roleInput" value="${not empty user.role ? user.role : (not empty param.role ? param.role : 'HR')}">
-                <div class="role-grid">
-                    <div class="role-card" id="card-HR" onclick="selectRole('HR')">
-                        <div class="role-icon ri-hr"><i class="bi bi-person-badge"></i></div>
-                        <div class="role-label">HR</div>
-                        <div class="role-desc">Human Resources staff</div>
+                <%-- 2. Account & Credentials --%>
+                <div class="section-label"><i class="bi bi-shield-lock"></i> Account &amp; Credentials</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Username <span class="required">*</span></label>
+                        <div class="input-wrap">
+                            <i class="bi bi-at input-icon"></i>
+                            <input type="text" name="username" class="form-input" value="${user.username}" required placeholder="e.g. hr02" autocomplete="off">
+                        </div>
                     </div>
-                    <div class="role-card" id="card-MENTOR" onclick="selectRole('MENTOR')">
-                        <div class="role-icon ri-mentor"><i class="bi bi-mortarboard"></i></div>
-                        <div class="role-label">Mentor</div>
-                        <div class="role-desc">Guides intern teams</div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <div class="input-wrap" style="position:relative;">
+                            <i class="bi bi-lock input-icon"></i>
+                            <input type="password" name="password" id="pwField" class="form-input" placeholder="Leave blank to keep current password" autocomplete="new-password" style="padding-right:40px;">
+                            <button type="button" class="toggle-pw" onclick="togglePw()">
+                                <i class="bi bi-eye" id="pwEye"></i>
+                            </button>
+                        </div>
                     </div>
-                    <div class="role-card" id="card-INTERN" onclick="selectRole('INTERN')">
-                        <div class="role-icon ri-intern"><i class="bi bi-person-workspace"></i></div>
-                        <div class="role-label">Intern</div>
-                        <div class="role-desc">Internship participant</div>
+                    <div class="form-group">
+                        <label class="form-label">Role <span class="required">*</span></label>
+                        <div class="input-wrap">
+                            <i class="bi bi-person-badge input-icon"></i>
+                            <select name="role" class="form-select" required>
+                                <option value="HR"     ${user.role == 'HR'     ? 'selected' : ''}>HR</option>
+                                <option value="MENTOR" ${user.role == 'MENTOR' ? 'selected' : ''}>Mentor</option>
+                                <option value="INTERN" ${user.role == 'INTERN' ? 'selected' : ''}>Intern</option>
+                                <c:if test="${user.role == 'ADMIN'}">
+                                    <option value="ADMIN" selected>Admin</option>
+                                </c:if>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Status <span class="required">*</span></label>
+                        <div class="input-wrap">
+                            <i class="bi bi-toggle-on input-icon"></i>
+                            <select name="status" class="form-select" required>
+                                <option value="ACTIVE"   ${user.status == 'ACTIVE'   ? 'selected' : ''}>Active</option>
+                                <option value="INACTIVE" ${user.status == 'INACTIVE' ? 'selected' : ''}>Inactive</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
@@ -243,8 +228,8 @@
                     <a href="${pageContext.request.contextPath}/admin/users" class="btn-cancel">
                         <i class="bi bi-x"></i> Cancel
                     </a>
-                    <button type="submit" class="btn-save" id="saveBtn">
-                        <i class="bi bi-check-lg"></i> Create Account
+                    <button type="submit" class="btn-save" id="submitBtn">
+                        <i class="bi bi-check-lg"></i> Save Changes
                     </button>
                 </div>
             </form>
@@ -253,49 +238,21 @@
 </div>
 
 <script>
-    var roleClasses = { HR: 'selected-hr', MENTOR: 'selected-mentor', INTERN: 'selected-intern' };
-    function selectRole(role) {
-        document.querySelectorAll('.role-card').forEach(function(c){ c.className = 'role-card'; });
-        var card = document.getElementById('card-' + role);
-        if (card) card.classList.add(roleClasses[role]);
-        document.getElementById('roleInput').value = role;
-    }
-    // Init with current value
-    var initRole = document.getElementById('roleInput').value || 'HR';
-    selectRole(initRole);
-
     function togglePw() {
         var f = document.getElementById('pwField');
-        var i = document.getElementById('pwEye');
-        f.type = f.type === 'password' ? 'text' : 'password';
-        i.className = f.type === 'password' ? 'bi bi-eye' : 'bi bi-eye-slash';
-    }
-
-    function setHintStatus(hintId, icoId, isValid) {
-        var hint = document.getElementById(hintId);
-        var ico  = document.getElementById(icoId);
-        if (isValid) {
-            hint.style.color = '#16a34a';
-            hint.style.fontWeight = '600';
-            ico.className = 'bi bi-check-circle-fill';
+        var eye = document.getElementById('pwEye');
+        if (f.type === 'password') {
+            f.type = 'text';
+            eye.className = 'bi bi-eye-slash';
         } else {
-            hint.style.color = '#64748b';
-            hint.style.fontWeight = 'normal';
-            ico.className = 'bi bi-circle';
+            f.type = 'password';
+            eye.className = 'bi bi-eye';
         }
     }
-
-    function validatePwLive(val) {
-        setHintStatus('hintUpper', 'icoUpper', /[A-Z]/.test(val));
-        setHintStatus('hintLower', 'icoLower', /[a-z]/.test(val));
-        setHintStatus('hintNum',   'icoNum',   /[0-9]/.test(val));
-        setHintStatus('hintSpec',  'icoSpec',  /[^A-Za-z0-9]/.test(val));
-    }
-
-    document.getElementById('createForm').addEventListener('submit', function() {
-        var btn = document.getElementById('saveBtn');
+    document.getElementById('editForm').addEventListener('submit', function() {
+        var btn = document.getElementById('submitBtn');
         btn.disabled = true;
-        btn.innerHTML = '<i class="bi bi-arrow-repeat"></i> Creating...';
+        btn.innerHTML = '<i class="bi bi-arrow-repeat"></i> Saving...';
     });
 </script>
 </body>

@@ -18,10 +18,10 @@ public class Intern {
     private String address;
     private String phone;
     private String email;
-    private String status; // PENDING, APPROVED, INTERNING, COMPLETED
+    private String status; // PENDING, APPROVED, REJECTED, INTERNING, COMPLETED
     private LocalDateTime createdAt;
 
-  
+    // Joined field for convenience in views
     private String fullName;
 
     public Intern() {
@@ -57,6 +57,7 @@ public class Intern {
     public void setUserId(Long userId) {
         this.userId = userId;
     }
+
 
     public String getStudentCode() {
         return studentCode;

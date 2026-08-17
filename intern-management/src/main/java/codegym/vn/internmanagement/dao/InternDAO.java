@@ -1,5 +1,8 @@
 package codegym.vn.internmanagement.dao;
 
+import codegym.vn.internmanagement.entity.Intern;
+import codegym.vn.internmanagement.util.DBConnection;
+
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -9,9 +12,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import codegym.vn.internmanagement.entity.Intern;
-import codegym.vn.internmanagement.util.DBConnection;
-
 public class InternDAO {
 
     public boolean insert(Intern intern) {
@@ -20,7 +20,11 @@ public class InternDAO {
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setLong(1, intern.getUserId());
+            if (intern.getUserId() != null && intern.getUserId() > 0) {
+                statement.setLong(1, intern.getUserId());
+            } else {
+                statement.setNull(1, java.sql.Types.BIGINT);
+            }
             statement.setString(2, intern.getStudentCode());
             statement.setString(3, intern.getUniversity());
             statement.setString(4, intern.getMajor());
@@ -39,7 +43,7 @@ public class InternDAO {
     }
 
     public Intern findById(Long id) {
-        String sql = "SELECT i.*, u.full_name FROM interns i LEFT JOIN users u ON i.user_id = u.id WHERE i.id = ?";
+        String sql = "SELECT i.*, COALESCE(u.full_name, i.email) AS full_name FROM interns i LEFT JOIN users u ON i.user_id = u.id WHERE i.id = ?";
 
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -58,21 +62,26 @@ public class InternDAO {
     }
 
     public boolean update(Intern intern) {
-        String sql = "UPDATE interns SET student_code = ?, university = ?, major = ?, date_of_birth = ?, gender = ?, address = ?, phone = ?, email = ?, status = ? WHERE id = ?";
+        String sql = "UPDATE interns SET user_id = ?, student_code = ?, university = ?, major = ?, date_of_birth = ?, gender = ?, address = ?, phone = ?, email = ?, status = ? WHERE id = ?";
 
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setString(1, intern.getStudentCode());
-            statement.setString(2, intern.getUniversity());
-            statement.setString(3, intern.getMajor());
-            statement.setDate(4, intern.getDateOfBirth() != null ? Date.valueOf(intern.getDateOfBirth()) : null);
-            statement.setString(5, intern.getGender());
-            statement.setString(6, intern.getAddress());
-            statement.setString(7, intern.getPhone());
-            statement.setString(8, intern.getEmail());
-            statement.setString(9, intern.getStatus());
-            statement.setLong(10, intern.getId());
+            if (intern.getUserId() != null && intern.getUserId() > 0) {
+                statement.setLong(1, intern.getUserId());
+            } else {
+                statement.setNull(1, java.sql.Types.BIGINT);
+            }
+            statement.setString(2, intern.getStudentCode());
+            statement.setString(3, intern.getUniversity());
+            statement.setString(4, intern.getMajor());
+            statement.setDate(5, intern.getDateOfBirth() != null ? Date.valueOf(intern.getDateOfBirth()) : null);
+            statement.setString(6, intern.getGender());
+            statement.setString(7, intern.getAddress());
+            statement.setString(8, intern.getPhone());
+            statement.setString(9, intern.getEmail());
+            statement.setString(10, intern.getStatus());
+            statement.setLong(11, intern.getId());
 
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -83,7 +92,7 @@ public class InternDAO {
 
     public List<Intern> search(String keyword, String university, String major, String status) {
         List<Intern> list = new ArrayList<>();
-        StringBuilder sql = new StringBuilder("SELECT i.*, u.full_name FROM interns i LEFT JOIN users u ON i.user_id = u.id WHERE 1=1 ");
+        StringBuilder sql = new StringBuilder("SELECT i.*, COALESCE(u.full_name, i.email) AS full_name FROM interns i LEFT JOIN users u ON i.user_id = u.id WHERE 1=1 ");
         List<Object> params = new ArrayList<>();
 
         if (keyword != null && !keyword.trim().isEmpty()) {
@@ -132,7 +141,10 @@ public class InternDAO {
     private Intern mapResultSetToIntern(ResultSet rs) throws SQLException {
         Intern intern = new Intern();
         intern.setId(rs.getLong("id"));
-        intern.setUserId(rs.getLong("user_id"));
+        try {
+            long uid = rs.getLong("user_id");
+            if (!rs.wasNull()) intern.setUserId(uid);
+        } catch (Exception ignored) {}
         intern.setStudentCode(rs.getString("student_code"));
         intern.setUniversity(rs.getString("university"));
         intern.setMajor(rs.getString("major"));
@@ -154,8 +166,10 @@ public class InternDAO {
         }
 
         try {
-            intern.setFullName(rs.getString("full_name"));
+            String fn = rs.getString("full_name");
+            intern.setFullName(fn != null && !fn.isBlank() ? fn : intern.getEmail());
         } catch (SQLException ignored) {
+            if (intern.getFullName() == null) intern.setFullName(intern.getEmail());
         }
 
         return intern;
@@ -174,5 +188,65 @@ public class InternDAO {
             e.printStackTrace();
         }
         return false;
+    }
+
+    /**
+     * Find all interns assigned to a specific mentor.
+     * Matches either mentors.user_id or mentors.id.
+     */
+    public List<Intern> findByMentorId(Long mentorUserIdOrMentorId) {
+        List<Intern> list = new ArrayList<>();
+        String sql = "SELECT i.*, COALESCE(u.full_name, i.email) AS full_name " +
+                     "FROM interns i " +
+                     "LEFT JOIN users u ON i.user_id = u.id " +
+                     "JOIN mentor_assignments ma ON i.id = ma.intern_id " +
+                     "JOIN mentors m ON ma.mentor_id = m.id " +
+                     "WHERE (m.user_id = ? OR m.id = ?) AND ma.status = 'ACTIVE' " +
+                     "ORDER BY i.id DESC";
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, mentorUserIdOrMentorId);
+            statement.setLong(2, mentorUserIdOrMentorId);
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) list.add(mapResultSetToIntern(rs));
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+        return list;
+    }
+
+    /**
+     * Find all interns assigned to a specific mentor record ID (mentors.id).
+     */
+    public List<Intern> findByMentorRecordId(Long mentorRecordId) {
+        List<Intern> list = new ArrayList<>();
+        String sql = "SELECT i.*, COALESCE(u.full_name, i.email) AS full_name " +
+                     "FROM interns i " +
+                     "LEFT JOIN users u ON i.user_id = u.id " +
+                     "JOIN mentor_assignments ma ON i.id = ma.intern_id " +
+                     "WHERE ma.mentor_id = ? AND ma.status = 'ACTIVE' " +
+                     "ORDER BY i.id DESC";
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, mentorRecordId);
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) list.add(mapResultSetToIntern(rs));
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+        return list;
+    }
+
+    /**
+     * Find intern profile by their users.id (used after login to get intern's record).
+     */
+    public Intern findByUserId(Long userId) {
+        String sql = "SELECT i.*, COALESCE(u.full_name, i.email) AS full_name FROM interns i LEFT JOIN users u ON i.user_id = u.id WHERE i.user_id = ?";
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, userId);
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) return mapResultSetToIntern(rs);
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+        return null;
     }
 }

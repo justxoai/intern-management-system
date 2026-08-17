@@ -14,6 +14,6 @@ public class InternHomeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("/WEB-INF/views/intern/home.jsp").forward(request, response);
+        response.sendRedirect(request.getContextPath() + "/intern/documents");
     }
 }
