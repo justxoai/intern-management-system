@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,8 +15,10 @@
             <p class="text-muted mb-4">
                 Welcome, ${sessionScope.currentUser.fullName}. This area is for intern self-service.
             </p>
-            <div class="d-flex gap-2">
-                <a class="btn btn-primary" href="${pageContext.request.contextPath}/logout">Sign out</a>
+            <div class="d-flex flex-column gap-2">
+                <a class="btn btn-primary" href="${pageContext.request.contextPath}/intern/report/submit">Submit Weekly Report</a>
+                <a class="btn btn-secondary" href="${pageContext.request.contextPath}/intern/reports">My Reports</a>
+                <a class="btn btn-danger mt-2" href="${pageContext.request.contextPath}/logout">Sign out</a>
             </div>
         </div>
     </div>

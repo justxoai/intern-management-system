@@ -256,4 +256,36 @@ public class MentorDAO {
         mentor.setEmail(rs.getString("email"));
         return mentor;
     }
+
+    public Mentor findByUserId(Long userId) {
+        String sql = "SELECT m.*, u.full_name, u.username, u.email FROM mentors m LEFT JOIN users u ON m.user_id = u.id WHERE m.user_id = ?";
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, userId);
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    return mapMentor(rs);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Long getAssignedMentorId(Long internId) {
+        String sql = "SELECT mentor_id FROM mentor_assignments WHERE intern_id = ?";
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, internId);
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getLong("mentor_id");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

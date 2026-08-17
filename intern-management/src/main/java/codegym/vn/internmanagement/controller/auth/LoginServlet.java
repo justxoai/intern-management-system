@@ -41,6 +41,7 @@ public class LoginServlet extends HttpServlet {
         String landingPage = switch (user.getRole()) {
             case "ADMIN", "HR" -> "/hr/interns";
             case "INTERN" -> "/intern";
+            case "MENTOR" -> "/mentor/reports";
             default -> "/login";
         };
         response.sendRedirect(request.getContextPath() + landingPage);

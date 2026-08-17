@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,7 +14,9 @@
         <h2>Intern Profiles</h2>
         <div>
             <a href="${pageContext.request.contextPath}/hr/interns/create" class="btn btn-primary">+ Add Intern Profile</a>
+            <a href="${pageContext.request.contextPath}/hr/applications" class="btn btn-outline-info ms-2">Manage Applications</a>
             <a href="${pageContext.request.contextPath}/hr/mentors" class="btn btn-outline-secondary ms-2">Manage Mentors</a>
+            <a href="${pageContext.request.contextPath}/logout" class="btn btn-danger ms-2">Sign out</a>
         </div>
     </div>
 
