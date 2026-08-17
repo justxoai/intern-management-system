@@ -49,19 +49,27 @@ public class DocumentDAO {
         return list;
     }
 
-    /** Insert a new document record. */
-    public boolean insert(Document doc) {
+    /** Insert a new document record and return generated ID. */
+    public long insertAndGetId(Document doc) {
         String sql = "INSERT INTO documents (intern_id, document_type, file_name, file_path, status) VALUES (?,?,?,?,?)";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setLong(1, doc.getInternId());
             ps.setString(2, doc.getDocumentType());
             ps.setString(3, doc.getFileName());
             ps.setString(4, doc.getFilePath());
             ps.setString(5, "PENDING");
-            return ps.executeUpdate() > 0;
+            ps.executeUpdate();
+            try (ResultSet keys = ps.getGeneratedKeys()) {
+                if (keys.next()) return keys.getLong(1);
+            }
         } catch (SQLException e) { e.printStackTrace(); }
-        return false;
+        return -1;
+    }
+
+    /** Insert a new document record. */
+    public boolean insert(Document doc) {
+        return insertAndGetId(doc) > 0;
     }
 
     /**

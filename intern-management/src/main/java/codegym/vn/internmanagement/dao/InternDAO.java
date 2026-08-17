@@ -62,21 +62,26 @@ public class InternDAO {
     }
 
     public boolean update(Intern intern) {
-        String sql = "UPDATE interns SET student_code = ?, university = ?, major = ?, date_of_birth = ?, gender = ?, address = ?, phone = ?, email = ?, status = ? WHERE id = ?";
+        String sql = "UPDATE interns SET user_id = ?, student_code = ?, university = ?, major = ?, date_of_birth = ?, gender = ?, address = ?, phone = ?, email = ?, status = ? WHERE id = ?";
 
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setString(1, intern.getStudentCode());
-            statement.setString(2, intern.getUniversity());
-            statement.setString(3, intern.getMajor());
-            statement.setDate(4, intern.getDateOfBirth() != null ? Date.valueOf(intern.getDateOfBirth()) : null);
-            statement.setString(5, intern.getGender());
-            statement.setString(6, intern.getAddress());
-            statement.setString(7, intern.getPhone());
-            statement.setString(8, intern.getEmail());
-            statement.setString(9, intern.getStatus());
-            statement.setLong(10, intern.getId());
+            if (intern.getUserId() != null && intern.getUserId() > 0) {
+                statement.setLong(1, intern.getUserId());
+            } else {
+                statement.setNull(1, java.sql.Types.BIGINT);
+            }
+            statement.setString(2, intern.getStudentCode());
+            statement.setString(3, intern.getUniversity());
+            statement.setString(4, intern.getMajor());
+            statement.setDate(5, intern.getDateOfBirth() != null ? Date.valueOf(intern.getDateOfBirth()) : null);
+            statement.setString(6, intern.getGender());
+            statement.setString(7, intern.getAddress());
+            statement.setString(8, intern.getPhone());
+            statement.setString(9, intern.getEmail());
+            statement.setString(10, intern.getStatus());
+            statement.setLong(11, intern.getId());
 
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {

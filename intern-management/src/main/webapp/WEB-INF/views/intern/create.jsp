@@ -37,13 +37,7 @@
             font-size: 1.15rem; color: #fff; margin-bottom: 10px;
         }
         .sidebar-brand h1 { color: #fff; font-size: .95rem; font-weight: 700; line-height: 1.3; }
-        .sidebar-brand span { color: rgba(255,255,255,.4); font-size: .72rem; }
-
-        .sidebar-section-label {
-            padding: 18px 22px 6px;
-            font-size: .67rem; font-weight: 700; text-transform: uppercase;
-            letter-spacing: .8px; color: rgba(255,255,255,.3);
-        }
+        .sidebar-section-label { padding: 18px 22px 6px; font-size: .67rem; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; color: rgba(255,255,255,.3); }
         .sidebar-nav { list-style: none; padding: 0 12px; }
         .sidebar-nav li a {
             display: flex; align-items: center; gap: 10px;
@@ -52,23 +46,11 @@
             transition: background .15s, color .15s;
         }
         .sidebar-nav li a:hover { background: rgba(255,255,255,.07); color: #fff; }
-        .sidebar-nav li a.active {
-            background: rgba(14,165,233,.2); color: #fff;
-            border-left: 3px solid var(--accent);
-        }
+        .sidebar-nav li a.active { background: rgba(14,165,233,.2); color: #fff; border-left: 3px solid var(--accent); }
         .sidebar-nav li a i { font-size: 1rem; width: 20px; }
-
-        .sidebar-footer {
-            margin-top: auto; padding: 16px 22px;
-            border-top: 1px solid rgba(255,255,255,.08);
-        }
+        .sidebar-footer { margin-top: auto; padding: 16px 22px; border-top: 1px solid rgba(255,255,255,.08); }
         .sidebar-user { display: flex; align-items: center; gap: 10px; }
-        .avatar {
-            width: 34px; height: 34px; border-radius: 50%;
-            background: linear-gradient(135deg, #0ea5e9, #38bdf8);
-            display: flex; align-items: center; justify-content: center;
-            font-size: .85rem; color: #fff; font-weight: 700; flex-shrink: 0;
-        }
+        .avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #0ea5e9, #38bdf8); display: flex; align-items: center; justify-content: center; font-size: .85rem; color: #fff; font-weight: 700; flex-shrink: 0; }
         .sidebar-user-info { flex: 1; min-width: 0; }
         .sidebar-user-name { color: #fff; font-size: .82rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .sidebar-user-role { color: rgba(255,255,255,.4); font-size: .7rem; }
@@ -93,7 +75,6 @@
         .topbar-back:hover { background: #f8fafc; border-color: var(--accent); color: var(--accent); }
         .page-title { font-size: 1.2rem; font-weight: 700; color: var(--text-primary); }
         .page-sub   { font-size: .8rem; color: var(--text-muted); margin-top: 1px; }
-
         .content { padding: 32px; flex: 1; display: flex; justify-content: center; }
 
         /* ── Form Card ── */
@@ -103,25 +84,17 @@
             width: 100%; max-width: 720px;
             box-shadow: 0 2px 16px rgba(0,0,0,.06);
         }
-        .form-card-header { margin-bottom: 24px; }
-        .form-card-title {
-            font-size: 1.15rem; font-weight: 700; color: var(--text-primary);
-            display: flex; align-items: center; gap: 10px;
-        }
-        .form-card-title .icon {
-            width: 38px; height: 38px; border-radius: 10px;
-            background: linear-gradient(135deg, #0ea5e9, #38bdf8);
-            display: flex; align-items: center; justify-content: center;
-            color: #fff; font-size: 1.05rem;
-        }
+        .form-card-header { margin-bottom: 28px; }
+        .form-card-title { font-size: 1.15rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 10px; }
+        .form-card-title .icon { width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, #0ea5e9, #38bdf8); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.05rem; }
         .form-card-sub { font-size: .83rem; color: var(--text-muted); margin-top: 4px; }
 
         .section-label {
             font-size: .71rem; font-weight: 700; text-transform: uppercase;
             letter-spacing: .5px; color: var(--accent);
-            margin: 22px 0 14px; padding-bottom: 6px;
-            border-bottom: 1.5px solid #f0f9ff;
-            display: flex; align-items: center; gap: 6px;
+            margin: 26px 0 14px; padding-bottom: 8px;
+            border-bottom: 1.5px solid #e0f4fe;
+            display: flex; align-items: center; gap: 7px;
         }
         .section-label:first-of-type { margin-top: 0; }
 
@@ -131,31 +104,23 @@
         .form-label { font-size: .78rem; font-weight: 600; color: #374151; }
         .required { color: #ef4444; font-weight: 700; }
         .input-wrap { position: relative; }
-        .input-icon {
-            position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
-            color: #94a3b8; font-size: .95rem; pointer-events: none;
-        }
+        .input-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: .95rem; pointer-events: none; }
         .form-input, .form-select {
             width: 100%; padding: 10px 12px 10px 36px;
             border: 1.5px solid var(--border); border-radius: 9px;
             font-family: 'Inter', sans-serif; font-size: .85rem; color: var(--text-primary);
             background: #fff; outline: none; transition: border-color .2s, box-shadow .2s;
         }
-        .form-input:focus, .form-select:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(14,165,233,.12);
-        }
-        .no-icon { padding-left: 12px; }
+        .form-input:focus, .form-select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(14,165,233,.12); }
 
         .alert-error {
             background: #fef2f2; border: 1px solid #fecaca; border-radius: 10px;
             padding: 12px 16px; display: flex; align-items: center; gap: 10px;
             color: #dc2626; font-size: .85rem; margin-bottom: 20px;
         }
-
         .form-actions {
             display: flex; align-items: center; justify-content: flex-end; gap: 12px;
-            margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--border);
+            margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--border);
         }
         .btn-cancel {
             padding: 10px 22px; border-radius: 9px; border: 1.5px solid var(--border);
@@ -175,6 +140,11 @@
         .btn-save:hover { opacity: .9; transform: translateY(-1px); }
         .btn-save:active { transform: translateY(0); }
 
+        .pw-toggle {
+            position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+            background: none; border: none; cursor: pointer; color: #94a3b8; font-size: .9rem; padding: 0;
+        }
+
         @media (max-width: 650px) {
             .form-grid { grid-template-columns: 1fr; }
             .form-card { padding: 24px 20px; }
@@ -193,7 +163,9 @@
     <div class="sidebar-section-label">Management</div>
     <ul class="sidebar-nav">
         <li><a href="${pageContext.request.contextPath}/hr/dashboard"><i class="bi bi-grid"></i> Dashboard</a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/mentors"><i class="bi bi-mortarboard"></i> Mentors</a></li>
         <li><a href="${pageContext.request.contextPath}/hr/applications"><i class="bi bi-clipboard-check"></i> Applications</a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/contracts"><i class="bi bi-file-earmark-text"></i> Contracts</a></li>
         <li><a href="${pageContext.request.contextPath}/hr/documents"><i class="bi bi-folder-check"></i> Document Review</a></li>
     </ul>
 
@@ -229,56 +201,25 @@
                     <div class="icon"><i class="bi bi-person-plus-fill"></i></div>
                     Create Intern Profile
                 </div>
-                <div class="form-card-sub">Enter the intern's academic and personal details. All marked (*) fields are required.</div>
+                <div class="form-card-sub">All marked (*) fields are required.</div>
             </div>
 
             <c:if test="${not empty error}">
-                <div class="alert-error"><i class="bi bi-exclamation-circle-fill"></i>${error}</div>
+                <div class="alert-error"><i class="bi bi-exclamation-circle-fill"></i> ${error}</div>
             </c:if>
 
             <form action="${pageContext.request.contextPath}/hr/interns/create" method="post" id="internForm">
 
-                <%-- Academic Info --%>
-                <div class="section-label"><i class="bi bi-mortarboard"></i> Academic Details</div>
+                <%-- 1. Personal Information --%>
+                <div class="section-label"><i class="bi bi-person-fill"></i> Personal Information</div>
                 <div class="form-grid">
-                    <div class="form-group">
-                        <label class="form-label">Student Code <span class="required">*</span></label>
-                        <div class="input-wrap">
-                            <i class="bi bi-card-text input-icon"></i>
-                            <input type="text" name="studentCode" class="form-input" value="${intern.studentCode}" required placeholder="e.g. SV001">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Status</label>
-                        <div class="input-wrap">
-                            <i class="bi bi-flag input-icon"></i>
-                            <select name="status" class="form-select">
-                                <option value="PENDING"   ${intern.status == 'PENDING'   ? 'selected' : ''}>PENDING</option>
-                                <option value="APPROVED"  ${intern.status == 'APPROVED'  ? 'selected' : ''}>APPROVED</option>
-                                <option value="INTERNING" ${intern.status == 'INTERNING' ? 'selected' : ''}>INTERNING</option>
-                                <option value="COMPLETED" ${intern.status == 'COMPLETED' ? 'selected' : ''}>COMPLETED</option>
-                            </select>
-                        </div>
-                    </div>
                     <div class="form-group full">
-                        <label class="form-label">University <span class="required">*</span></label>
+                        <label class="form-label">Full Name <span class="required">*</span></label>
                         <div class="input-wrap">
-                            <i class="bi bi-building input-icon"></i>
-                            <input type="text" name="university" class="form-input" value="${intern.university}" required placeholder="e.g. Hanoi University of Science and Technology">
+                            <i class="bi bi-person-fill input-icon"></i>
+                            <input type="text" name="fullName" class="form-input" value="${intern.fullName}" required placeholder="e.g. Nguyen Van A">
                         </div>
                     </div>
-                    <div class="form-group full">
-                        <label class="form-label">Major <span class="required">*</span></label>
-                        <div class="input-wrap">
-                            <i class="bi bi-book input-icon"></i>
-                            <input type="text" name="major" class="form-input" value="${intern.major}" required placeholder="e.g. Computer Science">
-                        </div>
-                    </div>
-                </div>
-
-                <%-- Personal Info --%>
-                <div class="section-label"><i class="bi bi-person"></i> Contact &amp; Personal Info</div>
-                <div class="form-grid">
                     <div class="form-group">
                         <label class="form-label">Email <span class="required">*</span></label>
                         <div class="input-wrap">
@@ -301,10 +242,10 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Gender</label>
+                        <label class="form-label">Gender <span class="required">*</span></label>
                         <div class="input-wrap">
                             <i class="bi bi-gender-ambiguous input-icon"></i>
-                            <select name="gender" class="form-select">
+                            <select name="gender" class="form-select" required>
                                 <option value="">-- Select --</option>
                                 <option value="MALE"   ${intern.gender == 'MALE'   ? 'selected' : ''}>Male</option>
                                 <option value="FEMALE" ${intern.gender == 'FEMALE' ? 'selected' : ''}>Female</option>
@@ -312,11 +253,65 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-group full">
-                        <label class="form-label">User Account ID (Optional)</label>
+                </div>
+
+                <%-- 2. Academic Details --%>
+                <div class="section-label"><i class="bi bi-mortarboard"></i> Academic Details</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Student Code</label>
                         <div class="input-wrap">
-                            <i class="bi bi-person-badge input-icon"></i>
-                            <input type="number" name="userId" class="form-input" value="${intern.userId}" placeholder="Leave blank if not linked yet">
+                            <i class="bi bi-card-text input-icon"></i>
+                            <input type="text" name="studentCode" class="form-input" value="${intern.studentCode}" placeholder="e.g. SV001">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <div class="input-wrap">
+                            <i class="bi bi-flag input-icon"></i>
+                            <select name="status" class="form-select">
+                                <option value="PENDING"   ${intern.status == 'PENDING'   ? 'selected' : ''}>Pending</option>
+                                <option value="APPROVED"  ${intern.status == 'APPROVED'  ? 'selected' : ''}>Approved</option>
+                                <option value="REJECTED"  ${intern.status == 'REJECTED'  ? 'selected' : ''}>Rejected</option>
+                                <option value="INTERNING" ${intern.status == 'INTERNING' ? 'selected' : ''}>Interning</option>
+                                <option value="COMPLETED" ${intern.status == 'COMPLETED' ? 'selected' : ''}>Completed</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group full">
+                        <label class="form-label">University <span class="required">*</span></label>
+                        <div class="input-wrap">
+                            <i class="bi bi-building input-icon"></i>
+                            <input type="text" name="university" class="form-input" value="${intern.university}" required placeholder="e.g. Hanoi University of Science and Technology">
+                        </div>
+                    </div>
+                    <div class="form-group full">
+                        <label class="form-label">Major <span class="required">*</span></label>
+                        <div class="input-wrap">
+                            <i class="bi bi-book input-icon"></i>
+                            <input type="text" name="major" class="form-input" value="${intern.major}" required placeholder="e.g. Computer Science">
+                        </div>
+                    </div>
+                </div>
+
+                <%-- 3. Login Credentials --%>
+                <div class="section-label"><i class="bi bi-shield-lock"></i> Login Credentials</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Username <span class="required">*</span></label>
+                        <div class="input-wrap">
+                            <i class="bi bi-at input-icon"></i>
+                            <input type="text" name="username" class="form-input" value="${param.username}" required placeholder="e.g. intern03" autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password <span class="required">*</span></label>
+                        <div class="input-wrap">
+                            <i class="bi bi-lock input-icon"></i>
+                            <input type="password" name="password" id="pwField" class="form-input" required placeholder="Min 6 characters" autocomplete="new-password" style="padding-right:40px;">
+                            <button type="button" class="pw-toggle" onclick="togglePw()">
+                                <i class="bi bi-eye" id="pwEye"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -335,7 +330,13 @@
 </div>
 
 <script>
-    document.getElementById('internForm').addEventListener('submit', function() {
+    function togglePw() {
+        var f = document.getElementById('pwField');
+        var eye = document.getElementById('pwEye');
+        if (f.type === 'password') { f.type = 'text'; eye.className = 'bi bi-eye-slash'; }
+        else { f.type = 'password'; eye.className = 'bi bi-eye'; }
+    }
+    document.getElementById('internForm').addEventListener('submit', function () {
         var btn = document.getElementById('submitBtn');
         btn.disabled = true;
         btn.innerHTML = '<i class="bi bi-arrow-repeat"></i> Saving...';

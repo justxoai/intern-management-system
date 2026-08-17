@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Edit Intern Profile — HR</title>
+    <title>Add New Mentor — HR Management</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
@@ -15,6 +15,7 @@
             --sidebar-w: 250px;
             --sidebar-bg: #0c1f3f;
             --accent: #0ea5e9;
+            --accent-green: #10b981;
             --page-bg: #f0f6ff;
             --card-bg: #fff;
             --text-primary: #0f172a;
@@ -86,7 +87,7 @@
         }
         .form-card-header { margin-bottom: 28px; }
         .form-card-title { font-size: 1.15rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 10px; }
-        .form-card-title .icon { width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, #f59e0b, #fbbf24); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.05rem; }
+        .form-card-title .icon { width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, #10b981, #34d399); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.05rem; }
         .form-card-sub { font-size: .83rem; color: var(--text-muted); margin-top: 4px; }
 
         .section-label {
@@ -131,11 +132,11 @@
         .btn-cancel:hover { background: #f8fafc; border-color: #cbd5e1; color: var(--text-primary); }
         .btn-save {
             padding: 10px 24px; border-radius: 9px; border: none;
-            background: linear-gradient(135deg, #0ea5e9, #38bdf8);
+            background: linear-gradient(135deg, #10b981, #059669);
             color: #fff; font-family: 'Inter', sans-serif;
             font-size: .85rem; font-weight: 600; cursor: pointer;
             display: flex; align-items: center; gap: 6px;
-            box-shadow: 0 2px 10px rgba(14,165,233,.3); transition: opacity .15s, transform .15s;
+            box-shadow: 0 2px 10px rgba(16,185,129,.3); transition: opacity .15s, transform .15s;
         }
         .btn-save:hover { opacity: .9; transform: translateY(-1px); }
         .btn-save:active { transform: translateY(0); }
@@ -163,7 +164,7 @@
     <div class="sidebar-section-label">Management</div>
     <ul class="sidebar-nav">
         <li><a href="${pageContext.request.contextPath}/hr/dashboard"><i class="bi bi-grid"></i> Dashboard</a></li>
-        <li><a href="${pageContext.request.contextPath}/hr/mentors"><i class="bi bi-mortarboard"></i> Mentors</a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/mentors" class="active"><i class="bi bi-mortarboard"></i> Mentors</a></li>
         <li><a href="${pageContext.request.contextPath}/hr/applications"><i class="bi bi-clipboard-check"></i> Applications</a></li>
         <li><a href="${pageContext.request.contextPath}/hr/contracts"><i class="bi bi-file-earmark-text"></i> Contracts</a></li>
         <li><a href="${pageContext.request.contextPath}/hr/documents"><i class="bi bi-folder-check"></i> Document Review</a></li>
@@ -184,13 +185,13 @@
 <%-- ── Main ── --%>
 <div class="main">
     <div class="topbar">
-        <a href="${pageContext.request.contextPath}/hr/dashboard" class="topbar-back">
-            <i class="bi bi-arrow-left"></i> Back to Dashboard
+        <a href="${pageContext.request.contextPath}/hr/mentors" class="topbar-back">
+            <i class="bi bi-arrow-left"></i> Back to Mentors
         </a>
         <div style="border-left:1px solid var(--border);height:24px"></div>
         <div>
-            <div class="page-title">Edit Intern Profile</div>
-            <div class="page-sub">Update details for ${intern.studentCode}</div>
+            <div class="page-title">Add New Mentor</div>
+            <div class="page-sub">Create a new mentor account and assign intern capacity</div>
         </div>
     </div>
 
@@ -198,18 +199,17 @@
         <div class="form-card">
             <div class="form-card-header">
                 <div class="form-card-title">
-                    <div class="icon"><i class="bi bi-pencil-square"></i></div>
-                    Edit Intern Profile
+                    <div class="icon"><i class="bi bi-person-plus-fill"></i></div>
+                    Create Mentor Account
                 </div>
-                <div class="form-card-sub">All marked (*) fields are required.</div>
+                <div class="form-card-sub">All marked (*) fields are required. The mentor can log in to guide interns immediately.</div>
             </div>
 
             <c:if test="${not empty error}">
                 <div class="alert-error"><i class="bi bi-exclamation-circle-fill"></i> ${error}</div>
             </c:if>
 
-            <form action="${pageContext.request.contextPath}/hr/interns/edit" method="post" id="internEditForm">
-                <input type="hidden" name="id" value="${intern.id}">
+            <form action="${pageContext.request.contextPath}/hr/mentors/create" method="post" id="mentorForm">
 
                 <%-- 1. Personal Information --%>
                 <div class="section-label"><i class="bi bi-person-fill"></i> Personal Information</div>
@@ -218,86 +218,47 @@
                         <label class="form-label">Full Name <span class="required">*</span></label>
                         <div class="input-wrap">
                             <i class="bi bi-person-fill input-icon"></i>
-                            <input type="text" name="fullName" class="form-input" value="${intern.fullName}" required placeholder="e.g. Nguyen Van A">
+                            <input type="text" name="fullName" class="form-input" value="${param.fullName}" required placeholder="e.g. Tran Van Mentor">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Email <span class="required">*</span></label>
+                        <label class="form-label">Email Address <span class="required">*</span></label>
                         <div class="input-wrap">
                             <i class="bi bi-envelope input-icon"></i>
-                            <input type="email" name="email" class="form-input" value="${intern.email}" required placeholder="intern@example.com">
+                            <input type="email" name="email" class="form-input" value="${param.email}" required placeholder="mentor@company.com">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Phone <span class="required">*</span></label>
+                        <label class="form-label">Phone Number <span class="required">*</span></label>
                         <div class="input-wrap">
                             <i class="bi bi-phone input-icon"></i>
-                            <input type="tel" name="phone" class="form-input" value="${intern.phone}" required placeholder="0901234567">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Date of Birth</label>
-                        <div class="input-wrap">
-                            <i class="bi bi-calendar3 input-icon"></i>
-                            <input type="date" name="dateOfBirth" class="form-input" value="${intern.dateOfBirth}">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Gender <span class="required">*</span></label>
-                        <div class="input-wrap">
-                            <i class="bi bi-gender-ambiguous input-icon"></i>
-                            <select name="gender" class="form-select" required>
-                                <option value="">-- Select --</option>
-                                <option value="MALE"   ${intern.gender == 'MALE'   ? 'selected' : ''}>Male</option>
-                                <option value="FEMALE" ${intern.gender == 'FEMALE' ? 'selected' : ''}>Female</option>
-                                <option value="OTHER"  ${intern.gender == 'OTHER'  ? 'selected' : ''}>Other</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group full">
-                        <label class="form-label">Address</label>
-                        <div class="input-wrap">
-                            <i class="bi bi-geo-alt input-icon"></i>
-                            <input type="text" name="address" class="form-input" value="${intern.address}" placeholder="Address">
+                            <input type="tel" name="phone" class="form-input" value="${param.phone}" required placeholder="0901234567">
                         </div>
                     </div>
                 </div>
 
-                <%-- 2. Academic Details --%>
-                <div class="section-label"><i class="bi bi-mortarboard"></i> Academic Details</div>
+                <%-- 2. Professional Details --%>
+                <div class="section-label"><i class="bi bi-briefcase-fill"></i> Professional Details</div>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label class="form-label">Student Code</label>
+                        <label class="form-label">Department <span class="required">*</span></label>
                         <div class="input-wrap">
-                            <i class="bi bi-card-text input-icon"></i>
-                            <input type="text" name="studentCode" class="form-input" value="${intern.studentCode}" placeholder="e.g. SV001">
+                            <i class="bi bi-building input-icon"></i>
+                            <input type="text" name="department" class="form-input" value="${param.department}" required placeholder="e.g. Software Engineering">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Status</label>
+                        <label class="form-label">Position / Job Title <span class="required">*</span></label>
                         <div class="input-wrap">
-                            <i class="bi bi-flag input-icon"></i>
-                            <select name="status" class="form-select">
-                                <option value="PENDING"   ${intern.status == 'PENDING'   ? 'selected' : ''}>Pending</option>
-                                <option value="APPROVED"  ${intern.status == 'APPROVED'  ? 'selected' : ''}>Approved</option>
-                                <option value="REJECTED"  ${intern.status == 'REJECTED'  ? 'selected' : ''}>Rejected</option>
-                                <option value="INTERNING" ${intern.status == 'INTERNING' ? 'selected' : ''}>Interning</option>
-                                <option value="COMPLETED" ${intern.status == 'COMPLETED' ? 'selected' : ''}>Completed</option>
-                            </select>
+                            <i class="bi bi-award input-icon"></i>
+                            <input type="text" name="position" class="form-input" value="${param.position}" required placeholder="e.g. Senior Software Engineer">
                         </div>
                     </div>
                     <div class="form-group full">
-                        <label class="form-label">University <span class="required">*</span></label>
+                        <label class="form-label">Max Interns Capacity <span class="required">*</span></label>
                         <div class="input-wrap">
-                            <i class="bi bi-building input-icon"></i>
-                            <input type="text" name="university" class="form-input" value="${intern.university}" required placeholder="e.g. Hanoi University of Science and Technology">
-                        </div>
-                    </div>
-                    <div class="form-group full">
-                        <label class="form-label">Major <span class="required">*</span></label>
-                        <div class="input-wrap">
-                            <i class="bi bi-book input-icon"></i>
-                            <input type="text" name="major" class="form-input" value="${intern.major}" required placeholder="e.g. Computer Science">
+                            <i class="bi bi-people-fill input-icon"></i>
+                            <input type="number" name="maxInterns" class="form-input" value="${not empty param.maxInterns ? param.maxInterns : 5}" min="1" max="20" required placeholder="5">
                         </div>
                     </div>
                 </div>
@@ -309,14 +270,14 @@
                         <label class="form-label">Username <span class="required">*</span></label>
                         <div class="input-wrap">
                             <i class="bi bi-at input-icon"></i>
-                            <input type="text" name="username" class="form-input" value="${not empty user.username ? user.username : (not empty param.username ? param.username : '')}" required placeholder="e.g. intern01" autocomplete="off">
+                            <input type="text" name="username" class="form-input" value="${param.username}" required placeholder="e.g. mentor02" autocomplete="off">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Password</label>
+                        <label class="form-label">Password <span class="required">*</span></label>
                         <div class="input-wrap" style="position:relative;">
                             <i class="bi bi-lock input-icon"></i>
-                            <input type="password" name="password" id="pwField" class="form-input" placeholder="Leave blank to keep current password" autocomplete="new-password" style="padding-right:40px;">
+                            <input type="password" name="password" id="pwField" class="form-input" required placeholder="Min 6 characters" autocomplete="new-password" style="padding-right:40px;">
                             <button type="button" class="pw-toggle" onclick="togglePw()">
                                 <i class="bi bi-eye" id="pwEye"></i>
                             </button>
@@ -325,11 +286,11 @@
                 </div>
 
                 <div class="form-actions">
-                    <a href="${pageContext.request.contextPath}/hr/dashboard" class="btn-cancel">
+                    <a href="${pageContext.request.contextPath}/hr/mentors" class="btn-cancel">
                         <i class="bi bi-x"></i> Cancel
                     </a>
-                    <button type="submit" class="btn-save" id="saveEditBtn">
-                        <i class="bi bi-check-lg"></i> Update Profile
+                    <button type="submit" class="btn-save" id="submitBtn">
+                        <i class="bi bi-check-lg"></i> Create Mentor
                     </button>
                 </div>
             </form>
@@ -344,8 +305,8 @@
         if (f.type === 'password') { f.type = 'text'; eye.className = 'bi bi-eye-slash'; }
         else { f.type = 'password'; eye.className = 'bi bi-eye'; }
     }
-    document.getElementById('internEditForm').addEventListener('submit', function() {
-        var btn = document.getElementById('saveEditBtn');
+    document.getElementById('mentorForm').addEventListener('submit', function () {
+        var btn = document.getElementById('submitBtn');
         btn.disabled = true;
         btn.innerHTML = '<i class="bi bi-arrow-repeat"></i> Saving...';
     });

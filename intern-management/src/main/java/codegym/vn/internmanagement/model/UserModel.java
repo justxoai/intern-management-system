@@ -129,21 +129,74 @@ public class UserModel {
                 mentorDAO.insert(created.getId(), "", "", 5);
             }
         }
+
+        // Auto-create an interns profile when role is INTERN
+        if ("INTERN".equalsIgnoreCase(role)) {
+            User created = userDAO.findByUsername(user.getUsername());
+            if (created != null) {
+                codegym.vn.internmanagement.dao.InternDAO internDAO =
+                        new codegym.vn.internmanagement.dao.InternDAO();
+                codegym.vn.internmanagement.entity.Intern intern =
+                        new codegym.vn.internmanagement.entity.Intern();
+                intern.setUserId(created.getId());
+                intern.setStudentCode("");
+                intern.setUniversity("");
+                intern.setMajor("");
+                intern.setEmail(created.getEmail());
+                intern.setPhone(created.getPhone());
+                intern.setStatus("PENDING");
+                internDAO.insert(intern);
+            }
+        }
+
         return null;
     }
 
     /**
-     * Update an existing user account.
+     * Update an existing user account with optional new password and username.
      *
      * @param user User entity with updated values
+     * @param password Optional new password (can be null/empty to keep existing)
      * @return Error message if validation fails, or null if update succeeds.
      */
-    public String updateUser(User user) {
-        if (user.getId() == null) return "Invalid user ID.";
+    public String updateUser(User user, String password) {
+        if (user.getId() == null || user.getId() <= 0) return "Invalid user ID.";
         if (user.getFullName() == null || user.getFullName().trim().isEmpty()) return "Full Name is required.";
         if (user.getEmail() == null || user.getEmail().trim().isEmpty()) return "Email is required.";
+        if (!user.getEmail().trim().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+            return "Please enter a valid email address.";
+        }
 
+        // Validate username
+        if (user.getUsername() == null || user.getUsername().trim().isEmpty()) {
+            return "Username is required.";
+        }
+        User existingUserWithUsername = userDAO.findByUsername(user.getUsername().trim());
+        if (existingUserWithUsername != null && !existingUserWithUsername.getId().equals(user.getId())) {
+            return "Username is already taken.";
+        }
+
+        // Validate role
+        String role = user.getRole();
+        if (role == null || (!role.equals("HR") && !role.equals("MENTOR") && !role.equals("INTERN") && !role.equals("ADMIN"))) {
+            return "Invalid role specified.";
+        }
+
+        // Validate password if provided
+        if (password != null && !password.trim().isEmpty()) {
+            if (password.trim().length() < 6) {
+                return "Password must be at least 6 characters.";
+            }
+            user.setPassword(PasswordUtil.hashPassword(password.trim()));
+            userDAO.updatePassword(user.getId(), user.getPassword());
+        }
+
+        userDAO.updateUsername(user.getId(), user.getUsername().trim());
         return userDAO.update(user) ? null : "Failed to update user.";
+    }
+
+    public String updateUser(User user) {
+        return updateUser(user, null);
     }
 
     /**

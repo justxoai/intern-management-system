@@ -124,6 +124,7 @@
         .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 20px; font-size: .7rem; font-weight: 600; }
         .badge-pending   { background: #fefce8; color: #a16207; }
         .badge-approved  { background: #f0fdf4; color: #16a34a; }
+        .badge-rejected  { background: #fef2f2; color: #dc2626; }
         .badge-interning { background: #eff6ff; color: #1d4ed8; }
         .badge-completed { background: #f5f3ff; color: #7c3aed; }
         .badge-active    { background: #f0fdf4; color: #16a34a; }
@@ -154,8 +155,14 @@
         <li><a href="${pageContext.request.contextPath}/hr/dashboard" class="active">
             <i class="bi bi-grid"></i> Dashboard
         </a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/mentors">
+            <i class="bi bi-mortarboard"></i> Mentors
+        </a></li>
         <li><a href="${pageContext.request.contextPath}/hr/applications">
             <i class="bi bi-clipboard-check"></i> Applications
+        </a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/contracts">
+            <i class="bi bi-file-earmark-text"></i> Contracts
         </a></li>
         <li><a href="${pageContext.request.contextPath}/hr/documents">
             <i class="bi bi-folder-check"></i> Document Review
@@ -242,6 +249,7 @@
                         <option value="">All Status</option>
                         <option value="PENDING"   ${internStatus == 'PENDING'   ? 'selected' : ''}>Pending</option>
                         <option value="APPROVED"  ${internStatus == 'APPROVED'  ? 'selected' : ''}>Approved</option>
+                        <option value="REJECTED"  ${internStatus == 'REJECTED'  ? 'selected' : ''}>Rejected</option>
                         <option value="INTERNING" ${internStatus == 'INTERNING' ? 'selected' : ''}>Interning</option>
                         <option value="COMPLETED" ${internStatus == 'COMPLETED' ? 'selected' : ''}>Completed</option>
                     </select>
@@ -279,6 +287,7 @@
                                     <td>
                                         <c:choose>
                                             <c:when test="${i.status == 'APPROVED'}"><span class="badge badge-approved"><i class="bi bi-check-circle-fill" style="font-size:.65rem"></i>Approved</span></c:when>
+                                            <c:when test="${i.status == 'REJECTED'}"><span class="badge badge-rejected"><i class="bi bi-x-circle-fill" style="font-size:.65rem"></i>Rejected</span></c:when>
                                             <c:when test="${i.status == 'INTERNING'}"><span class="badge badge-interning"><i class="bi bi-play-circle-fill" style="font-size:.65rem"></i>Interning</span></c:when>
                                             <c:when test="${i.status == 'COMPLETED'}"><span class="badge badge-completed"><i class="bi bi-patch-check-fill" style="font-size:.65rem"></i>Completed</span></c:when>
                                             <c:otherwise><span class="badge badge-pending"><i class="bi bi-clock-fill" style="font-size:.65rem"></i>Pending</span></c:otherwise>
@@ -305,6 +314,14 @@
                     <div class="sec-icon si-mentor"><i class="bi bi-mortarboard"></i></div>
                     <span class="sec-title">Mentor Management</span>
                     <span class="sec-count count-mentor">${fn:length(mentors)}</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px">
+                    <a href="${pageContext.request.contextPath}/hr/mentors" class="btn-add" style="background:#f1f5f9;color:#334155;border:1px solid #cbd5e1">
+                        <i class="bi bi-person-gear"></i> Assign Interns
+                    </a>
+                    <a href="${pageContext.request.contextPath}/hr/mentors/create" class="btn-add green">
+                        <i class="bi bi-plus-lg"></i> Add Mentor
+                    </a>
                 </div>
             </div>
             <form class="filter-bar" method="get" action="${pageContext.request.contextPath}/hr/dashboard">

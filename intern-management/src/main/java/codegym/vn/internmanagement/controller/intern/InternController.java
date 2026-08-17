@@ -3,7 +3,9 @@ package codegym.vn.internmanagement.controller.intern;
 import java.io.IOException;
 import java.time.LocalDate;
 
+import codegym.vn.internmanagement.dao.UserDAO;
 import codegym.vn.internmanagement.entity.Intern;
+import codegym.vn.internmanagement.entity.User;
 import codegym.vn.internmanagement.model.InternModel;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -15,10 +17,12 @@ import jakarta.servlet.http.HttpServletResponse;
 public class InternController extends HttpServlet {
 
     private InternModel internModel;
+    private UserDAO userDAO;
 
     @Override
     public void init() {
         internModel = new InternModel();
+        userDAO = new UserDAO();
     }
 
     @Override
@@ -69,6 +73,16 @@ public class InternController extends HttpServlet {
                 return;
             }
 
+            if (intern.getUserId() != null && intern.getUserId() > 0) {
+                User user = userDAO.findById(intern.getUserId());
+                if (user != null) {
+                    request.setAttribute("user", user);
+                    if (intern.getFullName() == null || intern.getFullName().isBlank()) {
+                        intern.setFullName(user.getFullName());
+                    }
+                }
+            }
+
             request.setAttribute("intern", intern);
             request.getRequestDispatcher("/WEB-INF/views/intern/edit.jsp").forward(request, response);
         } catch (NumberFormatException e) {
@@ -100,6 +114,7 @@ public class InternController extends HttpServlet {
         intern.setAddress(trim(request.getParameter("address")));
         intern.setPhone(trim(request.getParameter("phone")));
         intern.setEmail(trim(request.getParameter("email")));
+        intern.setFullName(trim(request.getParameter("fullName")));
         String status = trim(request.getParameter("status"));
         intern.setStatus(!status.isEmpty() ? status : "PENDING");
 
@@ -108,9 +123,32 @@ public class InternController extends HttpServlet {
             try { intern.setUserId(Long.parseLong(userIdStr)); } catch (Exception ignored) {}
         }
 
+        String username = trim(request.getParameter("username"));
+        String password = trim(request.getParameter("password"));
+        request.setAttribute("internUsername", username);
+        request.setAttribute("internPassword", password);
+
         // Basic validation
-        if (intern.getStudentCode() == null || intern.getStudentCode().isEmpty()) {
-            request.setAttribute("error", "Student Code is required.");
+        if (intern.getFullName() == null || intern.getFullName().isEmpty()) {
+            request.setAttribute("error", "Full Name is required.");
+            request.setAttribute("intern", intern);
+            request.getRequestDispatcher("/WEB-INF/views/intern/create.jsp").forward(request, response);
+            return;
+        }
+        if (intern.getEmail() == null || intern.getEmail().isEmpty()) {
+            request.setAttribute("error", "Email is required.");
+            request.setAttribute("intern", intern);
+            request.getRequestDispatcher("/WEB-INF/views/intern/create.jsp").forward(request, response);
+            return;
+        }
+        if (intern.getPhone() == null || intern.getPhone().isEmpty()) {
+            request.setAttribute("error", "Phone is required.");
+            request.setAttribute("intern", intern);
+            request.getRequestDispatcher("/WEB-INF/views/intern/create.jsp").forward(request, response);
+            return;
+        }
+        if (intern.getGender() == null || intern.getGender().isEmpty()) {
+            request.setAttribute("error", "Gender is required.");
             request.setAttribute("intern", intern);
             request.getRequestDispatcher("/WEB-INF/views/intern/create.jsp").forward(request, response);
             return;
@@ -127,14 +165,8 @@ public class InternController extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/views/intern/create.jsp").forward(request, response);
             return;
         }
-        if (intern.getEmail() == null || intern.getEmail().isEmpty()) {
-            request.setAttribute("error", "Email is required.");
-            request.setAttribute("intern", intern);
-            request.getRequestDispatcher("/WEB-INF/views/intern/create.jsp").forward(request, response);
-            return;
-        }
 
-        String error = internModel.createIntern(intern);
+        String error = internModel.createIntern(intern, username, password);
 
         if (error != null) {
             request.setAttribute("error", error);
@@ -161,31 +193,33 @@ public class InternController extends HttpServlet {
                 return;
             }
 
-            intern.setStudentCode(trim(request.getParameter("studentCode")));
-            intern.setUniversity(trim(request.getParameter("university")));
-            intern.setMajor(trim(request.getParameter("major")));
+            intern.setFullName(trim(request.getParameter("fullName")));
+            intern.setEmail(trim(request.getParameter("email")));
+            intern.setPhone(trim(request.getParameter("phone")));
             String dobStr = trim(request.getParameter("dateOfBirth"));
             if (!dobStr.isEmpty()) {
                 try { intern.setDateOfBirth(LocalDate.parse(dobStr)); } catch (Exception ignored) {}
+            } else {
+                intern.setDateOfBirth(null);
             }
             intern.setGender(trim(request.getParameter("gender")));
-            intern.setAddress(trim(request.getParameter("address")));
-            intern.setPhone(trim(request.getParameter("phone")));
-            intern.setEmail(trim(request.getParameter("email")));
+            intern.setStudentCode(trim(request.getParameter("studentCode")));
             intern.setStatus(trim(request.getParameter("status")));
+            intern.setUniversity(trim(request.getParameter("university")));
+            intern.setMajor(trim(request.getParameter("major")));
+            intern.setAddress(trim(request.getParameter("address")));
 
-            if (intern.getStudentCode() == null || intern.getStudentCode().isEmpty()) {
-                request.setAttribute("error", "Student Code is required.");
-                request.setAttribute("intern", intern);
-                request.getRequestDispatcher("/WEB-INF/views/intern/edit.jsp").forward(request, response);
-                return;
-            }
+            String username = trim(request.getParameter("username"));
+            String password = trim(request.getParameter("password"));
 
-            String error = internModel.updateIntern(intern);
+            String error = internModel.updateIntern(intern, username, password);
 
             if (error != null) {
                 request.setAttribute("error", error);
                 request.setAttribute("intern", intern);
+                User user = new User();
+                user.setUsername(username);
+                request.setAttribute("user", user);
                 request.getRequestDispatcher("/WEB-INF/views/intern/edit.jsp").forward(request, response);
                 return;
             }

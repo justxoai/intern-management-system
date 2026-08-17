@@ -187,6 +187,38 @@ public class UserDAO {
         return false;
     }
 
+    public boolean updateUsername(Long userId, String username) {
+        String sql = "UPDATE users SET username=? WHERE id=?";
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, username);
+            statement.setLong(2, userId);
+
+            return statement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean updatePassword(Long userId, String hashedPassword) {
+        String sql = "UPDATE users SET password=? WHERE id=?";
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, hashedPassword);
+            statement.setLong(2, userId);
+
+            return statement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     /**
      * Delete a user by ID.
      *

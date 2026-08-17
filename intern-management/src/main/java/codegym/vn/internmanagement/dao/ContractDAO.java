@@ -78,6 +78,11 @@ public class ContractDAO {
                     ps2.setLong(1, contractId);
                     ps2.executeUpdate();
                 }
+                try (PreparedStatement ps3 = conn.prepareStatement(
+                        "UPDATE interns i JOIN contracts c ON c.intern_id = i.id SET i.status='INTERNING' WHERE c.id=? AND i.status IN ('PENDING', 'APPROVED')")) {
+                    ps3.setLong(1, contractId);
+                    ps3.executeUpdate();
+                }
                 conn.commit();
                 return true;
             } catch (SQLException e) {

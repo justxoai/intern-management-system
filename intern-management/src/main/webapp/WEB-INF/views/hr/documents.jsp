@@ -116,8 +116,14 @@
         <li><a href="${pageContext.request.contextPath}/hr/dashboard">
             <i class="bi bi-grid"></i> Dashboard
         </a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/mentors">
+            <i class="bi bi-mortarboard"></i> Mentors
+        </a></li>
         <li><a href="${pageContext.request.contextPath}/hr/applications">
             <i class="bi bi-clipboard-check"></i> Applications
+        </a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/contracts">
+            <i class="bi bi-file-earmark-text"></i> Contracts
         </a></li>
         <li><a href="${pageContext.request.contextPath}/hr/documents" class="active">
             <i class="bi bi-folder-check"></i> Document Review

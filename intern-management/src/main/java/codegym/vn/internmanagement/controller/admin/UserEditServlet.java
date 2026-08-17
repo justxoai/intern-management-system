@@ -61,6 +61,8 @@ public class UserEditServlet extends HttpServlet {
 
         try {
             Long id = Long.parseLong(idParam);
+            String username = request.getParameter("username");
+            String password = request.getParameter("password");
             String fullName = request.getParameter("fullName");
             String email    = request.getParameter("email");
             String phone    = request.getParameter("phone");
@@ -69,19 +71,20 @@ public class UserEditServlet extends HttpServlet {
 
             User user = new User();
             user.setId(id);
-            user.setFullName(fullName);
-            user.setEmail(email);
-            user.setPhone(phone);
-            user.setRole(role);
-            user.setStatus(status);
+            user.setUsername(username != null ? username.trim() : "");
+            user.setFullName(fullName != null ? fullName.trim() : "");
+            user.setEmail(email != null ? email.trim() : "");
+            user.setPhone(phone != null ? phone.trim() : "");
+            user.setRole(role != null ? role.trim() : "");
+            user.setStatus(status != null ? status.trim() : "ACTIVE");
 
-            String error = userModel.updateUser(user);
+            String error = userModel.updateUser(user, password);
             if (error != null) {
                 request.setAttribute("error", error);
                 request.setAttribute("user", user);
                 request.getRequestDispatcher("/WEB-INF/views/admin/users/edit.jsp").forward(request, response);
             } else {
-                response.sendRedirect(request.getContextPath() + "/admin/users");
+                response.sendRedirect(request.getContextPath() + "/admin/users?success=User+account+updated");
             }
         } catch (NumberFormatException e) {
             response.sendRedirect(request.getContextPath() + "/admin/users");

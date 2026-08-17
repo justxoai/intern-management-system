@@ -178,10 +178,12 @@
     <div class="sidebar-section-label">Management</div>
     <ul class="sidebar-nav">
         <li><a href="${pageContext.request.contextPath}/hr/dashboard"><i class="bi bi-grid"></i> Dashboard</a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/mentors"><i class="bi bi-mortarboard"></i> Mentors</a></li>
         <li><a href="${pageContext.request.contextPath}/hr/applications" class="active">
             <i class="bi bi-clipboard-check"></i> Applications
             <c:if test="${pendingCount > 0}"><span class="sidebar-badge">${pendingCount}</span></c:if>
         </a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/contracts"><i class="bi bi-file-earmark-text"></i> Contracts</a></li>
         <li><a href="${pageContext.request.contextPath}/hr/documents"><i class="bi bi-folder-check"></i> Document Review</a></li>
     </ul>
 

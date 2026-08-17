@@ -128,7 +128,9 @@
     <div class="sidebar-section-label">Management</div>
     <ul class="sidebar-nav">
         <li><a href="${pageContext.request.contextPath}/hr/dashboard"><i class="bi bi-grid"></i> Dashboard</a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/mentors" class="active"><i class="bi bi-mortarboard"></i> Mentors</a></li>
         <li><a href="${pageContext.request.contextPath}/hr/applications"><i class="bi bi-clipboard-check"></i> Applications</a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/contracts"><i class="bi bi-file-earmark-text"></i> Contracts</a></li>
         <li><a href="${pageContext.request.contextPath}/hr/documents"><i class="bi bi-folder-check"></i> Document Review</a></li>
     </ul>
     <div class="sidebar-footer">
@@ -150,6 +152,10 @@
             <div class="page-title">Mentor Management</div>
             <div class="page-sub">Workload distribution and intern assignment</div>
         </div>
+        <a href="${pageContext.request.contextPath}/hr/mentors/create"
+           style="padding:8px 18px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;border-radius:9px;text-decoration:none;font-size:.82rem;font-weight:600;display:flex;align-items:center;gap:6px;box-shadow:0 3px 10px rgba(16,185,129,.35)">
+            <i class="bi bi-plus-lg"></i> Add Mentor
+        </a>
     </div>
 
     <div class="content">
@@ -213,10 +219,7 @@
                                 <div class="mc-avatar">${fn:substring(m.fullName, 0, 1)}</div>
                                 <div style="flex:1;min-width:0">
                                     <div class="mc-name">${m.fullName}</div>
-                                    <div class="mc-email"><i class="bi bi-envelope" style="margin-right:3px"></i>${m.email}</div>
-                                    <c:if test="${not empty m.phone}">
-                                        <div class="mc-phone"><i class="bi bi-phone" style="margin-right:3px"></i>${m.phone}</div>
-                                    </c:if>
+                                    <div class="mc-email">${m.email}</div>
                                 </div>
                                 <c:choose>
                                     <c:when test="${m.userStatus == 'ACTIVE'}">
@@ -293,19 +296,28 @@
                                 </div>
 
                                 <%-- Assign form --%>
-                                <form method="post" action="${pageContext.request.contextPath}/hr/mentors/assign" class="assign-form">
-                                    <input type="hidden" name="mentorId" value="${m.id}">
-                                    <select name="internId" class="assign-select" required>
-                                        <option value="">— Select Intern —</option>
-                                        <c:forEach var="intern" items="${allInterns}">
-                                            <option value="${intern.id}">
-                                                ${not empty intern.fullName ? intern.fullName : intern.email}
-                                                <c:if test="${not empty intern.studentCode}"> (${intern.studentCode})</c:if>
-                                            </option>
-                                        </c:forEach>
-                                    </select>
-                                    <button type="submit" class="btn-assign"><i class="bi bi-plus-lg"></i> Assign</button>
-                                </form>
+                                <c:choose>
+                                    <c:when test="${m.currentInternCount >= m.maxInterns}">
+                                        <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:8px 12px;display:flex;align-items:center;gap:6px;color:#dc2626;font-size:.78rem;font-weight:600">
+                                            <i class="bi bi-slash-circle-fill"></i> Capacity Full (${m.maxInterns}/${m.maxInterns} interns)
+                                        </div>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <form method="post" action="${pageContext.request.contextPath}/hr/mentors/assign" class="assign-form">
+                                            <input type="hidden" name="mentorId" value="${m.id}">
+                                            <select name="internId" class="assign-select" required>
+                                                <option value="">— Select Intern —</option>
+                                                <c:forEach var="intern" items="${allInterns}">
+                                                    <option value="${intern.id}">
+                                                        ${not empty intern.fullName ? intern.fullName : intern.email}
+                                                        <c:if test="${not empty intern.studentCode}"> (${intern.studentCode})</c:if>
+                                                    </option>
+                                                </c:forEach>
+                                            </select>
+                                            <button type="submit" class="btn-assign"><i class="bi bi-plus-lg"></i> Assign</button>
+                                        </form>
+                                    </c:otherwise>
+                                </c:choose>
                             </div>
                         </div>
                     </c:forEach>

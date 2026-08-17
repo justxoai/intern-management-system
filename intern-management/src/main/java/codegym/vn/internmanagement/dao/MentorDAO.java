@@ -102,6 +102,25 @@ public class MentorDAO {
      * Assign an intern (interns.id) to a mentor (mentors.id).
      */
     public boolean assign(Long mentorId, Long internId) {
+        // Check if intern is already actively assigned to this mentor
+        String checkAssignedSql = "SELECT COUNT(*) FROM mentor_assignments WHERE mentor_id=? AND intern_id=? AND status='ACTIVE'";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement checkPs = conn.prepareStatement(checkAssignedSql)) {
+            checkPs.setLong(1, mentorId);
+            checkPs.setLong(2, internId);
+            try (ResultSet rs = checkPs.executeQuery()) {
+                if (rs.next() && rs.getInt(1) > 0) {
+                    return true; // Already assigned
+                }
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+
+        // Check if mentor has reached max_interns capacity
+        Mentor mentor = findById(mentorId);
+        if (mentor != null && mentor.getCurrentInternCount() >= mentor.getMaxInterns()) {
+            return false; // Reached capacity
+        }
+
         String updateOldSql = "UPDATE mentor_assignments SET status='ENDED' WHERE intern_id=? AND mentor_id != ?";
         String upsertSql = "INSERT INTO mentor_assignments (mentor_id, intern_id, status) VALUES (?,?,'ACTIVE') " +
                            "ON DUPLICATE KEY UPDATE status='ACTIVE'";

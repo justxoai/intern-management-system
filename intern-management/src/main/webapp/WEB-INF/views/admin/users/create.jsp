@@ -122,16 +122,8 @@
         <li><a href="${pageContext.request.contextPath}/admin/users/create" class="active">
             <i class="bi bi-person-plus"></i> Add New User
         </a></li>
-        <li><a href="${pageContext.request.contextPath}/admin/users#section-hr">
-            <i class="bi bi-building"></i> HR Section
-        </a></li>
-        <li><a href="${pageContext.request.contextPath}/admin/users#section-mentor">
-            <i class="bi bi-mortarboard"></i> Mentor Section
-        </a></li>
-        <li><a href="${pageContext.request.contextPath}/admin/users#section-intern">
-            <i class="bi bi-person-workspace"></i> Intern Section
-        </a></li>
     </ul>
+
     <div class="sidebar-footer">
         <div class="sidebar-user">
             <div class="avatar">${fn:substring(sessionScope.currentUser.fullName, 0, 1)}</div>

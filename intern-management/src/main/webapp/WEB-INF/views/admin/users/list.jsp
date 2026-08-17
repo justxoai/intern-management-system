@@ -237,15 +237,6 @@
         <li><a href="${pageContext.request.contextPath}/admin/users/create">
             <i class="bi bi-person-plus"></i> Add New User
         </a></li>
-        <li><a href="#section-hr" onclick="return scrollToSection('section-hr')">
-            <i class="bi bi-building"></i> HR Section
-        </a></li>
-        <li><a href="#section-mentor" onclick="return scrollToSection('section-mentor')">
-            <i class="bi bi-mortarboard"></i> Mentor Section
-        </a></li>
-        <li><a href="#section-intern" onclick="return scrollToSection('section-intern')">
-            <i class="bi bi-person-workspace"></i> Intern Section
-        </a></li>
     </ul>
 
     <div class="sidebar-footer">

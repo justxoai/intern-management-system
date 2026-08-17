@@ -113,20 +113,12 @@ public class HrContractServlet extends HttpServlet {
         doc.setFileName(originalName);
         doc.setFilePath(webPath);
         doc.setStatus("PENDING");
-        documentDAO.insert(doc);
-
-        // Retrieve the saved document to get its ID (find latest CONTRACT for this intern)
-        List<Document> docs = documentDAO.findByInternId(internId);
-        Long docId = docs.stream()
-                .filter(d -> "CONTRACT".equals(d.getDocumentType()))
-                .findFirst()
-                .map(Document::getId)
-                .orElse(null);
+        long docId = documentDAO.insertAndGetId(doc);
 
         // Create contract record
         Contract contract = new Contract();
         contract.setInternId(internId);
-        contract.setDocumentId(docId);
+        contract.setDocumentId(docId > 0 ? docId : null);
         contract.setStartDate(LocalDate.parse(startDateStr));
         contract.setEndDate(LocalDate.parse(endDateStr));
         contractDAO.insert(contract);

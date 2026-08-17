@@ -10,7 +10,6 @@ public class Intern {
 
     private Long id;
     private Long userId;
-    private Long mentorId;
     private String studentCode;
     private String university;
     private String major;
@@ -19,7 +18,7 @@ public class Intern {
     private String address;
     private String phone;
     private String email;
-    private String status; // PENDING, APPROVED, INTERNING, COMPLETED
+    private String status; // PENDING, APPROVED, REJECTED, INTERNING, COMPLETED
     private LocalDateTime createdAt;
 
     // Joined field for convenience in views
@@ -59,8 +58,6 @@ public class Intern {
         this.userId = userId;
     }
 
-    public Long getMentorId() { return mentorId; }
-    public void setMentorId(Long mentorId) { this.mentorId = mentorId; }
 
     public String getStudentCode() {
         return studentCode;
