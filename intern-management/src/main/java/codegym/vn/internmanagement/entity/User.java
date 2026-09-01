@@ -17,6 +17,11 @@ public class User {
     private String status; // ACTIVE, INACTIVE
     private LocalDateTime createdAt;
 
+    // Joined fields for intern display
+    private String studentCode;
+    private String major;
+    private String university;
+
     public User() {
     }
 
@@ -112,5 +117,29 @@ public class User {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getStudentCode() {
+        return studentCode;
+    }
+
+    public void setStudentCode(String studentCode) {
+        this.studentCode = studentCode;
+    }
+
+    public String getMajor() {
+        return major;
+    }
+
+    public void setMajor(String major) {
+        this.major = major;
+    }
+
+    public String getUniversity() {
+        return university;
+    }
+
+    public void setUniversity(String university) {
+        this.university = university;
     }
 }

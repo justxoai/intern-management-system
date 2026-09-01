@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -162,7 +163,9 @@ public class InternDAO {
         
         Timestamp createdAt = rs.getTimestamp("created_at");
         if (createdAt != null) {
-            intern.setCreatedAt(createdAt.toLocalDateTime());
+            intern.setCreatedAt(createdAt.toInstant()
+                    .atZone(ZoneId.of("Asia/Ho_Chi_Minh"))
+                    .toLocalDateTime());
         }
 
         try {

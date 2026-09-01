@@ -271,6 +271,22 @@
 
     <div class="content">
 
+        <%-- ── Success / Error banner ── --%>
+        <c:if test="${not empty param.success}">
+            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 18px;
+                        display:flex;align-items:center;gap:10px;color:#15803d;font-size:.87rem;
+                        font-weight:500;margin-bottom:20px">
+                <i class="bi bi-check-circle-fill"></i> ${param.success}
+            </div>
+        </c:if>
+        <c:if test="${not empty param.error}">
+            <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:12px 18px;
+                        display:flex;align-items:center;gap:10px;color:#dc2626;font-size:.87rem;
+                        font-weight:500;margin-bottom:20px">
+                <i class="bi bi-exclamation-circle-fill"></i> ${param.error}
+            </div>
+        </c:if>
+
         <!-- Stats -->
         <div class="stats-grid">
             <div class="stat-card">

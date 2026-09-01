@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
+<%@ taglib prefix="c"   uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn"  uri="jakarta.tags.functions" %>
+<%@ page import="java.time.format.DateTimeFormatter, java.time.LocalDateTime" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -380,7 +381,18 @@
                                             <c:otherwise><span class="badge badge-inactive"><i class="bi bi-circle-fill" style="font-size:.4rem"></i>${m.status}</span></c:otherwise>
                                         </c:choose>
                                     </td>
-                                    <td style="color:var(--text-muted);font-size:.78rem">${m.createdAt}</td>
+                                    <td style="color:var(--text-muted);font-size:.78rem">
+                                        <%
+                                            java.time.LocalDateTime _ca = (java.time.LocalDateTime)
+                                                ((codegym.vn.internmanagement.entity.Mentor)
+                                                    pageContext.getAttribute("m")).getCreatedAt();
+                                            if (_ca != null) {
+                                                out.print(_ca.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
+                                            } else {
+                                                out.print("—");
+                                            }
+                                        %>
+                                    </td>
                                 </tr>
                             </c:forEach>
                         </c:otherwise>

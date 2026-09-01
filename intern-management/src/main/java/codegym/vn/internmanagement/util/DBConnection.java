@@ -10,8 +10,9 @@ public class DBConnection {
             "DB_URL",
             "jdbc:mysql://localhost:3306/internship_management"
                     + "?useSSL=false"
-                    + "&serverTimezone=UTC"
-                    + "&allowPublicKeyRetrieval=true");
+                    + "&serverTimezone=Asia%2FHo_Chi_Minh"
+                    + "&allowPublicKeyRetrieval=true"
+                    + "&connectionTimeZone=Asia/Ho_Chi_Minh");
 
     private static final String USERNAME = System.getenv().getOrDefault("DB_USERNAME", "root");
 

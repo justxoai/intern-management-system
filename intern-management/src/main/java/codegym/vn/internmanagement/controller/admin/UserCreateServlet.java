@@ -1,4 +1,4 @@
-package codegym.vn.internmanagement;
+package codegym.vn.internmanagement.controller.admin;
 
 import java.io.IOException;
 
@@ -31,12 +31,12 @@ public class UserCreateServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        String fullName = request.getParameter("fullName");
-        String email = request.getParameter("email");
-        String phone = request.getParameter("phone");
-        String role = request.getParameter("role");
+        String username = trim(request.getParameter("username"));
+        String password = trim(request.getParameter("password"));
+        String fullName = trim(request.getParameter("fullName"));
+        String email    = trim(request.getParameter("email"));
+        String phone    = trim(request.getParameter("phone"));
+        String role     = trim(request.getParameter("role"));
 
         User user = new User(username, password, fullName, email, phone, role, "ACTIVE");
 
@@ -50,5 +50,9 @@ public class UserCreateServlet extends HttpServlet {
         } else {
             response.sendRedirect(request.getContextPath() + "/admin/users");
         }
+    }
+
+    private String trim(String v) {
+        return v == null ? "" : v.trim();
     }
 }

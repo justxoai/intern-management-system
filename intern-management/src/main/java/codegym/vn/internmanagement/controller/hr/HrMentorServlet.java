@@ -123,15 +123,23 @@ public class HrMentorServlet extends HttpServlet {
             return;
         }
         if (phone.isEmpty()) {
-            forwardWithError(request, response, "Phone Number is required.");
+            forwardWithError(request, response, "Số điện thoại là bắt buộc.");
+            return;
+        }
+        if (!phone.matches("^(?:\\+84|0)(3[2-9]|5[6-9]|7[06-9]|8[0-9]|9[0-9])\\d{7}$")) {
+            forwardWithError(request, response, "Số điện thoại không hợp lệ. Ví dụ: 0901234567 hoặc +84901234567.");
             return;
         }
         if (username.isEmpty()) {
-            forwardWithError(request, response, "Username is required.");
+            forwardWithError(request, response, "Tên đăng nhập là bắt buộc.");
+            return;
+        }
+        if (!username.matches("^[a-zA-Z0-9._-]{3,30}$")) {
+            forwardWithError(request, response, "Tên đăng nhập chỉ được chứa chữ cái, số, dấu chấm, gạch dưới hoặc gạch ngang (3–30 ký tự).");
             return;
         }
         if (password.isEmpty() || password.length() < 6) {
-            forwardWithError(request, response, "Password must be at least 6 characters.");
+            forwardWithError(request, response, "Mật khẩu phải có ít nhất 6 ký tự.");
             return;
         }
 
