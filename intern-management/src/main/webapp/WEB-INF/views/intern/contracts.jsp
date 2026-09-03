@@ -93,6 +93,7 @@
         <li><a href="${pageContext.request.contextPath}/intern/documents"><i class="bi bi-folder2-open"></i>Tài liệu của tôi</a></li>
         <li><a href="${pageContext.request.contextPath}/intern/contracts" class="active"><i class="bi bi-file-earmark-check"></i>Hợp đồng của tôi</a></li>
         <li><a href="${pageContext.request.contextPath}/intern/tasks"><i class="bi bi-list-task"></i>Nhiệm vụ của tôi</a></li>
+        <li><a href="${pageContext.request.contextPath}/intern/reports"><i class="bi bi-journal-text"></i>Báo cáo tuần</a></li>
     </ul>
     <div class="sidebar-footer">
         <div class="sidebar-user">

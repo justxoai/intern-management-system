@@ -183,6 +183,12 @@
         <li><a href="${pageContext.request.contextPath}/mentor/dashboard/task/edit" class="active">
             <i class="bi bi-pencil-square"></i> Cập nhật nhiệm vụ
         </a></li>
+        <li><a href="${pageContext.request.contextPath}/mentor/reports">
+            <i class="bi bi-journal-text"></i> Báo cáo tuần TTS
+        </a></li>
+        <li><a href="${pageContext.request.contextPath}/mentor/evaluations">
+            <i class="bi bi-star-fill"></i> Đánh giá thực tập sinh
+        </a></li>
     </ul>
     <div class="sidebar-footer">
         <div class="sidebar-user">

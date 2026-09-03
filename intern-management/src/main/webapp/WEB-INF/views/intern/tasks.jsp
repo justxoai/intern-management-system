@@ -137,6 +137,9 @@
         <li><a href="${pageContext.request.contextPath}/intern/tasks" class="active">
             <i class="bi bi-list-task"></i> Nhiệm vụ của tôi
         </a></li>
+        <li><a href="${pageContext.request.contextPath}/intern/reports">
+            <i class="bi bi-journal-text"></i> Báo cáo tuần
+        </a></li>
     </ul>
     <div class="sidebar-footer">
         <div class="sidebar-user">

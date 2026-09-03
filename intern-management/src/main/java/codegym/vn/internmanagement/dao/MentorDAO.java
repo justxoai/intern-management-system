@@ -243,4 +243,16 @@ public class MentorDAO {
                 .toLocalDateTime());
         return m;
     }
+
+    public Long findMentorIdByUserId(Long userId) {
+        String sql = "SELECT id FROM mentors WHERE user_id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return rs.getLong("id");
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+        return null;
+    }
 }

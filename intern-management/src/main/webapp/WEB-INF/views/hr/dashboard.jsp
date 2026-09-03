@@ -171,6 +171,9 @@
         <li><a href="${pageContext.request.contextPath}/hr/documents">
             <i class="bi bi-folder-check"></i> Duyệt tài liệu
         </a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/report">
+            <i class="bi bi-bar-chart-line"></i> Báo cáo cuối kỳ
+        </a></li>
     </ul>
 
     <div class="sidebar-footer">

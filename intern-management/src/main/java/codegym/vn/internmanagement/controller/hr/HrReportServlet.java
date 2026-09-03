@@ -42,11 +42,20 @@ public class HrReportServlet extends HttpServlet {
         long doneTasks     = reportRows.stream().mapToLong(r -> toLong(r.get("completedTasks"))).sum();
         long activeInterns = reportRows.stream().filter(r -> "INTERNING".equals(r.get("internStatus"))).count();
 
+        // Evaluation stats
+        long evaluatedInterns = reportRows.stream().filter(r -> r.get("overallScore") != null).count();
+        double sumOverall = reportRows.stream()
+                .filter(r -> r.get("overallScore") != null)
+                .mapToDouble(r -> ((Number) r.get("overallScore")).doubleValue()).sum();
+        double avgOverallScore = evaluatedInterns > 0 ? Math.round((sumOverall / evaluatedInterns) * 10.0) / 10.0 : 0.0;
+
         request.setAttribute("reportRows",       reportRows);
         request.setAttribute("totalInterns",     totalInterns);
         request.setAttribute("totalTasks",       totalTasks);
         request.setAttribute("doneTasks",        doneTasks);
         request.setAttribute("activeInterns",    activeInterns);
+        request.setAttribute("evaluatedInterns", evaluatedInterns);
+        request.setAttribute("avgOverallScore",  avgOverallScore);
         request.setAttribute("filterStatus",     filterStatus);
         request.setAttribute("filterUniversity", filterUniversity);
         request.setAttribute("filterMajor",      filterMajor);
@@ -78,7 +87,13 @@ public class HrReportServlet extends HttpServlet {
             "  c.start_date, " +
             "  c.end_date, " +
             "  SUM(CASE WHEN d.document_type='CV'                    AND d.status='APPROVED' THEN 1 ELSE 0 END) AS cv_ok, " +
-            "  SUM(CASE WHEN d.document_type='INTERNSHIP_APPLICATION' AND d.status='APPROVED' THEN 1 ELSE 0 END) AS app_ok " +
+            "  SUM(CASE WHEN d.document_type='INTERNSHIP_APPLICATION' AND d.status='APPROVED' THEN 1 ELSE 0 END) AS app_ok, " +
+            "  e.technical_score, " +
+            "  e.attitude_score, " +
+            "  e.communication_score, " +
+            "  e.overall_score, " +
+            "  e.comments       AS mentor_comments, " +
+            "  e.evaluated_at " +
             "FROM interns i " +
             "JOIN  users u   ON i.user_id    = u.id " +
             "LEFT JOIN mentor_assignments ma ON ma.intern_id = i.id AND ma.status = 'ACTIVE' " +
@@ -87,6 +102,7 @@ public class HrReportServlet extends HttpServlet {
             "LEFT JOIN tasks t     ON t.intern_id = i.id " +
             "LEFT JOIN contracts c ON c.intern_id = i.id " +
             "LEFT JOIN documents d ON d.intern_id = i.id " +
+            "LEFT JOIN evaluations e ON e.intern_id = i.id " +
             "WHERE 1=1 "
         );
         List<Object> params = new ArrayList<>();
@@ -102,7 +118,7 @@ public class HrReportServlet extends HttpServlet {
             sql.append("AND i.major LIKE ? ");
             params.add("%" + major + "%");
         }
-        sql.append("GROUP BY i.id, c.id ORDER BY i.id DESC");
+        sql.append("GROUP BY i.id, c.id, e.id ORDER BY i.id DESC");
 
         List<Map<String, Object>> rows = new ArrayList<>();
         try (Connection conn = DBConnection.getConnection();
@@ -132,7 +148,27 @@ public class HrReportServlet extends HttpServlet {
                     row.put("cvOk",           rs.getInt("cv_ok") > 0);
                     row.put("appOk",          rs.getInt("app_ok") > 0);
 
-                    // Compute performance grade
+                    // Evaluation metrics
+                    row.put("technicalScore",     rs.getBigDecimal("technical_score"));
+                    row.put("attitudeScore",      rs.getBigDecimal("attitude_score"));
+                    row.put("communicationScore", rs.getBigDecimal("communication_score"));
+                    java.math.BigDecimal overall = rs.getBigDecimal("overall_score");
+                    row.put("overallScore",       overall);
+                    row.put("mentorComments",     rs.getString("mentor_comments"));
+                    row.put("evaluatedAt",        rs.getTimestamp("evaluated_at"));
+
+                    String evalGrade = "Chưa đánh giá";
+                    if (overall != null) {
+                        double sc = overall.doubleValue();
+                        if (sc >= 9.0) evalGrade = "Xuất sắc";
+                        else if (sc >= 8.0) evalGrade = "Giỏi";
+                        else if (sc >= 6.5) evalGrade = "Khá";
+                        else if (sc >= 5.0) evalGrade = "Trung bình";
+                        else evalGrade = "Chưa đạt";
+                    }
+                    row.put("evalGrade", evalGrade);
+
+                    // Compute performance grade based on task completion
                     long total = rs.getLong("total_tasks");
                     long done  = rs.getLong("completed_tasks");
                     double rate = total > 0 ? (done * 100.0 / total) : 0;
