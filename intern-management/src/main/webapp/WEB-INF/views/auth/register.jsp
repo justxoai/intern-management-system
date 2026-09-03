@@ -1,10 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c"   uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
-<fmt:setLocale value="${not empty sessionScope.lang ? sessionScope.lang : 'vi'}" />
+<fmt:setLocale value="vi" />
 <fmt:setBundle basename="messages" />
 <!DOCTYPE html>
-<html lang="${not empty sessionScope.lang ? sessionScope.lang : 'vi'}">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -23,9 +23,6 @@
         .brand h1 { color: #fff; font-size: 1.4rem; font-weight: 700; margin-bottom: 4px; }
         .brand p { color: rgba(255,255,255,.6); font-size: .87rem; }
 
-        .lang-bar { display: flex; justify-content: flex-end; margin-bottom: 14px; gap: 6px; }
-        .lang-btn { padding: 4px 12px; border-radius: 20px; border: 1.5px solid rgba(255,255,255,.2); background: transparent; font-size: .75rem; font-weight: 600; color: rgba(255,255,255,.7); cursor: pointer; text-decoration: none; transition: all .15s; }
-        .lang-btn:hover, .lang-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
 
         .card { background: #fff; border-radius: 20px; padding: 36px 40px; box-shadow: 0 20px 60px rgba(0,0,0,.3); }
 
@@ -76,17 +73,6 @@
 <body>
 <div class="register-wrap">
 
-    <%-- Language switcher --%>
-    <div class="lang-bar">
-        <a href="${pageContext.request.contextPath}/lang?lang=vi"
-           class="lang-btn ${empty sessionScope.lang || sessionScope.lang == 'vi' ? 'active' : ''}">
-            <fmt:message key="lang.vi"/>
-        </a>
-        <a href="${pageContext.request.contextPath}/lang?lang=en"
-           class="lang-btn ${sessionScope.lang == 'en' ? 'active' : ''}">
-            <fmt:message key="lang.en"/>
-        </a>
-    </div>
 
     <div class="brand">
         <div class="brand-icon"><i class="bi bi-person-workspace"></i></div>

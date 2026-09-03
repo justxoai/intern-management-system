@@ -2,11 +2,11 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>End-of-Term Report — HR Portal</title>
+    <title>Báo cáo Cuối kỳ — HR</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
@@ -133,22 +133,22 @@
 <aside class="sidebar">
     <div class="sidebar-brand">
         <div class="brand-icon"><i class="bi bi-building"></i></div>
-        <h1>Human Resource</h1>
+        <h1>Nhân sự (HR)</h1>
     </div>
-    <div class="sidebar-section-label">Management</div>
+    <div class="sidebar-section-label">Quản lý</div>
     <ul class="sidebar-nav">
-        <li><a href="${pageContext.request.contextPath}/hr/dashboard"><i class="bi bi-grid"></i> Dashboard</a></li>
-        <li><a href="${pageContext.request.contextPath}/hr/applications"><i class="bi bi-clipboard-check"></i> Applications</a></li>
-        <li><a href="${pageContext.request.contextPath}/hr/documents"><i class="bi bi-folder-check"></i> Document Review</a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/dashboard"><i class="bi bi-grid"></i> Tổng quan</a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/applications"><i class="bi bi-clipboard-check"></i> Đơn xét tuyển</a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/documents"><i class="bi bi-folder-check"></i> Duyệt tài liệu</a></li>
     </ul>
     <div class="sidebar-footer">
         <div class="sidebar-user">
             <div class="avatar">${fn:substring(sessionScope.currentUser.fullName, 0, 1)}</div>
             <div class="sidebar-user-info">
                 <div class="sidebar-user-name">${sessionScope.currentUser.fullName}</div>
-                <div class="sidebar-user-role">HR Staff</div>
+                <div class="sidebar-user-role">Nhân sự</div>
             </div>
-            <a href="${pageContext.request.contextPath}/logout" class="logout-btn" title="Logout"><i class="bi bi-box-arrow-right"></i></a>
+            <a href="${pageContext.request.contextPath}/logout" class="logout-btn" title="Đăng xuất"><i class="bi bi-box-arrow-right"></i></a>
         </div>
     </div>
 </aside>
@@ -157,11 +157,11 @@
 <div class="main">
     <div class="topbar">
         <div>
-            <div class="page-title"><i class="bi bi-bar-chart-line" style="color:var(--accent);margin-right:8px"></i>End-of-Term Report</div>
-            <div class="page-sub">Comprehensive intern evaluation summary for department heads &amp; university</div>
+            <div class="page-title"><i class="bi bi-bar-chart-line" style="color:var(--accent);margin-right:8px"></i>Báo cáo Cuối kỳ</div>
+            <div class="page-sub">Tổng hợp đánh giá kết quả thực tập dành cho Trưởng bộ phận &amp; Trường đại học</div>
         </div>
         <button class="btn-print no-print" onclick="window.print()">
-            <i class="bi bi-printer"></i> Print / Export PDF
+            <i class="bi bi-printer"></i> In / Xuất PDF
         </button>
     </div>
 
@@ -173,28 +173,28 @@
                 <div class="sum-icon si-blue"><i class="bi bi-people"></i></div>
                 <div>
                     <div class="sum-num">${totalInterns}</div>
-                    <div class="sum-lbl">Total Interns</div>
+                    <div class="sum-lbl">Tổng số TTS</div>
                 </div>
             </div>
             <div class="sum-card">
                 <div class="sum-icon si-green"><i class="bi bi-person-workspace"></i></div>
                 <div>
                     <div class="sum-num">${activeInterns}</div>
-                    <div class="sum-lbl">Currently Active</div>
+                    <div class="sum-lbl">Đang thực tập</div>
                 </div>
             </div>
             <div class="sum-card">
                 <div class="sum-icon si-amber"><i class="bi bi-list-task"></i></div>
                 <div>
                     <div class="sum-num">${totalTasks}</div>
-                    <div class="sum-lbl">Tasks Assigned</div>
+                    <div class="sum-lbl">Nhiệm vụ đã giao</div>
                 </div>
             </div>
             <div class="sum-card">
                 <div class="sum-icon si-purple"><i class="bi bi-check2-circle"></i></div>
                 <div>
                     <div class="sum-num">${doneTasks}</div>
-                    <div class="sum-lbl">Tasks Completed</div>
+                    <div class="sum-lbl">Nhiệm vụ hoàn thành</div>
                 </div>
             </div>
         </div>
@@ -202,36 +202,36 @@
         <%-- Filter bar --%>
         <form class="filter-bar no-print" method="get" action="${pageContext.request.contextPath}/hr/report">
             <div class="filter-group">
-                <span class="filter-label">Intern Status</span>
+                <span class="filter-label">Trạng thái TTS</span>
                 <select name="internStatus" class="filter-select">
-                    <option value="">All Statuses</option>
-                    <option value="INTERNING"  ${filterStatus == 'INTERNING'  ? 'selected' : ''}>Interning</option>
-                    <option value="APPROVED"   ${filterStatus == 'APPROVED'   ? 'selected' : ''}>Approved</option>
-                    <option value="COMPLETED"  ${filterStatus == 'COMPLETED'  ? 'selected' : ''}>Completed</option>
-                    <option value="PENDING"    ${filterStatus == 'PENDING'    ? 'selected' : ''}>Pending</option>
-                    <option value="REJECTED"   ${filterStatus == 'REJECTED'   ? 'selected' : ''}>Rejected</option>
+                    <option value="">Tất cả trạng thái</option>
+                    <option value="INTERNING"  ${filterStatus == 'INTERNING'  ? 'selected' : ''}>Đang thực tập</option>
+                    <option value="APPROVED"   ${filterStatus == 'APPROVED'   ? 'selected' : ''}>Đã duyệt</option>
+                    <option value="COMPLETED"  ${filterStatus == 'COMPLETED'  ? 'selected' : ''}>Hoàn thành</option>
+                    <option value="PENDING"    ${filterStatus == 'PENDING'    ? 'selected' : ''}>Chờ duyệt</option>
+                    <option value="REJECTED"   ${filterStatus == 'REJECTED'   ? 'selected' : ''}>Từ chối</option>
                 </select>
             </div>
             <div class="filter-group">
-                <span class="filter-label">University</span>
-                <input class="filter-input" type="text" name="university" value="${filterUniversity}" placeholder="Search university…">
+                <span class="filter-label">Trường đại học</span>
+                <input class="filter-input" type="text" name="university" value="${filterUniversity}" placeholder="Tìm theo trường…">
             </div>
             <div class="filter-group">
-                <span class="filter-label">Major</span>
-                <input class="filter-input" type="text" name="major" value="${filterMajor}" placeholder="Search major…">
+                <span class="filter-label">Chuyên ngành</span>
+                <input class="filter-input" type="text" name="major" value="${filterMajor}" placeholder="Tìm theo chuyên ngành…">
             </div>
-            <button type="submit" class="btn-filter blue"><i class="bi bi-funnel"></i> Filter</button>
-            <a href="${pageContext.request.contextPath}/hr/report" class="btn-filter ghost" style="text-decoration:none">Clear</a>
+            <button type="submit" class="btn-filter blue"><i class="bi bi-funnel"></i> Lọc</button>
+            <a href="${pageContext.request.contextPath}/hr/report" class="btn-filter ghost" style="text-decoration:none">Xóa lọc</a>
         </form>
 
         <%-- Report table --%>
         <div class="report-card">
             <div class="report-card-header">
                 <div class="rh-icon"><i class="bi bi-table"></i></div>
-                <span class="rh-title">Intern Performance Report
-                    <span style="font-size:.75rem;color:var(--text-muted);font-weight:500;margin-left:6px">(${fn:length(reportRows)} interns)</span>
+                <span class="rh-title">Báo cáo Đánh giá Kết quả Thực tập sinh
+                    <span style="font-size:.75rem;color:var(--text-muted);font-weight:500;margin-left:6px">(${fn:length(reportRows)} thực tập sinh)</span>
                 </span>
-                <span style="font-size:.75rem;color:var(--text-muted)">Generated: ${pageContext.response.contentType != null ? '' : ''}
+                <span style="font-size:.75rem;color:var(--text-muted)">
                     <%-- Current date --%>
                     <c:set var="now" value="<%= new java.util.Date() %>"/>
                 </span>
@@ -241,15 +241,15 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Intern</th>
-                            <th>University / Major</th>
-                            <th>Status</th>
+                            <th>Thực tập sinh</th>
+                            <th>Trường / Chuyên ngành</th>
+                            <th>Trạng thái</th>
                             <th>Mentor</th>
-                            <th>Tasks</th>
-                            <th>Completion</th>
-                            <th>Performance</th>
-                            <th>Contract</th>
-                            <th>Docs ✓</th>
+                            <th>Nhiệm vụ</th>
+                            <th>Tỷ lệ hoàn thành</th>
+                            <th>Đánh giá</th>
+                            <th>Hợp đồng</th>
+                            <th>Tài liệu ✓</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -258,7 +258,7 @@
                                 <tr><td colspan="10">
                                     <div class="empty-state">
                                         <i class="bi bi-bar-chart"></i>
-                                        No intern data found matching the filters.
+                                        Không tìm thấy dữ liệu thực tập sinh phù hợp với bộ lọc.
                                     </div>
                                 </td></tr>
                             </c:when>
@@ -313,7 +313,7 @@
                                         <td>
                                             <span style="font-weight:700;color:var(--text-primary)">${r.completedTasks}</span>
                                             <span style="color:var(--text-muted)"> / ${r.totalTasks}</span>
-                                            <div class="intern-sub">${r.inprogressTasks} in progress</div>
+                                            <div class="intern-sub">${r.inprogressTasks} đang làm</div>
                                         </td>
                                         <td>
                                             <div class="mini-bar-wrap">
@@ -322,7 +322,7 @@
                                                 </div>
                                                 <span class="mini-pct">${r.completionRate}%</span>
                                             </div>
-                                            <div class="intern-sub">Avg progress: ${r.avgProgress}%</div>
+                                            <div class="intern-sub">Tiến độ TB: ${r.avgProgress}%</div>
                                         </td>
                                         <td>
                                             <span class="grade-badge ${gradeClass}">${r.grade}</span>
@@ -336,18 +336,18 @@
                                                         <div class="intern-sub">${r.startDate} → ${r.endDate}</div>
                                                     </c:if>
                                                 </c:when>
-                                                <c:otherwise><span style="color:var(--text-muted)">No contract</span></c:otherwise>
+                                                <c:otherwise><span style="color:var(--text-muted)">Chưa có HĐ</span></c:otherwise>
                                             </c:choose>
                                         </td>
                                         <td style="text-align:center">
                                             <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
-                                                <span class="check-icon" title="CV ${r.cvOk ? 'Approved' : 'Pending'}">
+                                                <span class="check-icon" title="CV ${r.cvOk ? 'Đã duyệt' : 'Chờ duyệt'}">
                                                     <i class="bi ${r.cvOk ? 'bi-file-earmark-check-fill ci-yes' : 'bi-file-earmark-x ci-no'}"></i>
                                                     <span style="font-size:.65rem;color:var(--text-muted)">CV</span>
                                                 </span>
-                                                <span class="check-icon" title="Application ${r.appOk ? 'Approved' : 'Pending'}">
+                                                <span class="check-icon" title="Đơn ${r.appOk ? 'Đã duyệt' : 'Chờ duyệt'}">
                                                     <i class="bi ${r.appOk ? 'bi-clipboard-check-fill ci-yes' : 'bi-clipboard-x ci-no'}"></i>
-                                                    <span style="font-size:.65rem;color:var(--text-muted)">App</span>
+                                                    <span style="font-size:.65rem;color:var(--text-muted)">Đơn</span>
                                                 </span>
                                             </div>
                                         </td>
@@ -362,8 +362,8 @@
 
         <%-- Print footer --%>
         <div style="margin-top:20px;padding:14px 20px;background:var(--card-bg);border-radius:10px;border:1px solid var(--border);font-size:.78rem;color:var(--text-muted);display:flex;justify-content:space-between;align-items:center">
-            <span><i class="bi bi-building" style="margin-right:5px"></i>Internship Management System — End-of-Term Report</span>
-            <span>Prepared by: ${sessionScope.currentUser.fullName} (HR)</span>
+            <span><i class="bi bi-building" style="margin-right:5px"></i>Hệ thống Quản lý Thực tập — Báo cáo Cuối kỳ</span>
+            <span>Người lập: ${sessionScope.currentUser.fullName} (HR)</span>
         </div>
     </div>
 </div>

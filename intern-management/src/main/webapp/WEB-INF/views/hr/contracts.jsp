@@ -2,11 +2,11 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Contracts — HR Portal</title>
+    <title>Hợp đồng Thực tập — HR</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
@@ -103,24 +103,24 @@
 <aside class="sidebar">
     <div class="sidebar-brand">
         <div class="brand-icon"><i class="bi bi-building"></i></div>
-        <h1>Human Resource</h1>
+        <h1>Nhân sự (HR)</h1>
     </div>
-    <div class="sidebar-section-label">Management</div>
+    <div class="sidebar-section-label">Quản lý</div>
     <ul class="sidebar-nav">
-        <li><a href="${pageContext.request.contextPath}/hr/dashboard"><i class="bi bi-grid"></i> Dashboard</a></li>
-        <li><a href="${pageContext.request.contextPath}/hr/mentors"><i class="bi bi-mortarboard"></i> Mentors</a></li>
-        <li><a href="${pageContext.request.contextPath}/hr/applications"><i class="bi bi-clipboard-check"></i> Applications</a></li>
-        <li><a href="${pageContext.request.contextPath}/hr/contracts" class="active"><i class="bi bi-file-earmark-text"></i> Contracts</a></li>
-        <li><a href="${pageContext.request.contextPath}/hr/documents"><i class="bi bi-folder-check"></i> Document Review</a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/dashboard"><i class="bi bi-grid"></i> Tổng quan</a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/mentors"><i class="bi bi-mortarboard"></i> Mentor</a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/applications"><i class="bi bi-clipboard-check"></i> Đơn xét tuyển</a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/contracts" class="active"><i class="bi bi-file-earmark-text"></i> Hợp đồng</a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/documents"><i class="bi bi-folder-check"></i> Duyệt tài liệu</a></li>
     </ul>
     <div class="sidebar-footer">
         <div class="sidebar-user">
             <div class="avatar">${fn:substring(sessionScope.currentUser.fullName,0,1)}</div>
             <div class="sidebar-user-info">
                 <div class="sidebar-user-name">${sessionScope.currentUser.fullName}</div>
-                <div class="sidebar-user-role">HR Staff</div>
+                <div class="sidebar-user-role">Nhân sự</div>
             </div>
-            <a href="${pageContext.request.contextPath}/logout" class="logout-btn"><i class="bi bi-box-arrow-right"></i></a>
+            <a href="${pageContext.request.contextPath}/logout" class="logout-btn" title="Đăng xuất"><i class="bi bi-box-arrow-right"></i></a>
         </div>
     </div>
 </aside>
@@ -128,8 +128,8 @@
 <div class="main">
     <div class="topbar">
         <div>
-            <div class="page-title">Internship Contracts</div>
-            <div class="page-sub">Upload and manage intern contracts</div>
+            <div class="page-title">Hợp đồng Thực tập</div>
+            <div class="page-sub">Tải lên và quản lý hợp đồng thực tập</div>
         </div>
     </div>
 
@@ -143,38 +143,38 @@
 
         <%-- Upload form --%>
         <div class="upload-card">
-            <div class="upload-card-title"><i class="bi bi-cloud-upload"></i>Upload New Contract</div>
+            <div class="upload-card-title"><i class="bi bi-cloud-upload"></i>Tải lên hợp đồng mới</div>
             <form method="post" action="${pageContext.request.contextPath}/hr/contracts/upload" enctype="multipart/form-data" id="uploadForm">
                 <div class="form-grid">
                     <div class="form-group">
-                        <label class="form-label">Intern <span style="color:#ef4444">*</span></label>
+                        <label class="form-label">Thực tập sinh <span style="color:#ef4444">*</span></label>
                         <select name="internId" class="form-select" required>
-                            <option value="">— Select Intern —</option>
+                            <option value="">— Chọn thực tập sinh —</option>
                             <c:forEach var="i" items="${interns}">
                                 <option value="${i.id}">${i.studentCode} — ${not empty i.fullName ? i.fullName : i.email}</option>
                             </c:forEach>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Start Date <span style="color:#ef4444">*</span></label>
+                        <label class="form-label">Ngày bắt đầu <span style="color:#ef4444">*</span></label>
                         <input type="date" name="startDate" class="form-input" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">End Date <span style="color:#ef4444">*</span></label>
+                        <label class="form-label">Ngày kết thúc <span style="color:#ef4444">*</span></label>
                         <input type="date" name="endDate" class="form-input" required>
                     </div>
                     <div class="form-group full">
-                        <label class="form-label">Contract File (PDF/DOC) <span style="color:#ef4444">*</span></label>
+                        <label class="form-label">Tệp hợp đồng (PDF/DOC) <span style="color:#ef4444">*</span></label>
                         <label class="file-label" for="contractFile">
                             <i class="bi bi-paperclip"></i>
-                            <span id="fileLabel">Click to choose file…</span>
+                            <span id="fileLabel">Nhấp để chọn tệp…</span>
                         </label>
                         <input type="file" id="contractFile" name="file" class="file-input" accept=".pdf,.doc,.docx" required
                                onchange="document.getElementById('fileLabel').textContent = this.files[0].name">
                     </div>
                 </div>
                 <div style="margin-top:16px">
-                    <button type="submit" class="btn-submit"><i class="bi bi-send me-1"></i>Upload Contract</button>
+                    <button type="submit" class="btn-submit"><i class="bi bi-send me-1"></i>Tải lên hợp đồng</button>
                 </div>
             </form>
         </div>
@@ -183,30 +183,30 @@
         <div class="sec-card">
             <div class="sec-header">
                 <div class="sec-icon"><i class="bi bi-file-earmark-text"></i></div>
-                <span class="sec-title">All Contracts</span>
+                <span class="sec-title">Tất cả hợp đồng</span>
                 <span class="sec-count">${fn:length(contracts)}</span>
             </div>
             <form class="filter-bar" method="get" action="${pageContext.request.contextPath}/hr/contracts">
                 <div class="filter-group">
-                    <span class="filter-label">Status</span>
+                    <span class="filter-label">Trạng thái</span>
                     <select class="filter-select" name="status">
-                        <option value="">All</option>
-                        <option value="PENDING"   ${statusFilter == 'PENDING'   ? 'selected':''}>Pending</option>
-                        <option value="CONFIRMED" ${statusFilter == 'CONFIRMED' ? 'selected':''}>Confirmed</option>
-                        <option value="CANCELLED" ${statusFilter == 'CANCELLED' ? 'selected':''}>Cancelled</option>
+                        <option value="">Tất cả</option>
+                        <option value="PENDING"   ${statusFilter == 'PENDING'   ? 'selected':''}>Chờ xác nhận</option>
+                        <option value="CONFIRMED" ${statusFilter == 'CONFIRMED' ? 'selected':''}>Đã xác nhận</option>
+                        <option value="CANCELLED" ${statusFilter == 'CANCELLED' ? 'selected':''}>Đã hủy</option>
                     </select>
                 </div>
-                <button type="submit" class="btn-filter blue"><i class="bi bi-funnel"></i>Filter</button>
-                <a href="${pageContext.request.contextPath}/hr/contracts" class="btn-filter ghost">Clear</a>
+                <button type="submit" class="btn-filter blue"><i class="bi bi-funnel"></i>Lọc</button>
+                <a href="${pageContext.request.contextPath}/hr/contracts" class="btn-filter ghost">Xóa lọc</a>
             </form>
             <table class="data-table">
                 <thead><tr>
-                    <th>Intern</th><th>Period</th><th>File</th><th>Status</th><th>Confirmed At</th><th>Actions</th>
+                    <th>Thực tập sinh</th><th>Thời hạn</th><th>Tệp tin</th><th>Trạng thái</th><th>Ngày xác nhận</th><th>Thao tác</th>
                 </tr></thead>
                 <tbody>
                     <c:choose>
                         <c:when test="${empty contracts}">
-                            <tr><td colspan="6"><div class="empty-state"><i class="bi bi-inbox"></i>No contracts found.</div></td></tr>
+                            <tr><td colspan="6"><div class="empty-state"><i class="bi bi-inbox"></i>Chưa có hợp đồng nào.</div></td></tr>
                         </c:when>
                         <c:otherwise>
                             <c:forEach var="c" items="${contracts}">
@@ -226,15 +226,15 @@
                                     </td>
                                     <td>
                                         <c:if test="${not empty c.filePath}">
-                                            <a href="${pageContext.request.contextPath}${c.filePath}" class="btn-view" target="_blank"><i class="bi bi-eye"></i>View</a>
+                                            <a href="${pageContext.request.contextPath}${c.filePath}" class="btn-view" target="_blank"><i class="bi bi-eye"></i>Xem</a>
                                         </c:if>
-                                        <c:if test="${empty c.filePath}"><span style="color:var(--text-muted);font-size:.8rem">No file</span></c:if>
+                                        <c:if test="${empty c.filePath}"><span style="color:var(--text-muted);font-size:.8rem">Không có tệp</span></c:if>
                                     </td>
                                     <td>
                                         <c:choose>
-                                            <c:when test="${c.status == 'CONFIRMED'}"><span class="badge badge-confirmed"><i class="bi bi-check-circle-fill" style="font-size:.6rem"></i>Confirmed</span></c:when>
-                                            <c:when test="${c.status == 'CANCELLED'}"><span class="badge badge-cancelled"><i class="bi bi-dash-circle-fill" style="font-size:.6rem"></i>Cancelled</span></c:when>
-                                            <c:otherwise><span class="badge badge-pending"><i class="bi bi-clock-fill" style="font-size:.6rem"></i>Pending</span></c:otherwise>
+                                            <c:when test="${c.status == 'CONFIRMED'}"><span class="badge badge-confirmed"><i class="bi bi-check-circle-fill" style="font-size:.6rem"></i>Đã xác nhận</span></c:when>
+                                            <c:when test="${c.status == 'CANCELLED'}"><span class="badge badge-cancelled"><i class="bi bi-dash-circle-fill" style="font-size:.6rem"></i>Đã hủy</span></c:when>
+                                            <c:otherwise><span class="badge badge-pending"><i class="bi bi-clock-fill" style="font-size:.6rem"></i>Chờ xác nhận</span></c:otherwise>
                                         </c:choose>
                                     </td>
                                     <td style="color:var(--text-muted);font-size:.78rem">
@@ -245,9 +245,9 @@
                                     </td>
                                     <td>
                                         <c:if test="${c.status == 'PENDING'}">
-                                            <form method="post" action="${pageContext.request.contextPath}/hr/contracts/cancel" style="display:inline" onsubmit="return confirm('Cancel this contract?')">
+                                            <form method="post" action="${pageContext.request.contextPath}/hr/contracts/cancel" style="display:inline" onsubmit="return confirm('Hủy hợp đồng này?')">
                                                 <input type="hidden" name="id" value="${c.id}">
-                                                <button type="submit" class="btn-cancel"><i class="bi bi-x"></i>Cancel</button>
+                                                <button type="submit" class="btn-cancel"><i class="bi bi-x"></i>Hủy</button>
                                             </form>
                                         </c:if>
                                         <c:if test="${c.status != 'PENDING'}">

@@ -1,10 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c"   uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
-<fmt:setLocale value="${not empty sessionScope.lang ? sessionScope.lang : 'vi'}" />
+<fmt:setLocale value="vi" />
 <fmt:setBundle basename="messages" />
 <!DOCTYPE html>
-<html lang="${not empty sessionScope.lang ? sessionScope.lang : 'vi'}">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -168,18 +168,6 @@
 <!-- Right login panel -->
 <div class="right-panel">
     <div class="login-box">
-
-        <%-- Language switcher --%>
-        <div class="lang-bar">
-            <a href="${pageContext.request.contextPath}/lang?lang=vi"
-               class="lang-btn ${empty sessionScope.lang || sessionScope.lang == 'vi' ? 'active' : ''}">
-                <fmt:message key="lang.vi"/>
-            </a>
-            <a href="${pageContext.request.contextPath}/lang?lang=en"
-               class="lang-btn ${sessionScope.lang == 'en' ? 'active' : ''}">
-                <fmt:message key="lang.en"/>
-            </a>
-        </div>
 
         <h2 class="login-heading"><fmt:message key="login.heading"/></h2>
         <p class="login-sub"><fmt:message key="login.subheading"/></p>

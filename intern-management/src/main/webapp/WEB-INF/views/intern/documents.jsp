@@ -2,11 +2,11 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>My Documents — Intern Portal</title>
+    <title>Tài liệu của tôi — Cổng TTS</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
@@ -124,19 +124,19 @@
 <aside class="sidebar">
     <div class="sidebar-brand">
         <div class="brand-icon"><i class="bi bi-person-workspace"></i></div>
-        <h1>Intern<br>Portal</h1>
-        <span>My Profile</span>
+        <h1>Cổng thông tin<br>Thực tập sinh</h1>
+        <span>Hồ sơ của tôi</span>
     </div>
-    <div class="sidebar-section-label">My Space</div>
+    <div class="sidebar-section-label">Không gian của tôi</div>
     <ul class="sidebar-nav">
         <li><a href="${pageContext.request.contextPath}/intern/documents" class="active">
-            <i class="bi bi-folder2-open"></i> My Documents
+            <i class="bi bi-folder2-open"></i> Tài liệu của tôi
         </a></li>
         <li><a href="${pageContext.request.contextPath}/intern/contracts">
-            <i class="bi bi-file-earmark-check"></i> My Contracts
+            <i class="bi bi-file-earmark-check"></i> Hợp đồng của tôi
         </a></li>
         <li><a href="${pageContext.request.contextPath}/intern/tasks">
-            <i class="bi bi-list-task"></i> My Tasks
+            <i class="bi bi-list-task"></i> Nhiệm vụ của tôi
         </a></li>
     </ul>
     <div class="sidebar-footer">
@@ -144,9 +144,9 @@
             <div class="avatar">${fn:substring(sessionScope.currentUser.fullName, 0, 1)}</div>
             <div class="sidebar-user-info">
                 <div class="sidebar-user-name">${sessionScope.currentUser.fullName}</div>
-                <div class="sidebar-user-role">Intern</div>
+                <div class="sidebar-user-role">Thực tập sinh</div>
             </div>
-            <a href="${pageContext.request.contextPath}/logout" class="logout-btn" title="Logout">
+            <a href="${pageContext.request.contextPath}/logout" class="logout-btn" title="Đăng xuất">
                 <i class="bi bi-box-arrow-right"></i>
             </a>
         </div>
@@ -157,8 +157,8 @@
 <div class="main">
     <div class="topbar">
         <div>
-            <div class="page-title">My Documents</div>
-            <div class="page-sub">Upload and track your internship documents</div>
+            <div class="page-title">Tài liệu của tôi</div>
+            <div class="page-sub">Tải lên và theo dõi tài liệu thực tập của bạn</div>
         </div>
     </div>
 
@@ -185,7 +185,7 @@
                 </div>
                 <div class="profile-code">
                     <div class="code">${intern.studentCode}</div>
-                    <div class="label">Student Code</div>
+                    <div class="label">Mã sinh viên</div>
                 </div>
             </div>
         </c:if>
@@ -196,36 +196,36 @@
                 <%-- CV Upload --%>
                 <div class="upload-card" id="cvCard">
                     <div class="upload-icon ui-cv"><i class="bi bi-file-person"></i></div>
-                    <div class="upload-title">Curriculum Vitae (CV)</div>
-                    <div class="upload-desc">Upload your CV to showcase your skills, education, and experience to HR.</div>
+                    <div class="upload-title">Sơ yếu lý lịch (CV)</div>
+                    <div class="upload-desc">Tải lên CV để thể hiện kỹ năng, học vấn và kinh nghiệm với phòng Nhân sự.</div>
                     <form method="post" action="${pageContext.request.contextPath}/intern/documents/upload" enctype="multipart/form-data" id="cvForm">
                         <input type="hidden" name="documentType" value="CV">
                         <div class="file-input-wrap">
                             <button type="button" class="btn-upload btn-cv" onclick="document.getElementById('cvFile').click()">
-                                <i class="bi bi-cloud-upload"></i> Choose File
+                                <i class="bi bi-cloud-upload"></i> Chọn tệp
                             </button>
                             <input type="file" id="cvFile" name="file" accept=".pdf,.doc,.docx" onchange="showSelected(this,'cvSelected','cvForm')">
                         </div>
                         <div class="selected-file" id="cvSelected"></div>
-                        <div class="upload-hint">PDF, DOC, DOCX · max 10 MB</div>
+                        <div class="upload-hint">PDF, DOC, DOCX · tối đa 10 MB</div>
                     </form>
                 </div>
 
                 <%-- Internship Application Upload --%>
                 <div class="upload-card" id="appCard">
                     <div class="upload-icon ui-app"><i class="bi bi-file-earmark-text"></i></div>
-                    <div class="upload-title">Internship Application</div>
-                    <div class="upload-desc">Upload your signed internship application form to complete your profile.</div>
+                    <div class="upload-title">Đơn xin thực tập</div>
+                    <div class="upload-desc">Tải lên đơn xin thực tập có chữ ký để hoàn thiện hồ sơ của bạn.</div>
                     <form method="post" action="${pageContext.request.contextPath}/intern/documents/upload" enctype="multipart/form-data" id="appForm">
                         <input type="hidden" name="documentType" value="INTERNSHIP_APPLICATION">
                         <div class="file-input-wrap">
                             <button type="button" class="btn-upload btn-app" onclick="document.getElementById('appFile').click()">
-                                <i class="bi bi-cloud-upload"></i> Choose File
+                                <i class="bi bi-cloud-upload"></i> Chọn tệp
                             </button>
                             <input type="file" id="appFile" name="file" accept=".pdf,.doc,.docx" onchange="showSelected(this,'appSelected','appForm')">
                         </div>
                         <div class="selected-file" id="appSelected"></div>
-                        <div class="upload-hint">PDF, DOC, DOCX · max 10 MB</div>
+                        <div class="upload-hint">PDF, DOC, DOCX · tối đa 10 MB</div>
                     </form>
                 </div>
             </div>
@@ -235,12 +235,12 @@
         <div class="sec-card">
             <div class="sec-header">
                 <div class="sec-icon"><i class="bi bi-files"></i></div>
-                <span class="sec-title">Uploaded Documents</span>
+                <span class="sec-title">Tài liệu đã tải lên</span>
                 <span class="sec-count">${fn:length(documents)}</span>
             </div>
             <table class="data-table">
                 <thead><tr>
-                    <th>Type</th><th>File Name</th><th>Uploaded</th><th>Status</th><th>Actions</th>
+                    <th>Loại tài liệu</th><th>Tên tệp</th><th>Ngày tải</th><th>Trạng thái</th><th>Thao tác</th>
                 </tr></thead>
                 <tbody>
                     <c:choose>
@@ -248,7 +248,7 @@
                             <tr><td colspan="5">
                                 <div class="empty-state">
                                     <i class="bi bi-folder2"></i>
-                                    <p>No documents uploaded yet.<br>Use the upload cards above to get started.</p>
+                                    <p>Chưa có tài liệu nào được tải lên.<br>Sử dụng các khung tải lên phía trên để bắt đầu.</p>
                                 </div>
                             </td></tr>
                         </c:when>
@@ -261,10 +261,10 @@
                                                 <span class="doc-type-badge dt-cv"><i class="bi bi-file-person"></i>CV</span>
                                             </c:when>
                                             <c:when test="${d.documentType == 'INTERNSHIP_APPLICATION'}">
-                                                <span class="doc-type-badge dt-app"><i class="bi bi-file-earmark-text"></i>Application</span>
+                                                <span class="doc-type-badge dt-app"><i class="bi bi-file-earmark-text"></i>Đơn xin TT</span>
                                             </c:when>
                                             <c:otherwise>
-                                                <span class="doc-type-badge dt-contract"><i class="bi bi-file-earmark-check"></i>Contract</span>
+                                                <span class="doc-type-badge dt-contract"><i class="bi bi-file-earmark-check"></i>Hợp đồng</span>
                                             </c:otherwise>
                                         </c:choose>
                                     </td>
@@ -273,24 +273,24 @@
                                     <td>
                                         <c:choose>
                                             <c:when test="${d.status == 'APPROVED'}">
-                                                <span class="badge badge-approved"><i class="bi bi-check-circle-fill" style="font-size:.6rem"></i>Approved</span>
+                                                <span class="badge badge-approved"><i class="bi bi-check-circle-fill" style="font-size:.6rem"></i>Đã duyệt</span>
                                             </c:when>
                                             <c:when test="${d.status == 'REJECTED'}">
-                                                <span class="badge badge-rejected"><i class="bi bi-x-circle-fill" style="font-size:.6rem"></i>Rejected</span>
+                                                <span class="badge badge-rejected"><i class="bi bi-x-circle-fill" style="font-size:.6rem"></i>Bị từ chối</span>
                                             </c:when>
                                             <c:otherwise>
-                                                <span class="badge badge-pending"><i class="bi bi-clock-fill" style="font-size:.6rem"></i>Pending Review</span>
+                                                <span class="badge badge-pending"><i class="bi bi-clock-fill" style="font-size:.6rem"></i>Chờ xét duyệt</span>
                                             </c:otherwise>
                                         </c:choose>
                                     </td>
                                     <td>
                                         <div style="display:flex;gap:6px;align-items:center">
                                             <a href="${pageContext.request.contextPath}${d.filePath}" class="btn-download" target="_blank">
-                                                <i class="bi bi-download"></i> View
+                                                <i class="bi bi-download"></i> Xem
                                             </a>
                                             <c:if test="${d.status == 'PENDING'}">
                                                 <form method="post" action="${pageContext.request.contextPath}/intern/documents/delete" style="display:inline"
-                                                      onsubmit="return confirm('Delete this document?')">
+                                                      onsubmit="return confirm('Xóa tài liệu này?')">
                                                     <input type="hidden" name="id" value="${d.id}">
                                                     <button type="submit" class="btn-delete"><i class="bi bi-trash"></i></button>
                                                 </form>

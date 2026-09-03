@@ -2,11 +2,11 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>My Contracts — Intern Portal</title>
+    <title>Hợp đồng của tôi — Cổng TTS</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
@@ -85,23 +85,23 @@
 <aside class="sidebar">
     <div class="sidebar-brand">
         <div class="brand-icon"><i class="bi bi-person-workspace"></i></div>
-        <h1>Intern<br>Portal</h1>
-        <span>My Profile</span>
+        <h1>Cổng thông tin<br>Thực tập sinh</h1>
+        <span>Hồ sơ của tôi</span>
     </div>
-    <div class="sidebar-section-label">My Space</div>
+    <div class="sidebar-section-label">Không gian của tôi</div>
     <ul class="sidebar-nav">
-        <li><a href="${pageContext.request.contextPath}/intern/documents"><i class="bi bi-folder2-open"></i>My Documents</a></li>
-        <li><a href="${pageContext.request.contextPath}/intern/contracts" class="active"><i class="bi bi-file-earmark-check"></i>My Contracts</a></li>
-        <li><a href="${pageContext.request.contextPath}/intern/tasks"><i class="bi bi-list-task"></i>My Tasks</a></li>
+        <li><a href="${pageContext.request.contextPath}/intern/documents"><i class="bi bi-folder2-open"></i>Tài liệu của tôi</a></li>
+        <li><a href="${pageContext.request.contextPath}/intern/contracts" class="active"><i class="bi bi-file-earmark-check"></i>Hợp đồng của tôi</a></li>
+        <li><a href="${pageContext.request.contextPath}/intern/tasks"><i class="bi bi-list-task"></i>Nhiệm vụ của tôi</a></li>
     </ul>
     <div class="sidebar-footer">
         <div class="sidebar-user">
             <div class="avatar">${fn:substring(sessionScope.currentUser.fullName,0,1)}</div>
             <div class="sidebar-user-info">
                 <div class="sidebar-user-name">${sessionScope.currentUser.fullName}</div>
-                <div class="sidebar-user-role">Intern</div>
+                <div class="sidebar-user-role">Thực tập sinh</div>
             </div>
-            <a href="${pageContext.request.contextPath}/logout" class="logout-btn"><i class="bi bi-box-arrow-right"></i></a>
+            <a href="${pageContext.request.contextPath}/logout" class="logout-btn" title="Đăng xuất"><i class="bi bi-box-arrow-right"></i></a>
         </div>
     </div>
 </aside>
@@ -109,8 +109,8 @@
 <div class="main">
     <div class="topbar">
         <div>
-            <div class="page-title">My Contracts</div>
-            <div class="page-sub">View and confirm your internship contracts</div>
+            <div class="page-title">Hợp đồng của tôi</div>
+            <div class="page-sub">Xem và xác nhận hợp đồng thực tập của bạn</div>
         </div>
     </div>
 
@@ -118,15 +118,15 @@
 
         <div class="info-banner">
             <i class="bi bi-info-circle"></i>
-            <p>When HR uploads a contract for you, it will appear here with status <strong>Pending</strong>.<br>
-               Please read the contract carefully before clicking <strong>Confirm</strong> to finalize your internship.</p>
+            <p>Khi phòng Nhân sự tải lên hợp đồng cho bạn, hợp đồng sẽ xuất hiện tại đây với trạng thái <strong>Chờ xác nhận</strong>.<br>
+               Vui lòng đọc kỹ hợp đồng trước khi nhấn <strong>Xác nhận hợp đồng</strong> để hoàn tất thủ tục thực tập.</p>
         </div>
 
         <c:choose>
             <c:when test="${empty contracts}">
                 <div class="empty-state">
                     <i class="bi bi-file-earmark-x"></i>
-                    <p>No contracts yet.<br>HR will upload your internship contract once your profile is approved.<br>Check back soon!</p>
+                    <p>Chưa có hợp đồng nào.<br>Phòng Nhân sự sẽ tải lên hợp đồng sau khi hồ sơ của bạn được phê duyệt.<br>Vui lòng kiểm tra lại sau!</p>
                 </div>
             </c:when>
             <c:otherwise>
@@ -142,7 +142,7 @@
                             </div>
                             <div class="cc-info">
                                 <div class="cc-title">
-                                    Internship Contract
+                                    Hợp đồng Thực tập
                                     <c:if test="${not empty c.fileName}"> — ${c.fileName}</c:if>
                                 </div>
                                 <div class="cc-period">
@@ -154,9 +154,9 @@
                             </div>
                             <div>
                                 <c:choose>
-                                    <c:when test="${c.status == 'CONFIRMED'}"><span class="badge badge-confirmed"><i class="bi bi-check-circle-fill" style="font-size:.6rem"></i>Confirmed</span></c:when>
-                                    <c:when test="${c.status == 'CANCELLED'}"><span class="badge badge-cancelled"><i class="bi bi-dash-circle-fill" style="font-size:.6rem"></i>Cancelled</span></c:when>
-                                    <c:otherwise><span class="badge badge-pending"><i class="bi bi-clock-fill" style="font-size:.6rem"></i>Pending Confirmation</span></c:otherwise>
+                                    <c:when test="${c.status == 'CONFIRMED'}"><span class="badge badge-confirmed"><i class="bi bi-check-circle-fill" style="font-size:.6rem"></i>Đã xác nhận</span></c:when>
+                                    <c:when test="${c.status == 'CANCELLED'}"><span class="badge badge-cancelled"><i class="bi bi-dash-circle-fill" style="font-size:.6rem"></i>Đã hủy</span></c:when>
+                                    <c:otherwise><span class="badge badge-pending"><i class="bi bi-clock-fill" style="font-size:.6rem"></i>Chờ xác nhận</span></c:otherwise>
                                 </c:choose>
                             </div>
                         </div>
@@ -164,7 +164,7 @@
                         <div class="cc-body">
                             <c:if test="${not empty c.confirmedAt}">
                                 <div class="cc-meta">
-                                    <div class="label">Confirmed At</div>
+                                    <div class="label">Ngày xác nhận</div>
                                     <div class="value">${c.confirmedAt}</div>
                                 </div>
                             </c:if>
@@ -172,15 +172,15 @@
                             <div style="margin-left:auto;display:flex;gap:10px;align-items:center">
                                 <c:if test="${not empty c.filePath}">
                                     <a href="${pageContext.request.contextPath}${c.filePath}" class="btn-view" target="_blank">
-                                        <i class="bi bi-eye"></i> View Contract
+                                        <i class="bi bi-eye"></i> Xem hợp đồng
                                     </a>
                                 </c:if>
                                 <c:if test="${c.status == 'PENDING'}">
                                     <form method="post" action="${pageContext.request.contextPath}/intern/contracts/confirm"
-                                          onsubmit="return confirm('Are you sure you want to confirm this contract? This action cannot be undone.')">
+                                          onsubmit="return confirm('Bạn có chắc chắn muốn xác nhận hợp đồng này không? Hành động này không thể hoàn tác.')">
                                         <input type="hidden" name="id" value="${c.id}">
                                         <button type="submit" class="btn-confirm">
-                                            <i class="bi bi-check-lg"></i> Confirm Contract
+                                            <i class="bi bi-check-lg"></i> Xác nhận hợp đồng
                                         </button>
                                     </form>
                                 </c:if>

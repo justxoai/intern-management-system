@@ -2,11 +2,11 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Mentor Management — HR</title>
+    <title>Quản lý Mentor — HR</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
@@ -123,24 +123,24 @@
 <aside class="sidebar">
     <div class="sidebar-brand">
         <div class="brand-icon"><i class="bi bi-building"></i></div>
-        <h1>Human Resource</h1>
+        <h1>Nhân sự (HR)</h1>
     </div>
-    <div class="sidebar-section-label">Management</div>
+    <div class="sidebar-section-label">Quản lý</div>
     <ul class="sidebar-nav">
-        <li><a href="${pageContext.request.contextPath}/hr/dashboard"><i class="bi bi-grid"></i> Dashboard</a></li>
-        <li><a href="${pageContext.request.contextPath}/hr/mentors" class="active"><i class="bi bi-mortarboard"></i> Mentors</a></li>
-        <li><a href="${pageContext.request.contextPath}/hr/applications"><i class="bi bi-clipboard-check"></i> Applications</a></li>
-        <li><a href="${pageContext.request.contextPath}/hr/contracts"><i class="bi bi-file-earmark-text"></i> Contracts</a></li>
-        <li><a href="${pageContext.request.contextPath}/hr/documents"><i class="bi bi-folder-check"></i> Document Review</a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/dashboard"><i class="bi bi-grid"></i> Tổng quan</a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/mentors" class="active"><i class="bi bi-mortarboard"></i> Mentor</a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/applications"><i class="bi bi-clipboard-check"></i> Đơn xét tuyển</a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/contracts"><i class="bi bi-file-earmark-text"></i> Hợp đồng</a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/documents"><i class="bi bi-folder-check"></i> Duyệt tài liệu</a></li>
     </ul>
     <div class="sidebar-footer">
         <div class="sidebar-user">
             <div class="avatar">${fn:substring(sessionScope.currentUser.fullName, 0, 1)}</div>
             <div class="sidebar-user-info">
                 <div class="sidebar-user-name">${sessionScope.currentUser.fullName}</div>
-                <div class="sidebar-user-role">HR Staff</div>
+                <div class="sidebar-user-role">Nhân sự</div>
             </div>
-            <a href="${pageContext.request.contextPath}/logout" class="logout-btn" title="Logout"><i class="bi bi-box-arrow-right"></i></a>
+            <a href="${pageContext.request.contextPath}/logout" class="logout-btn" title="Đăng xuất"><i class="bi bi-box-arrow-right"></i></a>
         </div>
     </div>
 </aside>
@@ -149,12 +149,12 @@
 <div class="main">
     <div class="topbar">
         <div>
-            <div class="page-title">Mentor Management</div>
-            <div class="page-sub">Workload distribution and intern assignment</div>
+            <div class="page-title">Quản lý Mentor</div>
+            <div class="page-sub">Phân bổ khối lượng công việc và gán thực tập sinh</div>
         </div>
         <a href="${pageContext.request.contextPath}/hr/mentors/create"
            style="padding:8px 18px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;border-radius:9px;text-decoration:none;font-size:.82rem;font-weight:600;display:flex;align-items:center;gap:6px;box-shadow:0 3px 10px rgba(16,185,129,.35)">
-            <i class="bi bi-plus-lg"></i> Add Mentor
+            <i class="bi bi-plus-lg"></i> Thêm Mentor
         </a>
     </div>
 
@@ -172,31 +172,31 @@
                 <div class="stat-pill-icon"><i class="bi bi-mortarboard"></i></div>
                 <div>
                     <div class="stat-pill-num">${totalMentors}</div>
-                    <div class="stat-pill-lbl">Total Mentors</div>
+                    <div class="stat-pill-lbl">Tổng số Mentor</div>
                 </div>
             </div>
             <div class="stat-pill">
                 <div class="stat-pill-icon"><i class="bi bi-people"></i></div>
                 <div>
                     <div class="stat-pill-num">${totalAssigned}</div>
-                    <div class="stat-pill-lbl">Active Assignments</div>
+                    <div class="stat-pill-lbl">Đang hướng dẫn</div>
                 </div>
             </div>
             <div class="stat-pill">
                 <div class="stat-pill-icon" style="background:#f0f6ff;color:#0ea5e9"><i class="bi bi-person-workspace"></i></div>
                 <div>
                     <div class="stat-pill-num">${fn:length(allInterns)}</div>
-                    <div class="stat-pill-lbl">Total Interns</div>
+                    <div class="stat-pill-lbl">Tổng số Thực tập sinh</div>
                 </div>
             </div>
         </div>
 
         <%-- Filter bar --%>
         <form class="filter-card" method="get" action="${pageContext.request.contextPath}/hr/mentors">
-            <input class="filter-input" type="text" name="keyword" value="${keyword}" placeholder="Search mentor by name, email..." style="width:230px">
-            <input class="filter-input" type="text" name="department" value="${department}" placeholder="Department..." style="width:170px">
-            <button type="submit" class="btn-filter blue"><i class="bi bi-search"></i> Search</button>
-            <a href="${pageContext.request.contextPath}/hr/mentors" class="btn-filter ghost">Reset</a>
+            <input class="filter-input" type="text" name="keyword" value="${keyword}" placeholder="Tìm kiếm theo tên, email..." style="width:230px">
+            <input class="filter-input" type="text" name="department" value="${department}" placeholder="Phòng ban..." style="width:170px">
+            <button type="submit" class="btn-filter blue"><i class="bi bi-search"></i> Tìm kiếm</button>
+            <a href="${pageContext.request.contextPath}/hr/mentors" class="btn-filter ghost">Đặt lại</a>
         </form>
 
         <%-- Mentor cards --%>
@@ -204,7 +204,7 @@
             <c:when test="${empty mentors}">
                 <div style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:48px;text-align:center;color:var(--text-muted)">
                     <i class="bi bi-mortarboard" style="font-size:2rem;display:block;margin-bottom:10px;opacity:.3"></i>
-                    No mentor profiles found. Create a Mentor user account first.
+                    Không tìm thấy thông tin mentor nào. Vui lòng tạo tài khoản người dùng Mentor trước.
                 </div>
             </c:when>
             <c:otherwise>
@@ -223,7 +223,7 @@
                                 </div>
                                 <c:choose>
                                     <c:when test="${m.userStatus == 'ACTIVE'}">
-                                        <span style="background:#f0fdf4;color:#16a34a;font-size:.68rem;font-weight:700;padding:3px 9px;border-radius:20px">Active</span>
+                                        <span style="background:#f0fdf4;color:#16a34a;font-size:.68rem;font-weight:700;padding:3px 9px;border-radius:20px">Hoạt động</span>
                                     </c:when>
                                     <c:otherwise>
                                         <span style="background:#f1f5f9;color:#475569;font-size:.68rem;font-weight:700;padding:3px 9px;border-radius:20px">${m.userStatus}</span>
@@ -234,7 +234,7 @@
                             <%-- Workload bar --%>
                             <div class="workload-bar-wrap">
                                 <div class="workload-label">
-                                    <span>Workload</span>
+                                    <span>Tải công việc</span>
                                     <strong>${m.currentInternCount} / ${m.maxInterns}</strong>
                                 </div>
                                 <div class="workload-track">
@@ -245,36 +245,36 @@
                             <%-- Edit profile form --%>
                             <div class="mc-body">
                                 <div style="font-size:.75rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.4px">
-                                    <i class="bi bi-pencil-square" style="margin-right:4px"></i>Edit Profile
+                                    <i class="bi bi-pencil-square" style="margin-right:4px"></i>Chỉnh sửa thông tin
                                 </div>
                                 <form method="post" action="${pageContext.request.contextPath}/hr/mentors/update">
                                     <input type="hidden" name="mentorId" value="${m.id}">
                                     <div class="edit-grid">
                                         <div class="edit-group">
-                                            <label>Department</label>
-                                            <input class="edit-input" type="text" name="department" value="${m.department}" placeholder="e.g. IT">
+                                            <label>Phòng ban</label>
+                                            <input class="edit-input" type="text" name="department" value="${m.department}" placeholder="VD: CNTT">
                                         </div>
                                         <div class="edit-group">
-                                            <label>Position</label>
-                                            <input class="edit-input" type="text" name="position" value="${m.position}" placeholder="e.g. Lead Tech">
+                                            <label>Chức vụ</label>
+                                            <input class="edit-input" type="text" name="position" value="${m.position}" placeholder="VD: Lead Tech">
                                         </div>
                                         <div class="edit-group" style="grid-column: 1/-1">
-                                            <label>Max Interns</label>
+                                            <label>TTS tối đa</label>
                                             <input class="edit-input" type="number" name="maxInterns" value="${m.maxInterns}" min="1" max="50">
                                         </div>
                                     </div>
-                                    <button type="submit" class="btn-save"><i class="bi bi-floppy"></i> Save Details</button>
+                                    <button type="submit" class="btn-save"><i class="bi bi-floppy"></i> Lưu thông tin</button>
                                 </form>
                             </div>
 
                             <%-- Assign Intern section --%>
                             <div class="mc-assign">
-                                <div class="assign-title"><i class="bi bi-people"></i> Assigned Interns (${m.currentInternCount})</div>
+                                <div class="assign-title"><i class="bi bi-people"></i> TTS được gán (${m.currentInternCount})</div>
                                 <div class="assigned-list">
                                     <c:set var="assignedList" value="${mentorAssignments[m.id]}"/>
                                     <c:choose>
                                         <c:when test="${empty assignedList}">
-                                            <div class="no-assigned">No interns assigned yet.</div>
+                                            <div class="no-assigned">Chưa có thực tập sinh nào.</div>
                                         </c:when>
                                         <c:otherwise>
                                             <c:forEach var="ai" items="${assignedList}">
@@ -284,10 +284,10 @@
                                                         <div class="assigned-code">${ai.studentCode} · ${ai.university}</div>
                                                     </div>
                                                     <form method="post" action="${pageContext.request.contextPath}/hr/mentors/unassign" style="margin:0"
-                                                          onsubmit="return confirm('Remove ${ai.studentCode} from ${m.fullName}?')">
+                                                          onsubmit="return confirm('Gỡ ${ai.studentCode} khỏi ${m.fullName}?')">
                                                         <input type="hidden" name="mentorId" value="${m.id}">
                                                         <input type="hidden" name="internId" value="${ai.id}">
-                                                        <button type="submit" class="btn-unassign"><i class="bi bi-x"></i> Remove</button>
+                                                        <button type="submit" class="btn-unassign"><i class="bi bi-x"></i> Gỡ</button>
                                                     </form>
                                                 </div>
                                             </c:forEach>
@@ -299,14 +299,14 @@
                                 <c:choose>
                                     <c:when test="${m.currentInternCount >= m.maxInterns}">
                                         <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:8px 12px;display:flex;align-items:center;gap:6px;color:#dc2626;font-size:.78rem;font-weight:600">
-                                            <i class="bi bi-slash-circle-fill"></i> Capacity Full (${m.maxInterns}/${m.maxInterns} interns)
+                                            <i class="bi bi-slash-circle-fill"></i> Đã đủ số lượng (${m.maxInterns}/${m.maxInterns} TTS)
                                         </div>
                                     </c:when>
                                     <c:otherwise>
                                         <form method="post" action="${pageContext.request.contextPath}/hr/mentors/assign" class="assign-form">
                                             <input type="hidden" name="mentorId" value="${m.id}">
                                             <select name="internId" class="assign-select" required>
-                                                <option value="">— Select Intern —</option>
+                                                <option value="">— Chọn thực tập sinh —</option>
                                                 <c:forEach var="intern" items="${allInterns}">
                                                     <option value="${intern.id}">
                                                         ${not empty intern.fullName ? intern.fullName : intern.email}
@@ -314,7 +314,7 @@
                                                     </option>
                                                 </c:forEach>
                                             </select>
-                                            <button type="submit" class="btn-assign"><i class="bi bi-plus-lg"></i> Assign</button>
+                                            <button type="submit" class="btn-assign"><i class="bi bi-plus-lg"></i> Gán</button>
                                         </form>
                                     </c:otherwise>
                                 </c:choose>

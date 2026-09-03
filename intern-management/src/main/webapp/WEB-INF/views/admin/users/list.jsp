@@ -2,11 +2,11 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Account Management — Admin Dashboard</title>
+    <title>Quản lý Tài khoản — Admin</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
@@ -225,17 +225,17 @@
 <aside class="sidebar">
     <div class="sidebar-brand">
         <div class="brand-icon"><i class="bi bi-shield-check"></i></div>
-        <h1>Account<br>Management</h1>
+        <h1>Quản lý<br>Tài khoản</h1>
         <span>Admin Panel</span>
     </div>
 
-    <div class="sidebar-section-label">Management</div>
+    <div class="sidebar-section-label">Quản lý</div>
     <ul class="sidebar-nav">
         <li><a href="${pageContext.request.contextPath}/admin/users" class="active">
-            <i class="bi bi-people"></i> User Accounts
+            <i class="bi bi-people"></i> Tài khoản
         </a></li>
         <li><a href="${pageContext.request.contextPath}/admin/users/create">
-            <i class="bi bi-person-plus"></i> Add New User
+            <i class="bi bi-person-plus"></i> Thêm mới
         </a></li>
     </ul>
 
@@ -244,9 +244,9 @@
             <div class="avatar">${fn:substring(sessionScope.currentUser.fullName, 0, 1)}</div>
             <div class="sidebar-user-info">
                 <div class="sidebar-user-name">${sessionScope.currentUser.fullName}</div>
-                <div class="sidebar-user-role">Administrator</div>
+                <div class="sidebar-user-role">Quản trị viên</div>
             </div>
-            <a href="${pageContext.request.contextPath}/logout" class="logout-btn" title="Logout">
+            <a href="${pageContext.request.contextPath}/logout" class="logout-btn" title="Đăng xuất">
                 <i class="bi bi-box-arrow-right"></i>
             </a>
         </div>
@@ -258,13 +258,13 @@
     <!-- Topbar -->
     <div class="topbar">
         <div>
-            <div class="page-title">Account Management</div>
-            <div class="page-sub">Manage all HR, Mentor, and Intern accounts</div>
+            <div class="page-title">Quản lý Tài khoản</div>
+            <div class="page-sub">Quản lý tài khoản HR, Mentor và Thực tập sinh</div>
         </div>
         <div class="topbar-actions">
             <a href="${pageContext.request.contextPath}/admin/users/create"
                style="padding:8px 16px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);color:#fff;border-radius:9px;text-decoration:none;font-size:.82rem;font-weight:600;display:flex;align-items:center;gap:6px;">
-                <i class="bi bi-plus-lg"></i> New User
+                <i class="bi bi-plus-lg"></i> Thêm người dùng
             </a>
         </div>
     </div>
@@ -293,21 +293,21 @@
                 <div class="stat-icon hr"><i class="bi bi-person-badge"></i></div>
                 <div>
                     <div class="stat-count">${fn:length(hrUsers)}</div>
-                    <div class="stat-label">HR Accounts</div>
+                    <div class="stat-label">Tài khoản HR</div>
                 </div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon mentor"><i class="bi bi-mortarboard"></i></div>
                 <div>
                     <div class="stat-count">${fn:length(mentorUsers)}</div>
-                    <div class="stat-label">Mentor Accounts</div>
+                    <div class="stat-label">Tài khoản Mentor</div>
                 </div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon intern"><i class="bi bi-person-workspace"></i></div>
                 <div>
                     <div class="stat-count">${fn:length(internUsers)}</div>
-                    <div class="stat-label">Intern Accounts</div>
+                    <div class="stat-label">Tài khoản Thực tập sinh</div>
                 </div>
             </div>
         </div>
@@ -317,41 +317,41 @@
             <div class="sec-header">
                 <div class="sec-header-left">
                     <span class="sec-dot dot-hr"></span>
-                    <span class="sec-title">Human Resources</span>
+                    <span class="sec-title">Nhân sự (HR)</span>
                     <span class="sec-count count-hr">${fn:length(hrUsers)}</span>
                 </div>
                 <a href="${pageContext.request.contextPath}/admin/users/create?role=HR" class="btn-add hr">
-                    <i class="bi bi-plus-lg"></i> Add HR
+                    <i class="bi bi-plus-lg"></i> Thêm HR
                 </a>
             </div>
             <%-- Filter matches table header: Fullname, Email, Phone --%>
             <form class="filter-bar" method="get" action="${pageContext.request.contextPath}/admin/users">
                 <div class="filter-group">
-                    <span class="filter-label">Fullname</span>
-                    <input class="filter-input" type="text" name="hrName" value="${hrName}" placeholder="Search name...">
+                    <span class="filter-label">Họ và tên</span>
+                    <input class="filter-input" type="text" name="hrName" value="${hrName}" placeholder="Tìm theo tên...">
                 </div>
                 <div class="filter-group">
                     <span class="filter-label">Email</span>
                     <input class="filter-input" type="text" name="hrEmail" value="${hrEmail}" placeholder="email@...">
                 </div>
                 <div class="filter-group">
-                    <span class="filter-label">Phone</span>
+                    <span class="filter-label">Số điện thoại</span>
                     <input class="filter-input" type="text" name="hrPhone" value="${hrPhone}" placeholder="090...">
                 </div>
-                <button type="submit" class="btn-filter primary"><i class="bi bi-search"></i> Search</button>
-                <a href="${pageContext.request.contextPath}/admin/users" class="btn-filter ghost" style="text-decoration:none">Clear</a>
+                <button type="submit" class="btn-filter primary"><i class="bi bi-search"></i> Tìm kiếm</button>
+                <a href="${pageContext.request.contextPath}/admin/users" class="btn-filter ghost" style="text-decoration:none">Xóa lọc</a>
             </form>
             <table class="data-table">
                 <thead><tr>
-                    <th>Fullname</th>
+                    <th>Họ và tên</th>
                     <th>Email</th>
-                    <th>Phone</th>
-                    <th>Actions</th>
+                    <th>Số điện thoại</th>
+                    <th>Thao tác</th>
                 </tr></thead>
                 <tbody>
                     <c:choose>
                         <c:when test="${empty hrUsers}">
-                            <tr><td colspan="4"><div class="empty-state"><i class="bi bi-inbox"></i>No HR accounts found.</div></td></tr>
+                            <tr><td colspan="4"><div class="empty-state"><i class="bi bi-inbox"></i>Chưa có tài khoản HR nào.</div></td></tr>
                         </c:when>
                         <c:otherwise>
                             <c:forEach var="u" items="${hrUsers}">
@@ -366,10 +366,10 @@
                                     <td style="color:var(--text-muted)">${not empty u.phone ? u.phone : '-'}</td>
                                     <td>
                                         <div class="action-group">
-                                            <a href="${pageContext.request.contextPath}/admin/users/edit?id=${u.id}" class="btn-icon edit" title="Edit"><i class="bi bi-pencil"></i></a>
-                                            <form method="post" action="${pageContext.request.contextPath}/admin/users/delete" style="display:inline" onsubmit="return confirm('Delete ${u.fullName}?')">
+                                            <a href="${pageContext.request.contextPath}/admin/users/edit?id=${u.id}" class="btn-icon edit" title="Sửa"><i class="bi bi-pencil"></i></a>
+                                            <form method="post" action="${pageContext.request.contextPath}/admin/users/delete" style="display:inline" onsubmit="return confirm('Bạn có chắc muốn xóa tài khoản này không?')">
                                                 <input type="hidden" name="id" value="${u.id}">
-                                                <button type="submit" class="btn-icon delete" title="Delete"><i class="bi bi-trash"></i></button>
+                                                <button type="submit" class="btn-icon delete" title="Xóa"><i class="bi bi-trash"></i></button>
                                             </form>
                                         </div>
                                     </td>
@@ -386,41 +386,41 @@
             <div class="sec-header">
                 <div class="sec-header-left">
                     <span class="sec-dot dot-mentor"></span>
-                    <span class="sec-title">Mentors</span>
+                    <span class="sec-title">Mentor</span>
                     <span class="sec-count count-mentor">${fn:length(mentorUsers)}</span>
                 </div>
                 <a href="${pageContext.request.contextPath}/admin/users/create?role=MENTOR" class="btn-add mentor">
-                    <i class="bi bi-plus-lg"></i> Add Mentor
+                    <i class="bi bi-plus-lg"></i> Thêm Mentor
                 </a>
             </div>
             <%-- Filter matches table header: Fullname, Email, Phone --%>
             <form class="filter-bar" method="get" action="${pageContext.request.contextPath}/admin/users">
                 <div class="filter-group">
-                    <span class="filter-label">Fullname</span>
-                    <input class="filter-input" type="text" name="mentorName" value="${mentorName}" placeholder="Search name...">
+                    <span class="filter-label">Họ và tên</span>
+                    <input class="filter-input" type="text" name="mentorName" value="${mentorName}" placeholder="Tìm theo tên...">
                 </div>
                 <div class="filter-group">
                     <span class="filter-label">Email</span>
                     <input class="filter-input" type="text" name="mentorEmail" value="${mentorEmail}" placeholder="email@...">
                 </div>
                 <div class="filter-group">
-                    <span class="filter-label">Phone</span>
+                    <span class="filter-label">Số điện thoại</span>
                     <input class="filter-input" type="text" name="mentorPhone" value="${mentorPhone}" placeholder="090...">
                 </div>
-                <button type="submit" class="btn-filter primary" style="background:var(--mentor-col)"><i class="bi bi-search"></i> Search</button>
-                <a href="${pageContext.request.contextPath}/admin/users" class="btn-filter ghost" style="text-decoration:none">Clear</a>
+                <button type="submit" class="btn-filter primary" style="background:var(--mentor-col)"><i class="bi bi-search"></i> Tìm kiếm</button>
+                <a href="${pageContext.request.contextPath}/admin/users" class="btn-filter ghost" style="text-decoration:none">Xóa lọc</a>
             </form>
             <table class="data-table">
                 <thead><tr>
-                    <th>Fullname</th>
+                    <th>Họ và tên</th>
                     <th>Email</th>
-                    <th>Phone</th>
-                    <th>Actions</th>
+                    <th>Số điện thoại</th>
+                    <th>Thao tác</th>
                 </tr></thead>
                 <tbody>
                     <c:choose>
                         <c:when test="${empty mentorUsers}">
-                            <tr><td colspan="4"><div class="empty-state"><i class="bi bi-inbox"></i>No Mentor accounts found.</div></td></tr>
+                            <tr><td colspan="4"><div class="empty-state"><i class="bi bi-inbox"></i>Chưa có tài khoản Mentor nào.</div></td></tr>
                         </c:when>
                         <c:otherwise>
                             <c:forEach var="u" items="${mentorUsers}">
@@ -435,10 +435,10 @@
                                     <td style="color:var(--text-muted)">${not empty u.phone ? u.phone : '-'}</td>
                                     <td>
                                         <div class="action-group">
-                                            <a href="${pageContext.request.contextPath}/admin/users/edit?id=${u.id}" class="btn-icon edit" title="Edit"><i class="bi bi-pencil"></i></a>
-                                            <form method="post" action="${pageContext.request.contextPath}/admin/users/delete" style="display:inline" onsubmit="return confirm('Delete ${u.fullName}?')">
+                                            <a href="${pageContext.request.contextPath}/admin/users/edit?id=${u.id}" class="btn-icon edit" title="Sửa"><i class="bi bi-pencil"></i></a>
+                                            <form method="post" action="${pageContext.request.contextPath}/admin/users/delete" style="display:inline" onsubmit="return confirm('Bạn có chắc muốn xóa tài khoản này không?')">
                                                 <input type="hidden" name="id" value="${u.id}">
-                                                <button type="submit" class="btn-icon delete" title="Delete"><i class="bi bi-trash"></i></button>
+                                                <button type="submit" class="btn-icon delete" title="Xóa"><i class="bi bi-trash"></i></button>
                                             </form>
                                         </div>
                                     </td>
@@ -455,51 +455,51 @@
             <div class="sec-header">
                 <div class="sec-header-left">
                     <span class="sec-dot dot-intern"></span>
-                    <span class="sec-title">Interns</span>
+                    <span class="sec-title">Thực tập sinh</span>
                     <span class="sec-count count-intern">${fn:length(internUsers)}</span>
                 </div>
                 <a href="${pageContext.request.contextPath}/admin/users/create?role=INTERN" class="btn-add intern">
-                    <i class="bi bi-plus-lg"></i> Add Intern
+                    <i class="bi bi-plus-lg"></i> Thêm Intern
                 </a>
             </div>
             <%-- Filter matches table header: Fullname, Email, Phone, Major, University --%>
             <form class="filter-bar" method="get" action="${pageContext.request.contextPath}/admin/users">
                 <div class="filter-group">
-                    <span class="filter-label">Fullname</span>
-                    <input class="filter-input" type="text" name="internName" value="${internName}" placeholder="Search name...">
+                    <span class="filter-label">Họ và tên</span>
+                    <input class="filter-input" type="text" name="internName" value="${internName}" placeholder="Tìm theo tên...">
                 </div>
                 <div class="filter-group">
                     <span class="filter-label">Email</span>
                     <input class="filter-input" type="text" name="internEmail" value="${internEmail}" placeholder="email@...">
                 </div>
                 <div class="filter-group">
-                    <span class="filter-label">Phone</span>
+                    <span class="filter-label">Số điện thoại</span>
                     <input class="filter-input" type="text" name="internPhone" value="${internPhone}" placeholder="090...">
                 </div>
                 <div class="filter-group">
-                    <span class="filter-label">Major</span>
-                    <input class="filter-input" type="text" name="internMajor" value="${internMajor}" placeholder="e.g. CS">
+                    <span class="filter-label">Chuyên ngành</span>
+                    <input class="filter-input" type="text" name="internMajor" value="${internMajor}" placeholder="VD: CNTT">
                 </div>
                 <div class="filter-group">
-                    <span class="filter-label">University</span>
-                    <input class="filter-input" type="text" name="internUniversity" value="${internUniversity}" placeholder="University">
+                    <span class="filter-label">Trường đại học</span>
+                    <input class="filter-input" type="text" name="internUniversity" value="${internUniversity}" placeholder="Trường đại học">
                 </div>
-                <button type="submit" class="btn-filter primary" style="background:var(--intern-col)"><i class="bi bi-search"></i> Search</button>
-                <a href="${pageContext.request.contextPath}/admin/users" class="btn-filter ghost" style="text-decoration:none">Clear</a>
+                <button type="submit" class="btn-filter primary" style="background:var(--intern-col)"><i class="bi bi-search"></i> Tìm kiếm</button>
+                <a href="${pageContext.request.contextPath}/admin/users" class="btn-filter ghost" style="text-decoration:none">Xóa lọc</a>
             </form>
             <table class="data-table">
                 <thead><tr>
-                    <th>Fullname</th>
+                    <th>Họ và tên</th>
                     <th>Email</th>
-                    <th>Phone</th>
-                    <th>Major</th>
-                    <th>University</th>
-                    <th>Actions</th>
+                    <th>Số điện thoại</th>
+                    <th>Chuyên ngành</th>
+                    <th>Trường đại học</th>
+                    <th>Thao tác</th>
                 </tr></thead>
                 <tbody>
                     <c:choose>
                         <c:when test="${empty internUsers}">
-                            <tr><td colspan="6"><div class="empty-state"><i class="bi bi-inbox"></i>No Intern accounts found.</div></td></tr>
+                            <tr><td colspan="6"><div class="empty-state"><i class="bi bi-inbox"></i>Chưa có tài khoản Thực tập sinh nào.</div></td></tr>
                         </c:when>
                         <c:otherwise>
                             <c:forEach var="u" items="${internUsers}">
@@ -518,10 +518,10 @@
                                     <td style="color:var(--text-muted)">${not empty u.university ? u.university : '-'}</td>
                                     <td>
                                         <div class="action-group">
-                                            <a href="${pageContext.request.contextPath}/admin/users/edit?id=${u.id}" class="btn-icon edit" title="Edit"><i class="bi bi-pencil"></i></a>
-                                            <form method="post" action="${pageContext.request.contextPath}/admin/users/delete" style="display:inline" onsubmit="return confirm('Delete ${u.fullName}?')">
+                                            <a href="${pageContext.request.contextPath}/admin/users/edit?id=${u.id}" class="btn-icon edit" title="Sửa"><i class="bi bi-pencil"></i></a>
+                                            <form method="post" action="${pageContext.request.contextPath}/admin/users/delete" style="display:inline" onsubmit="return confirm('Bạn có chắc muốn xóa tài khoản này không?')">
                                                 <input type="hidden" name="id" value="${u.id}">
-                                                <button type="submit" class="btn-icon delete" title="Delete"><i class="bi bi-trash"></i></button>
+                                                <button type="submit" class="btn-icon delete" title="Xóa"><i class="bi bi-trash"></i></button>
                                             </form>
                                         </div>
                                     </td>

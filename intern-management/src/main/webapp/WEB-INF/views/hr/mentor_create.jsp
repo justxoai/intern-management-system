@@ -2,11 +2,11 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Add New Mentor — HR Management</title>
+    <title>Thêm Mentor mới — Quản lý HR</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
@@ -158,16 +158,16 @@
 <aside class="sidebar">
     <div class="sidebar-brand">
         <div class="brand-icon"><i class="bi bi-building"></i></div>
-        <h1>Human Resource</h1>
+        <h1>Nhân sự (HR)</h1>
     </div>
 
-    <div class="sidebar-section-label">Management</div>
+    <div class="sidebar-section-label">Quản lý</div>
     <ul class="sidebar-nav">
-        <li><a href="${pageContext.request.contextPath}/hr/dashboard"><i class="bi bi-grid"></i> Dashboard</a></li>
-        <li><a href="${pageContext.request.contextPath}/hr/mentors" class="active"><i class="bi bi-mortarboard"></i> Mentors</a></li>
-        <li><a href="${pageContext.request.contextPath}/hr/applications"><i class="bi bi-clipboard-check"></i> Applications</a></li>
-        <li><a href="${pageContext.request.contextPath}/hr/contracts"><i class="bi bi-file-earmark-text"></i> Contracts</a></li>
-        <li><a href="${pageContext.request.contextPath}/hr/documents"><i class="bi bi-folder-check"></i> Document Review</a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/dashboard"><i class="bi bi-grid"></i> Tổng quan</a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/mentors" class="active"><i class="bi bi-mortarboard"></i> Mentor</a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/applications"><i class="bi bi-clipboard-check"></i> Đơn xét tuyển</a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/contracts"><i class="bi bi-file-earmark-text"></i> Hợp đồng</a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/documents"><i class="bi bi-folder-check"></i> Duyệt tài liệu</a></li>
     </ul>
 
     <div class="sidebar-footer">
@@ -175,9 +175,9 @@
             <div class="avatar">${fn:substring(sessionScope.currentUser.fullName, 0, 1)}</div>
             <div class="sidebar-user-info">
                 <div class="sidebar-user-name">${sessionScope.currentUser.fullName}</div>
-                <div class="sidebar-user-role">HR Staff</div>
+                <div class="sidebar-user-role">Nhân sự</div>
             </div>
-            <a href="${pageContext.request.contextPath}/logout" class="logout-btn" title="Logout"><i class="bi bi-box-arrow-right"></i></a>
+            <a href="${pageContext.request.contextPath}/logout" class="logout-btn" title="Đăng xuất"><i class="bi bi-box-arrow-right"></i></a>
         </div>
     </div>
 </aside>
@@ -186,12 +186,12 @@
 <div class="main">
     <div class="topbar">
         <a href="${pageContext.request.contextPath}/hr/mentors" class="topbar-back">
-            <i class="bi bi-arrow-left"></i> Back to Mentors
+            <i class="bi bi-arrow-left"></i> Quay lại Mentor
         </a>
         <div style="border-left:1px solid var(--border);height:24px"></div>
         <div>
-            <div class="page-title">Add New Mentor</div>
-            <div class="page-sub">Create a new mentor account and assign intern capacity</div>
+            <div class="page-title">Thêm Mentor mới</div>
+            <div class="page-sub">Tạo tài khoản mentor mới và phân bổ số lượng thực tập sinh hướng dẫn</div>
         </div>
     </div>
 
@@ -200,9 +200,9 @@
             <div class="form-card-header">
                 <div class="form-card-title">
                     <div class="icon"><i class="bi bi-person-plus-fill"></i></div>
-                    Create Mentor Account
+                    Tạo tài khoản Mentor
                 </div>
-                <div class="form-card-sub">All marked (*) fields are required. The mentor can log in to guide interns immediately.</div>
+                <div class="form-card-sub">Các trường đánh dấu (*) là bắt buộc. Mentor có thể đăng nhập để hướng dẫn thực tập sinh ngay lập tức.</div>
             </div>
 
             <c:if test="${not empty error}">
@@ -212,24 +212,24 @@
             <form action="${pageContext.request.contextPath}/hr/mentors/create" method="post" id="mentorForm">
 
                 <%-- 1. Personal Information --%>
-                <div class="section-label"><i class="bi bi-person-fill"></i> Personal Information</div>
+                <div class="section-label"><i class="bi bi-person-fill"></i> 1. Thông tin cá nhân</div>
                 <div class="form-grid">
                     <div class="form-group full">
-                        <label class="form-label">Full Name <span class="required">*</span></label>
+                        <label class="form-label">Họ và tên <span class="required">*</span></label>
                         <div class="input-wrap">
                             <i class="bi bi-person-fill input-icon"></i>
-                            <input type="text" name="fullName" class="form-input" value="${param.fullName}" required placeholder="e.g. Tran Van Mentor">
+                            <input type="text" name="fullName" class="form-input" value="${param.fullName}" required placeholder="VD: Trần Văn Mentor">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Email Address <span class="required">*</span></label>
+                        <label class="form-label">Địa chỉ Email <span class="required">*</span></label>
                         <div class="input-wrap">
                             <i class="bi bi-envelope input-icon"></i>
                             <input type="email" name="email" class="form-input" value="${param.email}" required placeholder="mentor@company.com">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Phone Number <span class="required">*</span></label>
+                        <label class="form-label">Số điện thoại <span class="required">*</span></label>
                         <div class="input-wrap">
                             <i class="bi bi-phone input-icon"></i>
                             <input type="tel" name="phone" class="form-input" value="${param.phone}" required placeholder="0901234567">
@@ -238,24 +238,24 @@
                 </div>
 
                 <%-- 2. Professional Details --%>
-                <div class="section-label"><i class="bi bi-briefcase-fill"></i> Professional Details</div>
+                <div class="section-label"><i class="bi bi-briefcase-fill"></i> 2. Thông tin chuyên môn</div>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label class="form-label">Department <span class="required">*</span></label>
+                        <label class="form-label">Phòng ban <span class="required">*</span></label>
                         <div class="input-wrap">
                             <i class="bi bi-building input-icon"></i>
-                            <input type="text" name="department" class="form-input" value="${param.department}" required placeholder="e.g. Software Engineering">
+                            <input type="text" name="department" class="form-input" value="${param.department}" required placeholder="VD: Công nghệ thông tin">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Position / Job Title <span class="required">*</span></label>
+                        <label class="form-label">Chức vụ / Vị trí <span class="required">*</span></label>
                         <div class="input-wrap">
                             <i class="bi bi-award input-icon"></i>
-                            <input type="text" name="position" class="form-input" value="${param.position}" required placeholder="e.g. Senior Software Engineer">
+                            <input type="text" name="position" class="form-input" value="${param.position}" required placeholder="VD: Senior Software Engineer">
                         </div>
                     </div>
                     <div class="form-group full">
-                        <label class="form-label">Max Interns Capacity <span class="required">*</span></label>
+                        <label class="form-label">Số TTS tối đa <span class="required">*</span></label>
                         <div class="input-wrap">
                             <i class="bi bi-people-fill input-icon"></i>
                             <input type="number" name="maxInterns" class="form-input" value="${not empty param.maxInterns ? param.maxInterns : 5}" min="1" max="20" required placeholder="5">
@@ -264,20 +264,20 @@
                 </div>
 
                 <%-- 3. Login Credentials --%>
-                <div class="section-label"><i class="bi bi-shield-lock"></i> Login Credentials</div>
+                <div class="section-label"><i class="bi bi-shield-lock"></i> 3. Thông tin đăng nhập</div>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label class="form-label">Username <span class="required">*</span></label>
+                        <label class="form-label">Tên đăng nhập <span class="required">*</span></label>
                         <div class="input-wrap">
                             <i class="bi bi-at input-icon"></i>
-                            <input type="text" name="username" class="form-input" value="${param.username}" required placeholder="e.g. mentor02" autocomplete="off">
+                            <input type="text" name="username" class="form-input" value="${param.username}" required placeholder="VD: mentor02" autocomplete="off">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Password <span class="required">*</span></label>
+                        <label class="form-label">Mật khẩu <span class="required">*</span></label>
                         <div class="input-wrap" style="position:relative;">
                             <i class="bi bi-lock input-icon"></i>
-                            <input type="password" name="password" id="pwField" class="form-input" required placeholder="Min 6 characters" autocomplete="new-password" style="padding-right:40px;">
+                            <input type="password" name="password" id="pwField" class="form-input" required placeholder="Tối thiểu 6 ký tự" autocomplete="new-password" style="padding-right:40px;">
                             <button type="button" class="pw-toggle" onclick="togglePw()">
                                 <i class="bi bi-eye" id="pwEye"></i>
                             </button>
@@ -287,10 +287,10 @@
 
                 <div class="form-actions">
                     <a href="${pageContext.request.contextPath}/hr/mentors" class="btn-cancel">
-                        <i class="bi bi-x"></i> Cancel
+                        <i class="bi bi-x"></i> Hủy
                     </a>
                     <button type="submit" class="btn-save" id="submitBtn">
-                        <i class="bi bi-check-lg"></i> Create Mentor
+                        <i class="bi bi-check-lg"></i> Tạo Mentor
                     </button>
                 </div>
             </form>
@@ -308,7 +308,7 @@
     document.getElementById('mentorForm').addEventListener('submit', function () {
         var btn = document.getElementById('submitBtn');
         btn.disabled = true;
-        btn.innerHTML = '<i class="bi bi-arrow-repeat"></i> Saving...';
+        btn.innerHTML = '<i class="bi bi-arrow-repeat"></i> Đang lưu...';
     });
 </script>
 </body>

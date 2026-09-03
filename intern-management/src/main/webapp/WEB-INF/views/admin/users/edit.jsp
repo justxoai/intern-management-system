@@ -2,10 +2,10 @@
 <%@ taglib prefix="c"   uri="jakarta.tags.core" %>
 <%@ taglib prefix="fn"  uri="jakarta.tags.functions" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
-<fmt:setLocale value="${not empty sessionScope.lang ? sessionScope.lang : 'vi'}" />
+<fmt:setLocale value="vi" />
 <fmt:setBundle basename="messages" />
 <!DOCTYPE html>
-<html lang="${not empty sessionScope.lang ? sessionScope.lang : 'vi'}">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -135,14 +135,8 @@
             <div class="page-title"><fmt:message key="admin.edit.heading"/></div>
             <div class="page-sub"><fmt:message key="admin.edit.subheading"/></div>
         </div>
-        <%-- Lang switcher --%>
-        <div style="display:flex;gap:6px">
-            <a href="${pageContext.request.contextPath}/lang?lang=vi"
-               style="padding:4px 10px;border-radius:20px;border:1.5px solid var(--border);background:${empty sessionScope.lang || sessionScope.lang=='vi' ? '#3b82f6' : '#fff'};color:${empty sessionScope.lang || sessionScope.lang=='vi' ? '#fff' : '#64748b'};font-size:.72rem;font-weight:600;text-decoration:none"><fmt:message key="lang.vi"/></a>
-            <a href="${pageContext.request.contextPath}/lang?lang=en"
-               style="padding:4px 10px;border-radius:20px;border:1.5px solid var(--border);background:${sessionScope.lang=='en' ? '#3b82f6' : '#fff'};color:${sessionScope.lang=='en' ? '#fff' : '#64748b'};font-size:.72rem;font-weight:600;text-decoration:none"><fmt:message key="lang.en"/></a>
-        </div>
     </div>
+
 
     <div class="content">
         <div class="form-card">

@@ -37,7 +37,7 @@ public class AuthorizationFilter implements Filter {
         // Skip static assets or public auth endpoints
         if (path.startsWith("/assets/") || path.startsWith("/uploads/")
                 || path.equals("/login")   || path.equals("/logout")
-                || path.equals("/register")
+                || path.equals("/register") || path.equals("/lang")
                 || path.equals("/index.jsp") || path.equals("/")) {
             chain.doFilter(req, res);
             return;
