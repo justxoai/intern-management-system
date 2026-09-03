@@ -1,13 +1,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c"   uri="jakarta.tags.core" %>
 <%@ taglib prefix="fn"  uri="jakarta.tags.functions" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <%@ page import="java.time.format.DateTimeFormatter, java.time.LocalDateTime" %>
+<fmt:setLocale value="${not empty sessionScope.lang ? sessionScope.lang : 'vi'}" />
+<fmt:setBundle basename="messages" />
 <!DOCTYPE html>
-<html lang="en">
+<html lang="${not empty sessionScope.lang ? sessionScope.lang : 'vi'}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>HR Dashboard — Human Resource</title>
+    <title><fmt:message key="hr.dashboard.title"/></title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>

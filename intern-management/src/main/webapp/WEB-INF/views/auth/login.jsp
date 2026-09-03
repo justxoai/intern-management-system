@@ -1,11 +1,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="c"   uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<fmt:setLocale value="${not empty sessionScope.lang ? sessionScope.lang : 'vi'}" />
+<fmt:setBundle basename="messages" />
 <!DOCTYPE html>
-<html lang="en">
+<html lang="${not empty sessionScope.lang ? sessionScope.lang : 'vi'}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sign In — Internship Management System</title>
+    <title><fmt:message key="login.title"/></title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
@@ -74,6 +77,15 @@
 
         .login-box { width: 100%; max-width: 400px; }
 
+        /* ── Lang switcher ── */
+        .lang-bar { display: flex; justify-content: flex-end; margin-bottom: 20px; gap: 6px; }
+        .lang-btn {
+            padding: 4px 12px; border-radius: 20px; border: 1.5px solid #e2e8f0;
+            background: #fff; font-size: .75rem; font-weight: 600; color: #64748b;
+            cursor: pointer; text-decoration: none; transition: all .15s;
+        }
+        .lang-btn:hover, .lang-btn.active { background: #1565c0; color: #fff; border-color: #1565c0; }
+
         .login-heading { font-size: 1.75rem; font-weight: 700; color: #0f2350; margin-bottom: 6px; letter-spacing: -.4px; }
         .login-sub     { color: #64748b; font-size: .92rem; margin-bottom: 32px; }
 
@@ -112,6 +124,11 @@
             padding: 12px 16px; display: flex; align-items: center; gap: 10px;
             color: #dc2626; font-size: .87rem; margin-bottom: 20px;
         }
+        .success-alert {
+            background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px;
+            padding: 12px 16px; display: flex; align-items: center; gap: 10px;
+            color: #15803d; font-size: .86rem; font-weight: 500; margin-bottom: 16px;
+        }
 
         .btn-login {
             width: 100%; padding: 13px;
@@ -145,19 +162,32 @@
 <!-- Left decorative panel -->
 <div class="left-panel">
     <div class="brand-icon"><i class="bi bi-mortarboard-fill"></i></div>
-    <h1 class="brand-title">Internship<br>Management System</h1>
+    <h1 class="brand-title"><fmt:message key="app.name"/></h1>
 </div>
 
 <!-- Right login panel -->
 <div class="right-panel">
     <div class="login-box">
-        <h2 class="login-heading">Welcome back</h2>
-        <p class="login-sub">Sign in to access your dashboard</p>
+
+        <%-- Language switcher --%>
+        <div class="lang-bar">
+            <a href="${pageContext.request.contextPath}/lang?lang=vi"
+               class="lang-btn ${empty sessionScope.lang || sessionScope.lang == 'vi' ? 'active' : ''}">
+                <fmt:message key="lang.vi"/>
+            </a>
+            <a href="${pageContext.request.contextPath}/lang?lang=en"
+               class="lang-btn ${sessionScope.lang == 'en' ? 'active' : ''}">
+                <fmt:message key="lang.en"/>
+            </a>
+        </div>
+
+        <h2 class="login-heading"><fmt:message key="login.heading"/></h2>
+        <p class="login-sub"><fmt:message key="login.subheading"/></p>
 
         <c:if test="${param.registered == '1'}">
-            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:10px;color:#15803d;font-size:.86rem;font-weight:500;margin-bottom:16px">
+            <div class="success-alert">
                 <i class="bi bi-check-circle-fill"></i>
-                Registration successful! Please sign in with your new account.
+                <fmt:message key="login.heading"/> — <fmt:message key="login.register.link"/>!
             </div>
         </c:if>
 
@@ -170,33 +200,36 @@
 
         <form action="${pageContext.request.contextPath}/login" method="post" id="loginForm">
             <div class="form-group">
-                <label class="form-label" for="username">Username</label>
+                <label class="form-label" for="username"><fmt:message key="login.username"/></label>
                 <div class="input-wrap">
                     <i class="bi bi-person input-icon"></i>
                     <input type="text" id="username" name="username" class="form-input"
-                           placeholder="Enter your username" value="${username}" required autocomplete="username">
+                           placeholder="<fmt:message key='login.username.placeholder'/>"
+                           value="${username}" required autocomplete="username">
                 </div>
             </div>
 
             <div class="form-group">
-                <label class="form-label" for="password">Password</label>
+                <label class="form-label" for="password"><fmt:message key="login.password"/></label>
                 <div class="input-wrap">
                     <i class="bi bi-lock input-icon"></i>
                     <input type="password" id="password" name="password" class="form-input"
-                           placeholder="Enter your password" required autocomplete="current-password">
-                    <button type="button" class="toggle-pass" onclick="togglePassword()" id="toggleBtn" title="Toggle password visibility">
+                           placeholder="<fmt:message key='login.password.placeholder'/>"
+                           required autocomplete="current-password">
+                    <button type="button" class="toggle-pass" onclick="togglePassword()" id="toggleBtn">
                         <i class="bi bi-eye" id="eyeIcon"></i>
                     </button>
                 </div>
             </div>
 
             <button type="submit" class="btn-login" id="loginBtn">
-                <i class="bi bi-box-arrow-in-right me-1"></i> Sign In
+                <i class="bi bi-box-arrow-in-right"></i>&nbsp;<fmt:message key="login.submit"/>
             </button>
         </form>
 
         <p class="footer-note">
-            New intern? <a href="${pageContext.request.contextPath}/register">Register here &rarr;</a>
+            <fmt:message key="login.register.prompt"/>
+            <a href="${pageContext.request.contextPath}/register"><fmt:message key="login.register.link"/> &rarr;</a>
         </p>
     </div>
 </div>
@@ -217,7 +250,7 @@
     // Prevent double-submit
     document.getElementById('loginForm').addEventListener('submit', function () {
         document.getElementById('loginBtn').disabled = true;
-        document.getElementById('loginBtn').innerHTML = '<i class="bi bi-arrow-repeat me-1"></i> Signing in...';
+        document.getElementById('loginBtn').innerHTML = '<i class="bi bi-arrow-repeat"></i> ...';
     });
 </script>
 </body>

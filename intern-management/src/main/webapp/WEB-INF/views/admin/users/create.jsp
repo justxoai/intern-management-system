@@ -1,12 +1,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
+<%@ taglib prefix="c"   uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn"  uri="jakarta.tags.functions" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<fmt:setLocale value="${not empty sessionScope.lang ? sessionScope.lang : 'vi'}" />
+<fmt:setBundle basename="messages" />
 <!DOCTYPE html>
-<html lang="en">
+<html lang="${not empty sessionScope.lang ? sessionScope.lang : 'vi'}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Create User Account — Admin</title>
+    <title><fmt:message key="admin.create.title"/></title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
@@ -111,16 +114,16 @@
 <aside class="sidebar">
     <div class="sidebar-brand">
         <div class="brand-icon"><i class="bi bi-shield-check"></i></div>
-        <h1>Account<br>Management</h1>
+        <h1><fmt:message key="app.name"/></h1>
         <span>Admin Panel</span>
     </div>
-    <div class="sidebar-section-label">Management</div>
+    <div class="sidebar-section-label"><fmt:message key="label.role"/></div>
     <ul class="sidebar-nav">
         <li><a href="${pageContext.request.contextPath}/admin/users">
-            <i class="bi bi-people"></i> User Accounts
+            <i class="bi bi-people"></i> <fmt:message key="nav.users"/>
         </a></li>
         <li><a href="${pageContext.request.contextPath}/admin/users/create" class="active">
-            <i class="bi bi-person-plus"></i> Add New User
+            <i class="bi bi-person-plus"></i> <fmt:message key="nav.addUser"/>
         </a></li>
     </ul>
 
@@ -129,9 +132,9 @@
             <div class="avatar">${fn:substring(sessionScope.currentUser.fullName, 0, 1)}</div>
             <div class="sidebar-user-info">
                 <div class="sidebar-user-name">${sessionScope.currentUser.fullName}</div>
-                <div class="sidebar-user-role">Administrator</div>
+                <div class="sidebar-user-role"><fmt:message key="role.admin"/></div>
             </div>
-            <a href="${pageContext.request.contextPath}/logout" class="logout-btn" title="Logout">
+            <a href="${pageContext.request.contextPath}/logout" class="logout-btn" title="<fmt:message key='nav.logout'/>">
                 <i class="bi bi-box-arrow-right"></i>
             </a>
         </div>
@@ -141,12 +144,19 @@
 <div class="main">
     <div class="topbar">
         <a href="${pageContext.request.contextPath}/admin/users" class="topbar-back">
-            <i class="bi bi-arrow-left"></i> Back to Users
+            <i class="bi bi-arrow-left"></i> <fmt:message key="btn.back"/>
         </a>
         <div style="border-left:1px solid var(--border);height:28px;margin:0 4px"></div>
-        <div>
-            <div class="page-title">Create User Account</div>
-            <div class="page-sub">Add a new HR, Mentor, or Intern account</div>
+        <div style="flex:1">
+            <div class="page-title"><fmt:message key="admin.create.heading"/></div>
+            <div class="page-sub"><fmt:message key="admin.create.subheading"/></div>
+        </div>
+        <%-- Lang switcher --%>
+        <div style="display:flex;gap:6px">
+            <a href="${pageContext.request.contextPath}/lang?lang=vi"
+               style="padding:4px 10px;border-radius:20px;border:1.5px solid var(--border);background:${empty sessionScope.lang || sessionScope.lang=='vi' ? '#3b82f6' : '#fff'};color:${empty sessionScope.lang || sessionScope.lang=='vi' ? '#fff' : '#64748b'};font-size:.72rem;font-weight:600;text-decoration:none"><fmt:message key="lang.vi"/></a>
+            <a href="${pageContext.request.contextPath}/lang?lang=en"
+               style="padding:4px 10px;border-radius:20px;border:1.5px solid var(--border);background:${sessionScope.lang=='en' ? '#3b82f6' : '#fff'};color:${sessionScope.lang=='en' ? '#fff' : '#64748b'};font-size:.72rem;font-weight:600;text-decoration:none"><fmt:message key="lang.en"/></a>
         </div>
     </div>
 
@@ -155,9 +165,9 @@
             <div class="form-card-header">
                 <div class="form-card-title">
                     <div class="icon"><i class="bi bi-person-plus-fill"></i></div>
-                    New User Account
+                    <fmt:message key="admin.create.card.title"/>
                 </div>
-                <div class="form-card-sub">Fill in all required fields to create a new account. The user can log in immediately after creation.</div>
+                <div class="form-card-sub"><fmt:message key="admin.create.card.sub"/></div>
             </div>
 
             <c:if test="${not empty error}">
@@ -167,50 +177,52 @@
             <form action="${pageContext.request.contextPath}/admin/users/create" method="post" id="createForm">
 
                 <%-- Account Info --%>
-                <div class="section-label"><i class="bi bi-lock"></i> Login Credentials</div>
+                <div class="section-label"><i class="bi bi-lock"></i> <fmt:message key="admin.create.section.credentials"/></div>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label class="form-label">Username <span class="required">*</span></label>
+                        <label class="form-label"><fmt:message key="label.username"/> <span class="required">*</span></label>
                         <div class="input-wrap">
                             <i class="bi bi-at input-icon"></i>
                             <input type="text" name="username" class="form-input" value="${user.username}" required placeholder="e.g. hr02" autocomplete="off">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Password <span class="required">*</span></label>
+                        <label class="form-label"><fmt:message key="label.password"/> <span class="required">*</span></label>
                         <div class="input-wrap">
                             <i class="bi bi-lock input-icon"></i>
-                            <input type="password" name="password" id="pwField" class="form-input" required placeholder="Min 6 characters" autocomplete="new-password" oninput="validatePwLive(this.value)">
+                            <input type="password" name="password" id="pwField" class="form-input" required
+                                   placeholder="<fmt:message key='admin.create.pw.placeholder'/>"
+                                   autocomplete="new-password" oninput="validatePwLive(this.value)">
                             <button type="button" class="toggle-pw" onclick="togglePw()"><i class="bi bi-eye" id="pwEye"></i></button>
                         </div>
                         <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:6px;font-size:.72rem;color:#64748b">
-                            <span id="hintUpper"><i class="bi bi-circle" id="icoUpper"></i> 1 Uppercase</span>
-                            <span id="hintLower"><i class="bi bi-circle" id="icoLower"></i> 1 Normal</span>
-                            <span id="hintNum"><i class="bi bi-circle" id="icoNum"></i> 1 Number</span>
-                            <span id="hintSpec"><i class="bi bi-circle" id="icoSpec"></i> 1 Special key</span>
+                            <span id="hintUpper"><i class="bi bi-circle" id="icoUpper"></i> <fmt:message key="register.hint.upper"/></span>
+                            <span id="hintLower"><i class="bi bi-circle" id="icoLower"></i> <fmt:message key="register.hint.lower"/></span>
+                            <span id="hintNum">  <i class="bi bi-circle" id="icoNum"></i>   <fmt:message key="register.hint.num"/></span>
+                            <span id="hintSpec"> <i class="bi bi-circle" id="icoSpec"></i>  <fmt:message key="register.hint.special"/></span>
                         </div>
                     </div>
                 </div>
 
                 <%-- Personal Info --%>
-                <div class="section-label"><i class="bi bi-person"></i> Personal Information</div>
+                <div class="section-label"><i class="bi bi-person"></i> <fmt:message key="admin.create.section.personal"/></div>
                 <div class="form-grid">
                     <div class="form-group full">
-                        <label class="form-label">Full Name <span class="required">*</span></label>
+                        <label class="form-label"><fmt:message key="label.fullname"/> <span class="required">*</span></label>
                         <div class="input-wrap">
                             <i class="bi bi-person input-icon"></i>
                             <input type="text" name="fullName" class="form-input" value="${user.fullName}" required placeholder="e.g. Nguyen Van A">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Email <span class="required">*</span></label>
+                        <label class="form-label"><fmt:message key="label.email"/> <span class="required">*</span></label>
                         <div class="input-wrap">
                             <i class="bi bi-envelope input-icon"></i>
                             <input type="email" name="email" class="form-input" value="${user.email}" required placeholder="example@email.com">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Phone <span class="required">*</span></label>
+                        <label class="form-label"><fmt:message key="label.phone"/> <span class="required">*</span></label>
                         <div class="input-wrap">
                             <i class="bi bi-phone input-icon"></i>
                             <input type="tel" name="phone" class="form-input" value="${user.phone}" required placeholder="0901234567">
@@ -219,32 +231,32 @@
                 </div>
 
                 <%-- Role Selection --%>
-                <div class="section-label"><i class="bi bi-shield-halved"></i> Role Assignment</div>
+                <div class="section-label"><i class="bi bi-shield-halved"></i> <fmt:message key="admin.create.section.role"/></div>
                 <input type="hidden" name="role" id="roleInput" value="${not empty user.role ? user.role : (not empty param.role ? param.role : 'HR')}">
                 <div class="role-grid">
                     <div class="role-card" id="card-HR" onclick="selectRole('HR')">
                         <div class="role-icon ri-hr"><i class="bi bi-person-badge"></i></div>
                         <div class="role-label">HR</div>
-                        <div class="role-desc">Human Resources staff</div>
+                        <div class="role-desc"><fmt:message key="role.hr.desc"/></div>
                     </div>
                     <div class="role-card" id="card-MENTOR" onclick="selectRole('MENTOR')">
                         <div class="role-icon ri-mentor"><i class="bi bi-mortarboard"></i></div>
                         <div class="role-label">Mentor</div>
-                        <div class="role-desc">Guides intern teams</div>
+                        <div class="role-desc"><fmt:message key="role.mentor.desc"/></div>
                     </div>
                     <div class="role-card" id="card-INTERN" onclick="selectRole('INTERN')">
                         <div class="role-icon ri-intern"><i class="bi bi-person-workspace"></i></div>
                         <div class="role-label">Intern</div>
-                        <div class="role-desc">Internship participant</div>
+                        <div class="role-desc"><fmt:message key="role.intern.desc"/></div>
                     </div>
                 </div>
 
                 <div class="form-actions">
                     <a href="${pageContext.request.contextPath}/admin/users" class="btn-cancel">
-                        <i class="bi bi-x"></i> Cancel
+                        <i class="bi bi-x"></i> <fmt:message key="btn.cancel"/>
                     </a>
                     <button type="submit" class="btn-save" id="saveBtn">
-                        <i class="bi bi-check-lg"></i> Create Account
+                        <i class="bi bi-check-lg"></i> <fmt:message key="admin.create.btn.submit"/>
                     </button>
                 </div>
             </form>
