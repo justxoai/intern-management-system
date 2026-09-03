@@ -195,14 +195,14 @@
                 <div class="stat-pill-icon sp-todo"><i class="bi bi-circle"></i></div>
                 <div>
                     <div class="stat-pill-num">${todoCount}</div>
-                    <div class="stat-pill-lbl">Cần làm</div>
+                    <div class="stat-pill-lbl">Chờ thực hiện</div>
                 </div>
             </div>
             <div class="stat-pill">
                 <div class="stat-pill-icon sp-progress"><i class="bi bi-arrow-clockwise"></i></div>
                 <div>
                     <div class="stat-pill-num">${progressCount}</div>
-                    <div class="stat-pill-lbl">Đang thực hiện</div>
+                    <div class="stat-pill-lbl">Đang làm</div>
                 </div>
             </div>
             <div class="stat-pill">
@@ -220,11 +220,11 @@
                class="tab-btn ${empty statusFilter ? 'active' : ''}">Tất cả</a>
             <a href="${pageContext.request.contextPath}/intern/tasks?status=TODO"
                class="tab-btn ${statusFilter == 'TODO' ? 'active' : ''}">
-                <i class="bi bi-circle"></i> Cần làm
+                <i class="bi bi-circle"></i> Chờ thực hiện
             </a>
             <a href="${pageContext.request.contextPath}/intern/tasks?status=IN_PROGRESS"
                class="tab-btn ${statusFilter == 'IN_PROGRESS' ? 'active' : ''}">
-                <i class="bi bi-arrow-clockwise"></i> Đang thực hiện
+                <i class="bi bi-arrow-clockwise"></i> Đang làm
             </a>
             <a href="${pageContext.request.contextPath}/intern/tasks?status=COMPLETED"
                class="tab-btn ${statusFilter == 'COMPLETED' ? 'active' : ''}">
@@ -257,7 +257,7 @@
                                 <div style="flex:1;min-width:0">
                                     <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
                                         <div class="task-title">${task.title}</div>
-                                        <span class="badge ${badgeClass}">${task.status == 'COMPLETED' ? 'Hoàn thành' : (task.status == 'IN_PROGRESS' ? 'Đang làm' : 'Cần làm')}</span>
+                                        <span class="badge ${badgeClass}">${task.status == 'COMPLETED' ? 'Đã hoàn thành' : (task.status == 'IN_PROGRESS' ? 'Đang làm' : 'Chờ thực hiện')}</span>
                                     </div>
                                     <c:if test="${not empty task.description}">
                                         <div class="task-desc">${task.description}</div>
@@ -296,8 +296,8 @@
                                         <input type="hidden" name="taskId" value="${task.id}">
                                         <select name="status" class="status-select" id="sel-${task.id}"
                                                 onchange="syncProgress(${task.id}, this.value)">
-                                            <option value="TODO"        ${task.status == 'TODO'        ? 'selected' : ''}>📋 Cần làm</option>
-                                            <option value="IN_PROGRESS" ${task.status == 'IN_PROGRESS' ? 'selected' : ''}>⏳ Đang thực hiện</option>
+                                            <option value="TODO"        ${task.status == 'TODO'        ? 'selected' : ''}>📋 Chờ thực hiện</option>
+                                            <option value="IN_PROGRESS" ${task.status == 'IN_PROGRESS' ? 'selected' : ''}>⏳ Đang làm</option>
                                             <option value="COMPLETED"                                                    >✅ Đã hoàn thành</option>
                                         </select>
                                         <span class="update-label">Tiến độ:</span>
@@ -314,8 +314,34 @@
                                 </div>
                             </c:if>
                             <c:if test="${task.status == 'COMPLETED'}">
-                                <div style="padding:10px 20px;background:#f0fdf4;border-top:1px solid #bbf7d0;font-size:.78rem;color:#15803d;font-weight:600">
-                                    <i class="bi bi-check-circle-fill" style="margin-right:5px"></i>Nhiệm vụ đã hoàn thành
+                                <div style="padding:10px 20px;background:#f0fdf4;border-top:1px solid #bbf7d0;display:flex;align-items:center;justify-content:space-between;font-size:.78rem;color:#15803d;font-weight:600">
+                                    <span><i class="bi bi-check-circle-fill" style="margin-right:5px"></i>Nhiệm vụ đã hoàn thành</span>
+                                    <button type="button" onclick="document.getElementById('update-${task.id}').style.display='flex';this.parentElement.style.display='none';" style="background:none;border:none;color:#059669;cursor:pointer;font-size:.75rem;font-weight:600;text-decoration:underline">
+                                        <i class="bi bi-pencil"></i> Chỉnh sửa lại
+                                    </button>
+                                </div>
+                                <div class="task-update" id="update-${task.id}" style="display:none">
+                                    <span class="update-label"><i class="bi bi-pencil"></i> Cập nhật:</span>
+                                    <form method="post" action="${pageContext.request.contextPath}/intern/tasks/update"
+                                          style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;flex:1">
+                                        <input type="hidden" name="taskId" value="${task.id}">
+                                        <select name="status" class="status-select" id="sel-${task.id}"
+                                                onchange="syncProgress(${task.id}, this.value)">
+                                            <option value="TODO">📋 Chờ thực hiện</option>
+                                            <option value="IN_PROGRESS">⏳ Đang làm</option>
+                                            <option value="COMPLETED" selected>✅ Đã hoàn thành</option>
+                                        </select>
+                                        <span class="update-label">Tiến độ:</span>
+                                        <input type="range" name="progress" min="0" max="100" step="5"
+                                               value="${task.progress}" class="progress-range"
+                                               id="range-${task.id}"
+                                               oninput="updateVal(${task.id}, this.value)"
+                                               style="width:120px">
+                                        <span class="progress-val" id="val-${task.id}">${task.progress}%</span>
+                                        <button type="submit" class="btn-update">
+                                            <i class="bi bi-floppy"></i> Lưu
+                                        </button>
+                                    </form>
                                 </div>
                             </c:if>
                         </div>
@@ -337,6 +363,7 @@
         if (!range) return;
         if (status === 'COMPLETED') { range.value = 100; updateVal(id, 100); }
         else if (status === 'TODO') { range.value = 0; updateVal(id, 0); }
+        else if (status === 'IN_PROGRESS' && parseInt(range.value) === 0) { range.value = 25; updateVal(id, 25); }
     }
     // Init range colors on load
     document.querySelectorAll('.progress-range').forEach(function(r) {

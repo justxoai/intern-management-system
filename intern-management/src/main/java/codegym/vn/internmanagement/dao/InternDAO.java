@@ -199,6 +199,11 @@ public class InternDAO {
      */
     public List<Intern> findByMentorId(Long mentorUserIdOrMentorId) {
         List<Intern> list = new ArrayList<>();
+        String syncSql = "UPDATE interns i " +
+                         "JOIN mentor_assignments ma ON i.id = ma.intern_id " +
+                         "JOIN mentors m ON ma.mentor_id = m.id " +
+                         "SET i.status = 'APPROVED' " +
+                         "WHERE (m.user_id = ? OR m.id = ?) AND ma.status = 'ACTIVE' AND (i.status = 'PENDING' OR i.status IS NULL)";
         String sql = "SELECT i.*, COALESCE(u.full_name, i.email) AS full_name " +
                      "FROM interns i " +
                      "LEFT JOIN users u ON i.user_id = u.id " +
@@ -206,12 +211,19 @@ public class InternDAO {
                      "JOIN mentors m ON ma.mentor_id = m.id " +
                      "WHERE (m.user_id = ? OR m.id = ?) AND ma.status = 'ACTIVE' " +
                      "ORDER BY i.id DESC";
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setLong(1, mentorUserIdOrMentorId);
-            statement.setLong(2, mentorUserIdOrMentorId);
-            try (ResultSet rs = statement.executeQuery()) {
-                while (rs.next()) list.add(mapResultSetToIntern(rs));
+        try (Connection connection = DBConnection.getConnection()) {
+            try (PreparedStatement psSync = connection.prepareStatement(syncSql)) {
+                psSync.setLong(1, mentorUserIdOrMentorId);
+                psSync.setLong(2, mentorUserIdOrMentorId);
+                psSync.executeUpdate();
+            } catch (SQLException e) { e.printStackTrace(); }
+
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setLong(1, mentorUserIdOrMentorId);
+                statement.setLong(2, mentorUserIdOrMentorId);
+                try (ResultSet rs = statement.executeQuery()) {
+                    while (rs.next()) list.add(mapResultSetToIntern(rs));
+                }
             }
         } catch (SQLException e) { e.printStackTrace(); }
         return list;
@@ -222,17 +234,27 @@ public class InternDAO {
      */
     public List<Intern> findByMentorRecordId(Long mentorRecordId) {
         List<Intern> list = new ArrayList<>();
+        String syncSql = "UPDATE interns i " +
+                         "JOIN mentor_assignments ma ON i.id = ma.intern_id " +
+                         "SET i.status = 'APPROVED' " +
+                         "WHERE ma.mentor_id = ? AND ma.status = 'ACTIVE' AND (i.status = 'PENDING' OR i.status IS NULL)";
         String sql = "SELECT i.*, COALESCE(u.full_name, i.email) AS full_name " +
                      "FROM interns i " +
                      "LEFT JOIN users u ON i.user_id = u.id " +
                      "JOIN mentor_assignments ma ON i.id = ma.intern_id " +
                      "WHERE ma.mentor_id = ? AND ma.status = 'ACTIVE' " +
                      "ORDER BY i.id DESC";
-        try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setLong(1, mentorRecordId);
-            try (ResultSet rs = statement.executeQuery()) {
-                while (rs.next()) list.add(mapResultSetToIntern(rs));
+        try (Connection connection = DBConnection.getConnection()) {
+            try (PreparedStatement psSync = connection.prepareStatement(syncSql)) {
+                psSync.setLong(1, mentorRecordId);
+                psSync.executeUpdate();
+            } catch (SQLException e) { e.printStackTrace(); }
+
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setLong(1, mentorRecordId);
+                try (ResultSet rs = statement.executeQuery()) {
+                    while (rs.next()) list.add(mapResultSetToIntern(rs));
+                }
             }
         } catch (SQLException e) { e.printStackTrace(); }
         return list;

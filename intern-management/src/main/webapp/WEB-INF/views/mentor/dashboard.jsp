@@ -175,6 +175,9 @@
         <li><a href="#" onclick="openModal();return false;">
             <i class="bi bi-plus-circle"></i> Giao nhiệm vụ mới
         </a></li>
+        <li><a href="${pageContext.request.contextPath}/mentor/dashboard/task/edit">
+            <i class="bi bi-pencil-square"></i> Cập nhật nhiệm vụ
+        </a></li>
     </ul>
     <div class="sidebar-footer">
         <div class="sidebar-user">
@@ -231,7 +234,7 @@
                         </c:if>
                     </c:forEach>
                     <div class="stat-count">${inProgressCount}</div>
-                    <div class="stat-label">Đang thực hiện</div>
+                    <div class="stat-label">Đang làm</div>
                 </div>
             </div>
         </div>
@@ -255,12 +258,12 @@
             </form>
             <table class="data-table">
                 <thead><tr>
-                    <th>Thực tập sinh</th><th>Mã SV</th><th>Chuyên ngành / Trường</th><th>Email</th><th>Trạng thái</th>
+                    <th>Thực tập sinh</th><th>Mã SV</th><th>Chuyên ngành / Trường</th><th>Email</th><th>Trạng thái</th><th>Thao tác</th>
                 </tr></thead>
                 <tbody>
                     <c:choose>
                         <c:when test="${empty myInterns}">
-                            <tr><td colspan="5"><div class="empty-state"><i class="bi bi-inbox"></i>Chưa có thực tập sinh nào được phân công cho bạn.<br><small>Vui lòng liên hệ HR để được phân công thực tập sinh.</small></div></td></tr>
+                            <tr><td colspan="6"><div class="empty-state"><i class="bi bi-inbox"></i>Chưa có thực tập sinh nào được phân công cho bạn.<br><small>Vui lòng liên hệ HR để được phân công thực tập sinh.</small></div></td></tr>
                         </c:when>
                         <c:otherwise>
                             <c:forEach var="i" items="${myInterns}">
@@ -274,19 +277,38 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td><code style="background:#f0fdf4;padding:2px 7px;border-radius:5px;font-size:.75rem;color:#059669">${i.studentCode}</code></td>
                                     <td>
-                                        <div style="font-size:.82rem;font-weight:500">${i.university}</div>
-                                        <div style="font-size:.73rem;color:var(--text-muted)">${i.major}</div>
+                                        <c:choose>
+                                            <c:when test="${not empty i.studentCode}"><code style="background:#f0fdf4;padding:2px 7px;border-radius:5px;font-size:.75rem;color:#059669">${i.studentCode}</code></c:when>
+                                            <c:otherwise><span style="color:var(--text-muted)">—</span></c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${not empty i.university || not empty i.major}">
+                                                <div style="font-size:.82rem;font-weight:500">${not empty i.university ? i.university : '—'}</div>
+                                                <div style="font-size:.73rem;color:var(--text-muted)">${not empty i.major ? i.major : '—'}</div>
+                                            </c:when>
+                                            <c:otherwise><span style="color:var(--text-muted)">—</span></c:otherwise>
+                                        </c:choose>
                                     </td>
                                     <td style="color:var(--text-muted)">${i.email}</td>
                                     <td>
                                         <c:choose>
-                                            <c:when test="${i.status == 'APPROVED'}"><span class="badge badge-approved"><i class="bi bi-check-circle-fill" style="font-size:.6rem"></i>Đã duyệt</span></c:when>
                                             <c:when test="${i.status == 'INTERNING'}"><span class="badge badge-interning"><i class="bi bi-play-circle-fill" style="font-size:.6rem"></i>Đang thực tập</span></c:when>
                                             <c:when test="${i.status == 'COMPLETED'}"><span class="badge badge-completed"><i class="bi bi-patch-check-fill" style="font-size:.6rem"></i>Hoàn thành</span></c:when>
-                                            <c:otherwise><span class="badge badge-pending"><i class="bi bi-clock-fill" style="font-size:.6rem"></i>Chờ duyệt</span></c:otherwise>
+                                            <c:otherwise><span class="badge badge-approved"><i class="bi bi-check-circle-fill" style="font-size:.6rem"></i>Đã duyệt</span></c:otherwise>
                                         </c:choose>
+                                    </td>
+                                    <td>
+                                        <div class="action-group">
+                                            <button type="button" class="btn-filter cyan" style="padding:4px 10px;font-size:.75rem;cursor:pointer" onclick="openModalForIntern(${i.id});" title="Giao việc cho TTS này">
+                                                <i class="bi bi-plus-lg"></i> Giao việc
+                                            </button>
+                                            <a href="${pageContext.request.contextPath}/mentor/dashboard?internId=${i.id}" class="btn-icon edit" title="Lọc nhiệm vụ của TTS này">
+                                                <i class="bi bi-funnel"></i>
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -297,11 +319,11 @@
         </div>
 
         <%-- TASKS SECTION --%>
-        <div class="sec-card">
+        <div class="sec-card" id="tasks-section">
             <div class="sec-header">
                 <div class="sec-header-left">
                     <div class="sec-icon si-tasks"><i class="bi bi-list-task"></i></div>
-                    <span class="sec-title">Giao việc &amp; Nhiệm vụ</span>
+                    <span class="sec-title">Quản lý &amp; Cập nhật nhiệm vụ</span>
                     <span class="sec-count count-task">${fn:length(tasks)}</span>
                 </div>
                 <button onclick="openModal()" class="btn-assign">
@@ -311,10 +333,10 @@
             <form class="filter-bar" method="get" action="${pageContext.request.contextPath}/mentor/dashboard">
                 <div class="filter-group">
                     <span class="filter-label">Trạng thái</span>
-                    <select class="filter-select" name="taskStatus" style="width:150px">
+                    <select class="filter-select" name="taskStatus" style="width:160px">
                         <option value="">Tất cả trạng thái</option>
-                        <option value="TODO"        ${taskStatus == 'TODO'        ? 'selected' : ''}>Cần làm</option>
-                        <option value="IN_PROGRESS" ${taskStatus == 'IN_PROGRESS' ? 'selected' : ''}>Đang thực hiện</option>
+                        <option value="TODO"        ${taskStatus == 'TODO'        ? 'selected' : ''}>Chờ thực hiện</option>
+                        <option value="IN_PROGRESS" ${taskStatus == 'IN_PROGRESS' ? 'selected' : ''}>Đang làm</option>
                         <option value="COMPLETED"   ${taskStatus == 'COMPLETED'   ? 'selected' : ''}>Đã hoàn thành</option>
                     </select>
                 </div>
@@ -323,12 +345,12 @@
             </form>
             <table class="data-table">
                 <thead><tr>
-                    <th>Nhiệm vụ</th><th>TTS phụ trách</th><th>Trạng thái</th><th>Hạn nộp</th><th>Thao tác</th>
+                    <th>Nhiệm vụ</th><th>TTS phụ trách</th><th>Trạng thái</th><th>Tiến độ</th><th>Hạn nộp</th><th>Thao tác</th>
                 </tr></thead>
                 <tbody>
                     <c:choose>
                         <c:when test="${empty tasks}">
-                            <tr><td colspan="5"><div class="empty-state"><i class="bi bi-clipboard-x"></i>Chưa có nhiệm vụ nào được giao. Nhấp "Giao nhiệm vụ" để bắt đầu.</div></td></tr>
+                            <tr><td colspan="6"><div class="empty-state"><i class="bi bi-clipboard-x"></i>Chưa có nhiệm vụ nào được giao. Nhấp "Giao nhiệm vụ" để bắt đầu.</div></td></tr>
                         </c:when>
                         <c:otherwise>
                             <c:forEach var="t" items="${tasks}">
@@ -350,10 +372,18 @@
                                     </td>
                                     <td>
                                         <c:choose>
-                                            <c:when test="${t.status == 'COMPLETED'}"><span class="badge badge-done"><i class="bi bi-check2-all" style="font-size:.7rem"></i>Hoàn thành</span></c:when>
+                                            <c:when test="${t.status == 'COMPLETED'}"><span class="badge badge-done"><i class="bi bi-check2-all" style="font-size:.7rem"></i>Đã hoàn thành</span></c:when>
                                             <c:when test="${t.status == 'IN_PROGRESS'}"><span class="badge badge-inprog"><i class="bi bi-arrow-repeat" style="font-size:.7rem"></i>Đang làm</span></c:when>
-                                            <c:otherwise><span class="badge badge-todo"><i class="bi bi-circle" style="font-size:.6rem"></i>Cần làm</span></c:otherwise>
+                                            <c:otherwise><span class="badge badge-todo"><i class="bi bi-clock" style="font-size:.7rem"></i>Chờ thực hiện</span></c:otherwise>
                                         </c:choose>
+                                    </td>
+                                    <td>
+                                        <div class="progress-wrap">
+                                            <div class="progress-bar-outer">
+                                                <div class="progress-bar-inner" style="width:${t.progress}%; background:${t.status == 'COMPLETED' ? 'linear-gradient(90deg, #10b981, #34d399)' : (t.status == 'IN_PROGRESS' ? 'linear-gradient(90deg, #0891b2, #22d3ee)' : '#cbd5e1')}"></div>
+                                            </div>
+                                            <span class="progress-pct">${t.progress}%</span>
+                                        </div>
                                     </td>
                                     <td style="color:var(--text-muted);font-size:.82rem">
                                         <c:choose>
@@ -363,10 +393,12 @@
                                     </td>
                                     <td>
                                         <div class="action-group">
-                                            <a href="${pageContext.request.contextPath}/mentor/dashboard/task/edit?id=${t.id}" class="btn-icon edit" title="Sửa"><i class="bi bi-pencil"></i></a>
+                                            <a href="${pageContext.request.contextPath}/mentor/dashboard/task/edit?id=${t.id}" class="btn-filter cyan" style="padding:4px 10px;font-size:.75rem;text-decoration:none" title="Cập nhật nhiệm vụ">
+                                                <i class="bi bi-pencil-square"></i> Cập nhật
+                                            </a>
                                             <form method="post" action="${pageContext.request.contextPath}/mentor/dashboard/task/delete" style="display:inline" onsubmit="return confirm('Xóa nhiệm vụ: ${t.title}?')">
                                                 <input type="hidden" name="id" value="${t.id}">
-                                                <button type="submit" class="btn-icon delete" title="Xóa"><i class="bi bi-trash"></i></button>
+                                                <button type="submit" class="btn-icon delete" title="Xóa nhiệm vụ"><i class="bi bi-trash"></i></button>
                                             </form>
                                         </div>
                                     </td>
@@ -404,15 +436,15 @@
                         <select name="internId" class="form-select" required>
                             <option value="">— Chọn thực tập sinh —</option>
                             <c:forEach var="i" items="${allMyInterns}">
-                                <option value="${i.id}">${i.studentCode} — ${not empty i.fullName ? i.fullName : i.email}</option>
+                                <option value="${i.id}">${not empty i.studentCode ? i.studentCode.concat(' — ') : ''}${not empty i.fullName ? i.fullName : i.email}</option>
                             </c:forEach>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Trạng thái</label>
+                        <label class="form-label">Trạng thái *</label>
                         <select name="status" class="form-select">
-                            <option value="TODO">Cần làm</option>
-                            <option value="IN_PROGRESS">Đang thực hiện</option>
+                            <option value="TODO" selected>Chờ thực hiện</option>
+                            <option value="IN_PROGRESS">Đang làm</option>
                             <option value="COMPLETED">Đã hoàn thành</option>
                         </select>
                     </div>
@@ -433,6 +465,11 @@
 <script>
     function openModal()  { document.getElementById('taskModal').classList.add('open'); }
     function closeModal() { document.getElementById('taskModal').classList.remove('open'); }
+    function openModalForIntern(id) {
+        var sel = document.querySelector('#taskModal select[name="internId"]');
+        if (sel && id) { sel.value = id; }
+        openModal();
+    }
     document.getElementById('taskModal').addEventListener('click', function(e) {
         if (e.target === this) closeModal();
     });

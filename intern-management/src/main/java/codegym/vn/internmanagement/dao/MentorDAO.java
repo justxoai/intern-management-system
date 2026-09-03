@@ -133,7 +133,22 @@ public class MentorDAO {
             try (PreparedStatement ps2 = conn.prepareStatement(upsertSql)) {
                 ps2.setLong(1, mentorId);
                 ps2.setLong(2, internId);
-                return ps2.executeUpdate() > 0;
+                boolean success = ps2.executeUpdate() > 0;
+                if (success) {
+                    // Update intern status to APPROVED when assigned to a mentor if currently PENDING
+                    try (PreparedStatement ps3 = conn.prepareStatement(
+                            "UPDATE interns SET status='APPROVED' WHERE id=? AND status='PENDING'")) {
+                        ps3.setLong(1, internId);
+                        ps3.executeUpdate();
+                    }
+                    // Also update any pending application for this intern to APPROVED
+                    try (PreparedStatement ps4 = conn.prepareStatement(
+                            "UPDATE internship_applications SET status='APPROVED', reviewed_at=NOW() WHERE intern_id=? AND status='PENDING'")) {
+                        ps4.setLong(1, internId);
+                        ps4.executeUpdate();
+                    }
+                }
+                return success;
             }
         } catch (SQLException e) { e.printStackTrace(); }
         return false;
@@ -151,33 +166,45 @@ public class MentorDAO {
 
     public List<codegym.vn.internmanagement.entity.Intern> findInternsByMentorUserId(Long mentorUserId) {
         List<codegym.vn.internmanagement.entity.Intern> list = new ArrayList<>();
+        // Sync any active assigned interns that are currently PENDING to APPROVED
+        String syncSql = "UPDATE interns i " +
+                         "JOIN mentor_assignments ma ON i.id = ma.intern_id " +
+                         "JOIN mentors m ON ma.mentor_id = m.id " +
+                         "SET i.status = 'APPROVED' " +
+                         "WHERE m.user_id = ? AND ma.status = 'ACTIVE' AND (i.status = 'PENDING' OR i.status IS NULL)";
         String sql = "SELECT i.*, u.full_name, u.email AS user_email, u.phone AS user_phone " +
                      "FROM mentor_assignments ma " +
                      "JOIN mentors m ON ma.mentor_id = m.id " +
                      "JOIN interns i ON ma.intern_id = i.id " +
                      "LEFT JOIN users u ON i.user_id = u.id " +
                      "WHERE m.user_id = ? AND ma.status = 'ACTIVE' ORDER BY i.id DESC";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setLong(1, mentorUserId);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    codegym.vn.internmanagement.entity.Intern in = new codegym.vn.internmanagement.entity.Intern();
-                    in.setId(rs.getLong("id"));
-                    in.setUserId(rs.getLong("user_id"));
-                    in.setStudentCode(rs.getString("student_code"));
-                    in.setUniversity(rs.getString("university"));
-                    in.setMajor(rs.getString("major"));
-                    Date dob = rs.getDate("date_of_birth");
-                    if (dob != null) in.setDateOfBirth(dob.toLocalDate());
-                    in.setGender(rs.getString("gender"));
-                    in.setAddress(rs.getString("address"));
-                    in.setPhone(rs.getString("phone"));
-                    in.setEmail(rs.getString("email"));
-                    in.setStatus(rs.getString("status"));
-                    String fn = rs.getString("full_name");
-                    in.setFullName(fn != null ? fn : rs.getString("user_email"));
-                    list.add(in);
+        try (Connection conn = DBConnection.getConnection()) {
+            try (PreparedStatement psSync = conn.prepareStatement(syncSql)) {
+                psSync.setLong(1, mentorUserId);
+                psSync.executeUpdate();
+            } catch (SQLException e) { e.printStackTrace(); }
+
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setLong(1, mentorUserId);
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        codegym.vn.internmanagement.entity.Intern in = new codegym.vn.internmanagement.entity.Intern();
+                        in.setId(rs.getLong("id"));
+                        in.setUserId(rs.getLong("user_id"));
+                        in.setStudentCode(rs.getString("student_code"));
+                        in.setUniversity(rs.getString("university"));
+                        in.setMajor(rs.getString("major"));
+                        Date dob = rs.getDate("date_of_birth");
+                        if (dob != null) in.setDateOfBirth(dob.toLocalDate());
+                        in.setGender(rs.getString("gender"));
+                        in.setAddress(rs.getString("address"));
+                        in.setPhone(rs.getString("phone"));
+                        in.setEmail(rs.getString("email"));
+                        in.setStatus(rs.getString("status"));
+                        String fn = rs.getString("full_name");
+                        in.setFullName(fn != null ? fn : rs.getString("user_email"));
+                        list.add(in);
+                    }
                 }
             }
         } catch (SQLException e) { e.printStackTrace(); }
