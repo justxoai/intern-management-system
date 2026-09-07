@@ -3,33 +3,14 @@ package codegym.vn.internmanagement.model;
 import java.util.List;
 
 import codegym.vn.internmanagement.dao.MentorDAO;
-import codegym.vn.internmanagement.entity.Intern;
 import codegym.vn.internmanagement.entity.Mentor;
-import codegym.vn.internmanagement.entity.MentorAssignment;
-import codegym.vn.internmanagement.entity.User;
 
 public class MentorModel {
 
     private final MentorDAO mentorDAO = new MentorDAO();
 
     public List<Mentor> getAllMentors() {
-        return mentorDAO.findAll();
-    }
-
-    public List<User> getAvailableMentorUsers() {
-        return mentorDAO.findAvailableMentorUsers();
-    }
-
-    public List<Intern> getAvailableInterns() {
-        return mentorDAO.findAvailableInterns();
-    }
-
-    public List<MentorAssignment> getAssignments() {
-        return mentorDAO.findAssignments();
-    }
-
-    public List<MentorAssignment> getMentorWorkloadStats() {
-        return mentorDAO.findMentorWorkloadStats();
+        return mentorDAO.findAll(null, null);
     }
 
     public String createMentor(Mentor mentor) {
@@ -42,10 +23,11 @@ public class MentorModel {
         if (mentor.getPosition() == null || mentor.getPosition().trim().isEmpty()) {
             return "Position is required.";
         }
-        if (mentor.getMaxInterns() == null || mentor.getMaxInterns() <= 0) {
+        if (mentor.getMaxInterns() <= 0) {
             return "Maximum interns must be greater than 0.";
         }
-        return mentorDAO.insert(mentor) ? null : "Failed to create mentor profile.";
+        return mentorDAO.insert(mentor.getUserId(), mentor.getDepartment(), mentor.getPosition(), mentor.getMaxInterns())
+                ? null : "Failed to create mentor profile.";
     }
 
     public String assignMentor(Long mentorId, Long internId) {
@@ -55,6 +37,6 @@ public class MentorModel {
         if (internId == null || internId <= 0) {
             return "Please select an intern.";
         }
-        return mentorDAO.assignMentor(mentorId, internId) ? null : "Failed to assign mentor.";
+        return mentorDAO.assign(mentorId, internId) ? null : "Failed to assign mentor.";
     }
 }

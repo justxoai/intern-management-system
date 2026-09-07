@@ -30,8 +30,10 @@ public class RegisterServlet extends HttpServlet {
 
     private static final Pattern EMAIL_PATTERN =
             Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
+    // Đầu số hợp lệ VN: 03x, 05x (56-9), 07x (06,7,8,9), 08x, 09x — tổng 10 số
+    // hoặc +84 + 9 số bắt đầu bằng các đầu số trên
     private static final Pattern PHONE_PATTERN =
-            Pattern.compile("^(?:\\+84|0)[0-9]{9,10}$");
+            Pattern.compile("^(?:\\+84|0)(3[2-9]|5[6-9]|7[06-9]|8[0-9]|9[0-9])\\d{7}$");
 
     private UserModel userModel;
     private UserDAO   userDAO;

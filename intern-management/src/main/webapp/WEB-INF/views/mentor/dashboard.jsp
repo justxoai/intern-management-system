@@ -2,11 +2,11 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Mentor Dashboard — Intern Management</title>
+    <title>Bảng điều khiển Mentor — Quản lý Thực tập</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
@@ -161,19 +161,28 @@
 <aside class="sidebar">
     <div class="sidebar-brand">
         <div class="brand-icon"><i class="bi bi-mortarboard-fill"></i></div>
-        <h1>Mentor<br>Portal</h1>
-        <span>Intern Management</span>
+        <h1>Cổng thông tin<br>Mentor</h1>
+        <span>Quản lý Thực tập</span>
     </div>
-    <div class="sidebar-section-label">Overview</div>
+    <div class="sidebar-section-label">Tổng quan</div>
     <ul class="sidebar-nav">
         <li><a href="${pageContext.request.contextPath}/mentor/dashboard" class="active">
-            <i class="bi bi-grid"></i> Dashboard
+            <i class="bi bi-grid"></i> Bảng điều khiển
         </a></li>
     </ul>
-    <div class="sidebar-section-label">Actions</div>
+    <div class="sidebar-section-label">Thao tác</div>
     <ul class="sidebar-nav">
         <li><a href="#" onclick="openModal();return false;">
-            <i class="bi bi-plus-circle"></i> Assign New Task
+            <i class="bi bi-plus-circle"></i> Giao nhiệm vụ mới
+        </a></li>
+        <li><a href="${pageContext.request.contextPath}/mentor/dashboard/task/edit">
+            <i class="bi bi-pencil-square"></i> Cập nhật nhiệm vụ
+        </a></li>
+        <li><a href="${pageContext.request.contextPath}/mentor/reports">
+            <i class="bi bi-journal-text"></i> Báo cáo tuần TTS
+        </a></li>
+        <li><a href="${pageContext.request.contextPath}/mentor/evaluations">
+            <i class="bi bi-star-fill"></i> Đánh giá thực tập sinh
         </a></li>
     </ul>
     <div class="sidebar-footer">
@@ -183,7 +192,7 @@
                 <div class="sidebar-user-name">${sessionScope.currentUser.fullName}</div>
                 <div class="sidebar-user-role">Mentor</div>
             </div>
-            <a href="${pageContext.request.contextPath}/logout" class="logout-btn" title="Logout">
+            <a href="${pageContext.request.contextPath}/logout" class="logout-btn" title="Đăng xuất">
                 <i class="bi bi-box-arrow-right"></i>
             </a>
         </div>
@@ -194,11 +203,11 @@
 <div class="main">
     <div class="topbar">
         <div>
-            <div class="page-title">Intern Management</div>
-            <div class="page-sub">Your assigned interns and task tracking</div>
+            <div class="page-title">Quản lý Thực tập sinh</div>
+            <div class="page-sub">Thực tập sinh được phân công và theo dõi nhiệm vụ</div>
         </div>
         <button onclick="openModal()" class="btn-assign">
-            <i class="bi bi-plus-lg"></i> Assign Task
+            <i class="bi bi-plus-lg"></i> Giao nhiệm vụ
         </button>
     </div>
 
@@ -210,14 +219,14 @@
                 <div class="stat-icon si-green"><i class="bi bi-people"></i></div>
                 <div>
                     <div class="stat-count">${fn:length(myInterns)}</div>
-                    <div class="stat-label">My Interns</div>
+                    <div class="stat-label">TTS của tôi</div>
                 </div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon si-cyan"><i class="bi bi-list-task"></i></div>
                 <div>
                     <div class="stat-count">${fn:length(tasks)}</div>
-                    <div class="stat-label">Total Tasks</div>
+                    <div class="stat-label">Tổng nhiệm vụ</div>
                 </div>
             </div>
             <div class="stat-card">
@@ -231,7 +240,7 @@
                         </c:if>
                     </c:forEach>
                     <div class="stat-count">${inProgressCount}</div>
-                    <div class="stat-label">In Progress</div>
+                    <div class="stat-label">Đang làm</div>
                 </div>
             </div>
         </div>
@@ -241,26 +250,26 @@
             <div class="sec-header">
                 <div class="sec-header-left">
                     <div class="sec-icon si-interns"><i class="bi bi-people"></i></div>
-                    <span class="sec-title">My Interns</span>
+                    <span class="sec-title">Thực tập sinh của tôi</span>
                     <span class="sec-count count-intern">${fn:length(myInterns)}</span>
                 </div>
             </div>
             <form class="filter-bar" method="get" action="${pageContext.request.contextPath}/mentor/dashboard">
                 <div class="filter-group">
-                    <span class="filter-label">Search</span>
-                    <input class="filter-input" type="text" name="internKeyword" value="${internKeyword}" placeholder="Code / Name / Email" style="width:200px">
+                    <span class="filter-label">Tìm kiếm</span>
+                    <input class="filter-input" type="text" name="internKeyword" value="${internKeyword}" placeholder="Mã / Tên / Email" style="width:200px">
                 </div>
-                <button type="submit" class="btn-filter green"><i class="bi bi-search"></i> Filter</button>
-                <a href="${pageContext.request.contextPath}/mentor/dashboard" class="btn-filter ghost">Clear</a>
+                <button type="submit" class="btn-filter green"><i class="bi bi-search"></i> Lọc</button>
+                <a href="${pageContext.request.contextPath}/mentor/dashboard" class="btn-filter ghost">Xóa lọc</a>
             </form>
             <table class="data-table">
                 <thead><tr>
-                    <th>Intern</th><th>Code</th><th>Major / University</th><th>Email</th><th>Status</th>
+                    <th>Thực tập sinh</th><th>Mã SV</th><th>Chuyên ngành / Trường</th><th>Email</th><th>Trạng thái</th><th>Thao tác</th>
                 </tr></thead>
                 <tbody>
                     <c:choose>
                         <c:when test="${empty myInterns}">
-                            <tr><td colspan="5"><div class="empty-state"><i class="bi bi-inbox"></i>No interns assigned to you yet.<br><small>Contact HR to get interns assigned to your mentorship.</small></div></td></tr>
+                            <tr><td colspan="6"><div class="empty-state"><i class="bi bi-inbox"></i>Chưa có thực tập sinh nào được phân công cho bạn.<br><small>Vui lòng liên hệ HR để được phân công thực tập sinh.</small></div></td></tr>
                         </c:when>
                         <c:otherwise>
                             <c:forEach var="i" items="${myInterns}">
@@ -274,19 +283,38 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td><code style="background:#f0fdf4;padding:2px 7px;border-radius:5px;font-size:.75rem;color:#059669">${i.studentCode}</code></td>
                                     <td>
-                                        <div style="font-size:.82rem;font-weight:500">${i.university}</div>
-                                        <div style="font-size:.73rem;color:var(--text-muted)">${i.major}</div>
+                                        <c:choose>
+                                            <c:when test="${not empty i.studentCode}"><code style="background:#f0fdf4;padding:2px 7px;border-radius:5px;font-size:.75rem;color:#059669">${i.studentCode}</code></c:when>
+                                            <c:otherwise><span style="color:var(--text-muted)">—</span></c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${not empty i.university || not empty i.major}">
+                                                <div style="font-size:.82rem;font-weight:500">${not empty i.university ? i.university : '—'}</div>
+                                                <div style="font-size:.73rem;color:var(--text-muted)">${not empty i.major ? i.major : '—'}</div>
+                                            </c:when>
+                                            <c:otherwise><span style="color:var(--text-muted)">—</span></c:otherwise>
+                                        </c:choose>
                                     </td>
                                     <td style="color:var(--text-muted)">${i.email}</td>
                                     <td>
                                         <c:choose>
-                                            <c:when test="${i.status == 'APPROVED'}"><span class="badge badge-approved"><i class="bi bi-check-circle-fill" style="font-size:.6rem"></i>Approved</span></c:when>
-                                            <c:when test="${i.status == 'INTERNING'}"><span class="badge badge-interning"><i class="bi bi-play-circle-fill" style="font-size:.6rem"></i>Interning</span></c:when>
-                                            <c:when test="${i.status == 'COMPLETED'}"><span class="badge badge-completed"><i class="bi bi-patch-check-fill" style="font-size:.6rem"></i>Completed</span></c:when>
-                                            <c:otherwise><span class="badge badge-pending"><i class="bi bi-clock-fill" style="font-size:.6rem"></i>Pending</span></c:otherwise>
+                                            <c:when test="${i.status == 'INTERNING'}"><span class="badge badge-interning"><i class="bi bi-play-circle-fill" style="font-size:.6rem"></i>Đang thực tập</span></c:when>
+                                            <c:when test="${i.status == 'COMPLETED'}"><span class="badge badge-completed"><i class="bi bi-patch-check-fill" style="font-size:.6rem"></i>Hoàn thành</span></c:when>
+                                            <c:otherwise><span class="badge badge-approved"><i class="bi bi-check-circle-fill" style="font-size:.6rem"></i>Đã duyệt</span></c:otherwise>
                                         </c:choose>
+                                    </td>
+                                    <td>
+                                        <div class="action-group">
+                                            <button type="button" class="btn-filter cyan" style="padding:4px 10px;font-size:.75rem;cursor:pointer" onclick="openModalForIntern(${i.id});" title="Giao việc cho TTS này">
+                                                <i class="bi bi-plus-lg"></i> Giao việc
+                                            </button>
+                                            <a href="${pageContext.request.contextPath}/mentor/dashboard?internId=${i.id}" class="btn-icon edit" title="Lọc nhiệm vụ của TTS này">
+                                                <i class="bi bi-funnel"></i>
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -297,38 +325,38 @@
         </div>
 
         <%-- TASKS SECTION --%>
-        <div class="sec-card">
+        <div class="sec-card" id="tasks-section">
             <div class="sec-header">
                 <div class="sec-header-left">
                     <div class="sec-icon si-tasks"><i class="bi bi-list-task"></i></div>
-                    <span class="sec-title">Task Assignment</span>
+                    <span class="sec-title">Quản lý &amp; Cập nhật nhiệm vụ</span>
                     <span class="sec-count count-task">${fn:length(tasks)}</span>
                 </div>
                 <button onclick="openModal()" class="btn-assign">
-                    <i class="bi bi-plus-lg"></i> Assign Task
+                    <i class="bi bi-plus-lg"></i> Giao nhiệm vụ
                 </button>
             </div>
             <form class="filter-bar" method="get" action="${pageContext.request.contextPath}/mentor/dashboard">
                 <div class="filter-group">
-                    <span class="filter-label">Task Status</span>
-                    <select class="filter-select" name="taskStatus" style="width:150px">
-                        <option value="">All Status</option>
-                        <option value="TODO"        ${taskStatus == 'TODO'        ? 'selected' : ''}>Todo</option>
-                        <option value="IN_PROGRESS" ${taskStatus == 'IN_PROGRESS' ? 'selected' : ''}>In Progress</option>
-                        <option value="COMPLETED"   ${taskStatus == 'COMPLETED'   ? 'selected' : ''}>Completed</option>
+                    <span class="filter-label">Trạng thái</span>
+                    <select class="filter-select" name="taskStatus" style="width:160px">
+                        <option value="">Tất cả trạng thái</option>
+                        <option value="TODO"        ${taskStatus == 'TODO'        ? 'selected' : ''}>Chờ thực hiện</option>
+                        <option value="IN_PROGRESS" ${taskStatus == 'IN_PROGRESS' ? 'selected' : ''}>Đang làm</option>
+                        <option value="COMPLETED"   ${taskStatus == 'COMPLETED'   ? 'selected' : ''}>Đã hoàn thành</option>
                     </select>
                 </div>
-                <button type="submit" class="btn-filter cyan"><i class="bi bi-funnel"></i> Filter</button>
-                <a href="${pageContext.request.contextPath}/mentor/dashboard" class="btn-filter ghost">Clear</a>
+                <button type="submit" class="btn-filter cyan"><i class="bi bi-funnel"></i> Lọc</button>
+                <a href="${pageContext.request.contextPath}/mentor/dashboard" class="btn-filter ghost">Xóa lọc</a>
             </form>
             <table class="data-table">
                 <thead><tr>
-                    <th>Task</th><th>Assigned Intern</th><th>Status</th><th>Due Date</th><th>Actions</th>
+                    <th>Nhiệm vụ</th><th>TTS phụ trách</th><th>Trạng thái</th><th>Tiến độ</th><th>Hạn nộp</th><th>Thao tác</th>
                 </tr></thead>
                 <tbody>
                     <c:choose>
                         <c:when test="${empty tasks}">
-                            <tr><td colspan="5"><div class="empty-state"><i class="bi bi-clipboard-x"></i>No tasks assigned yet. Click "Assign Task" to start.</div></td></tr>
+                            <tr><td colspan="6"><div class="empty-state"><i class="bi bi-clipboard-x"></i>Chưa có nhiệm vụ nào được giao. Nhấp "Giao nhiệm vụ" để bắt đầu.</div></td></tr>
                         </c:when>
                         <c:otherwise>
                             <c:forEach var="t" items="${tasks}">
@@ -350,10 +378,18 @@
                                     </td>
                                     <td>
                                         <c:choose>
-                                            <c:when test="${t.status == 'COMPLETED'}"><span class="badge badge-done"><i class="bi bi-check2-all" style="font-size:.7rem"></i>Done</span></c:when>
-                                            <c:when test="${t.status == 'IN_PROGRESS'}"><span class="badge badge-inprog"><i class="bi bi-arrow-repeat" style="font-size:.7rem"></i>In Progress</span></c:when>
-                                            <c:otherwise><span class="badge badge-todo"><i class="bi bi-circle" style="font-size:.6rem"></i>Todo</span></c:otherwise>
+                                            <c:when test="${t.status == 'COMPLETED'}"><span class="badge badge-done"><i class="bi bi-check2-all" style="font-size:.7rem"></i>Đã hoàn thành</span></c:when>
+                                            <c:when test="${t.status == 'IN_PROGRESS'}"><span class="badge badge-inprog"><i class="bi bi-arrow-repeat" style="font-size:.7rem"></i>Đang làm</span></c:when>
+                                            <c:otherwise><span class="badge badge-todo"><i class="bi bi-clock" style="font-size:.7rem"></i>Chờ thực hiện</span></c:otherwise>
                                         </c:choose>
+                                    </td>
+                                    <td>
+                                        <div class="progress-wrap">
+                                            <div class="progress-bar-outer">
+                                                <div class="progress-bar-inner" style="width:${t.progress}%; background:${t.status == 'COMPLETED' ? 'linear-gradient(90deg, #10b981, #34d399)' : (t.status == 'IN_PROGRESS' ? 'linear-gradient(90deg, #0891b2, #22d3ee)' : '#cbd5e1')}"></div>
+                                            </div>
+                                            <span class="progress-pct">${t.progress}%</span>
+                                        </div>
                                     </td>
                                     <td style="color:var(--text-muted);font-size:.82rem">
                                         <c:choose>
@@ -363,10 +399,12 @@
                                     </td>
                                     <td>
                                         <div class="action-group">
-                                            <a href="${pageContext.request.contextPath}/mentor/dashboard/task/edit?id=${t.id}" class="btn-icon edit" title="Edit"><i class="bi bi-pencil"></i></a>
-                                            <form method="post" action="${pageContext.request.contextPath}/mentor/dashboard/task/delete" style="display:inline" onsubmit="return confirm('Delete task: ${t.title}?')">
+                                            <a href="${pageContext.request.contextPath}/mentor/dashboard/task/edit?id=${t.id}" class="btn-filter cyan" style="padding:4px 10px;font-size:.75rem;text-decoration:none" title="Cập nhật nhiệm vụ">
+                                                <i class="bi bi-pencil-square"></i> Cập nhật
+                                            </a>
+                                            <form method="post" action="${pageContext.request.contextPath}/mentor/dashboard/task/delete" style="display:inline" onsubmit="return confirm('Xóa nhiệm vụ: ${t.title}?')">
                                                 <input type="hidden" name="id" value="${t.id}">
-                                                <button type="submit" class="btn-icon delete" title="Delete"><i class="bi bi-trash"></i></button>
+                                                <button type="submit" class="btn-icon delete" title="Xóa nhiệm vụ"><i class="bi bi-trash"></i></button>
                                             </form>
                                         </div>
                                     </td>
@@ -385,46 +423,46 @@
 <div class="modal-overlay" id="taskModal">
     <div class="modal-box">
         <div class="modal-header">
-            <h3><i class="bi bi-plus-circle"></i> Assign New Task</h3>
+            <h3><i class="bi bi-plus-circle"></i> Giao nhiệm vụ mới</h3>
             <button class="modal-close" onclick="closeModal()">&#x2715;</button>
         </div>
         <form method="post" action="${pageContext.request.contextPath}/mentor/dashboard/task/create">
             <div class="modal-body">
                 <div class="form-group">
-                    <label class="form-label">Task Title *</label>
-                    <input type="text" name="title" class="form-input" required placeholder="e.g. Implement Login Module">
+                    <label class="form-label">Tiêu đề nhiệm vụ *</label>
+                    <input type="text" name="title" class="form-input" required placeholder="VD: Xây dựng module đăng nhập">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Description</label>
-                    <textarea name="description" class="form-textarea" placeholder="Task details and requirements..."></textarea>
+                    <label class="form-label">Mô tả</label>
+                    <textarea name="description" class="form-textarea" placeholder="Chi tiết yêu cầu và nội dung công việc..."></textarea>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label class="form-label">Assign to Intern *</label>
+                        <label class="form-label">Giao cho TTS *</label>
                         <select name="internId" class="form-select" required>
-                            <option value="">— Select Intern —</option>
+                            <option value="">— Chọn thực tập sinh —</option>
                             <c:forEach var="i" items="${allMyInterns}">
-                                <option value="${i.id}">${i.studentCode} — ${not empty i.fullName ? i.fullName : i.email}</option>
+                                <option value="${i.id}">${not empty i.studentCode ? i.studentCode.concat(' — ') : ''}${not empty i.fullName ? i.fullName : i.email}</option>
                             </c:forEach>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Status</label>
+                        <label class="form-label">Trạng thái *</label>
                         <select name="status" class="form-select">
-                            <option value="TODO">Todo</option>
-                            <option value="IN_PROGRESS">In Progress</option>
-                            <option value="COMPLETED">Completed</option>
+                            <option value="TODO" selected>Chờ thực hiện</option>
+                            <option value="IN_PROGRESS">Đang làm</option>
+                            <option value="COMPLETED">Đã hoàn thành</option>
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Due Date</label>
+                    <label class="form-label">Hạn nộp</label>
                     <input type="date" name="dueDate" class="form-input">
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
-                <button type="submit" class="btn-submit"><i class="bi bi-check-lg"></i> Assign Task</button>
+                <button type="button" class="btn-cancel" onclick="closeModal()">Hủy</button>
+                <button type="submit" class="btn-submit"><i class="bi bi-check-lg"></i> Giao nhiệm vụ</button>
             </div>
         </form>
     </div>
@@ -433,6 +471,11 @@
 <script>
     function openModal()  { document.getElementById('taskModal').classList.add('open'); }
     function closeModal() { document.getElementById('taskModal').classList.remove('open'); }
+    function openModalForIntern(id) {
+        var sel = document.querySelector('#taskModal select[name="internId"]');
+        if (sel && id) { sel.value = id; }
+        openModal();
+    }
     document.getElementById('taskModal').addEventListener('click', function(e) {
         if (e.target === this) closeModal();
     });

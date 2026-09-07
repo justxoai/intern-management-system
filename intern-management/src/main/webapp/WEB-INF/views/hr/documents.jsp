@@ -2,11 +2,11 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Document Review — HR Portal</title>
+    <title>Duyệt tài liệu — HR</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
@@ -109,24 +109,24 @@
 <aside class="sidebar">
     <div class="sidebar-brand">
         <div class="brand-icon"><i class="bi bi-building"></i></div>
-        <h1>Human Resource</h1>
+        <h1>Nhân sự (HR)</h1>
     </div>
-    <div class="sidebar-section-label">Management</div>
+    <div class="sidebar-section-label">Quản lý</div>
     <ul class="sidebar-nav">
         <li><a href="${pageContext.request.contextPath}/hr/dashboard">
-            <i class="bi bi-grid"></i> Dashboard
+            <i class="bi bi-grid"></i> Tổng quan
         </a></li>
         <li><a href="${pageContext.request.contextPath}/hr/mentors">
-            <i class="bi bi-mortarboard"></i> Mentors
+            <i class="bi bi-mortarboard"></i> Mentor
         </a></li>
         <li><a href="${pageContext.request.contextPath}/hr/applications">
-            <i class="bi bi-clipboard-check"></i> Applications
+            <i class="bi bi-clipboard-check"></i> Đơn xét tuyển
         </a></li>
         <li><a href="${pageContext.request.contextPath}/hr/contracts">
-            <i class="bi bi-file-earmark-text"></i> Contracts
+            <i class="bi bi-file-earmark-text"></i> Hợp đồng
         </a></li>
         <li><a href="${pageContext.request.contextPath}/hr/documents" class="active">
-            <i class="bi bi-folder-check"></i> Document Review
+            <i class="bi bi-folder-check"></i> Duyệt tài liệu
         </a></li>
     </ul>
     <div class="sidebar-footer">
@@ -134,9 +134,9 @@
             <div class="avatar">${fn:substring(sessionScope.currentUser.fullName, 0, 1)}</div>
             <div class="sidebar-user-info">
                 <div class="sidebar-user-name">${sessionScope.currentUser.fullName}</div>
-                <div class="sidebar-user-role">HR Staff</div>
+                <div class="sidebar-user-role">Nhân sự</div>
             </div>
-            <a href="${pageContext.request.contextPath}/logout" class="logout-btn" title="Logout">
+            <a href="${pageContext.request.contextPath}/logout" class="logout-btn" title="Đăng xuất">
                 <i class="bi bi-box-arrow-right"></i>
             </a>
         </div>
@@ -147,8 +147,8 @@
 <div class="main">
     <div class="topbar">
         <div>
-            <div class="page-title">Document Review</div>
-            <div class="page-sub">Review and approve intern documents</div>
+            <div class="page-title">Duyệt tài liệu</div>
+            <div class="page-sub">Xem xét và phê duyệt tài liệu của thực tập sinh</div>
         </div>
         <%-- Pending count badge --%>
         <c:set var="pendingCount" value="0"/>
@@ -157,7 +157,7 @@
         </c:forEach>
         <c:if test="${pendingCount > 0}">
             <span style="background:#fef9c3;color:#a16207;border-radius:20px;padding:6px 16px;font-size:.82rem;font-weight:700;border:1px solid #fde68a">
-                <i class="bi bi-clock-fill me-1"></i> ${pendingCount} Pending Review
+                <i class="bi bi-clock-fill me-1"></i> ${pendingCount} Chờ duyệt
             </span>
         </c:if>
     </div>
@@ -172,7 +172,7 @@
                     <c:set var="pc" value="0"/>
                     <c:forEach var="d" items="${documents}"><c:if test="${d.status == 'PENDING'}"><c:set var="pc" value="${pc + 1}"/></c:if></c:forEach>
                     <div class="stat-count">${pc}</div>
-                    <div class="stat-label">Pending</div>
+                    <div class="stat-label">Chờ duyệt</div>
                 </div>
             </div>
             <div class="stat-card">
@@ -181,7 +181,7 @@
                     <c:set var="ac" value="0"/>
                     <c:forEach var="d" items="${documents}"><c:if test="${d.status == 'APPROVED'}"><c:set var="ac" value="${ac + 1}"/></c:if></c:forEach>
                     <div class="stat-count">${ac}</div>
-                    <div class="stat-label">Approved</div>
+                    <div class="stat-label">Đã duyệt</div>
                 </div>
             </div>
             <div class="stat-card">
@@ -190,7 +190,7 @@
                     <c:set var="rc" value="0"/>
                     <c:forEach var="d" items="${documents}"><c:if test="${d.status == 'REJECTED'}"><c:set var="rc" value="${rc + 1}"/></c:if></c:forEach>
                     <div class="stat-count">${rc}</div>
-                    <div class="stat-label">Rejected</div>
+                    <div class="stat-label">Từ chối</div>
                 </div>
             </div>
         </div>
@@ -199,26 +199,26 @@
         <div class="sec-card">
             <div class="sec-header">
                 <div class="sec-icon"><i class="bi bi-folder-check"></i></div>
-                <span class="sec-title">All Intern Documents</span>
+                <span class="sec-title">Tất cả tài liệu thực tập sinh</span>
                 <span class="sec-count">${fn:length(documents)}</span>
             </div>
             <form class="filter-bar" method="get" action="${pageContext.request.contextPath}/hr/documents">
                 <div class="filter-group">
-                    <span class="filter-label">Filter by Status</span>
+                    <span class="filter-label">Lọc theo trạng thái</span>
                     <select class="filter-select" name="status">
-                        <option value="">All Documents</option>
-                        <option value="PENDING"  ${statusFilter == 'PENDING'  ? 'selected' : ''}>Pending</option>
-                        <option value="APPROVED" ${statusFilter == 'APPROVED' ? 'selected' : ''}>Approved</option>
-                        <option value="REJECTED" ${statusFilter == 'REJECTED' ? 'selected' : ''}>Rejected</option>
+                        <option value="">Tất cả tài liệu</option>
+                        <option value="PENDING"  ${statusFilter == 'PENDING'  ? 'selected' : ''}>Chờ duyệt</option>
+                        <option value="APPROVED" ${statusFilter == 'APPROVED' ? 'selected' : ''}>Đã duyệt</option>
+                        <option value="REJECTED" ${statusFilter == 'REJECTED' ? 'selected' : ''}>Từ chối</option>
                     </select>
                 </div>
-                <button type="submit" class="btn-filter blue"><i class="bi bi-funnel"></i> Filter</button>
-                <a href="${pageContext.request.contextPath}/hr/documents" class="btn-filter ghost">Clear</a>
+                <button type="submit" class="btn-filter blue"><i class="bi bi-funnel"></i> Lọc</button>
+                <a href="${pageContext.request.contextPath}/hr/documents" class="btn-filter ghost">Xóa lọc</a>
             </form>
 
             <table class="data-table">
                 <thead><tr>
-                    <th>Intern</th><th>Type</th><th>File</th><th>Uploaded</th><th>Status</th><th>Reviewed By</th><th>Actions</th>
+                    <th>Thực tập sinh</th><th>Loại</th><th>Tệp tin</th><th>Ngày tải</th><th>Trạng thái</th><th>Người duyệt</th><th>Thao tác</th>
                 </tr></thead>
                 <tbody>
                     <c:choose>
@@ -226,7 +226,7 @@
                             <tr><td colspan="7">
                                 <div class="empty-state">
                                     <i class="bi bi-inbox"></i>
-                                    <p>No documents found for the selected filter.</p>
+                                    <p>Không tìm thấy tài liệu nào phù hợp.</p>
                                 </div>
                             </td></tr>
                         </c:when>
@@ -245,10 +245,10 @@
                                                 <span class="doc-type-badge dt-cv"><i class="bi bi-file-person"></i>CV</span>
                                             </c:when>
                                             <c:when test="${d.documentType == 'INTERNSHIP_APPLICATION'}">
-                                                <span class="doc-type-badge dt-app"><i class="bi bi-file-earmark-text"></i>Application</span>
+                                                <span class="doc-type-badge dt-app"><i class="bi bi-file-earmark-text"></i>Đơn xin thực tập</span>
                                             </c:when>
                                             <c:otherwise>
-                                                <span class="doc-type-badge dt-contract"><i class="bi bi-file-earmark-check"></i>Contract</span>
+                                                <span class="doc-type-badge dt-contract"><i class="bi bi-file-earmark-check"></i>Hợp đồng</span>
                                             </c:otherwise>
                                         </c:choose>
                                     </td>
@@ -256,9 +256,9 @@
                                     <td style="color:var(--text-muted);font-size:.78rem">${d.uploadedAt}</td>
                                     <td>
                                         <c:choose>
-                                            <c:when test="${d.status == 'APPROVED'}"><span class="badge badge-approved"><i class="bi bi-check-circle-fill" style="font-size:.6rem"></i>Approved</span></c:when>
-                                            <c:when test="${d.status == 'REJECTED'}"><span class="badge badge-rejected"><i class="bi bi-x-circle-fill" style="font-size:.6rem"></i>Rejected</span></c:when>
-                                            <c:otherwise><span class="badge badge-pending"><i class="bi bi-clock-fill" style="font-size:.6rem"></i>Pending</span></c:otherwise>
+                                            <c:when test="${d.status == 'APPROVED'}"><span class="badge badge-approved"><i class="bi bi-check-circle-fill" style="font-size:.6rem"></i>Đã duyệt</span></c:when>
+                                            <c:when test="${d.status == 'REJECTED'}"><span class="badge badge-rejected"><i class="bi bi-x-circle-fill" style="font-size:.6rem"></i>Từ chối</span></c:when>
+                                            <c:otherwise><span class="badge badge-pending"><i class="bi bi-clock-fill" style="font-size:.6rem"></i>Chờ duyệt</span></c:otherwise>
                                         </c:choose>
                                     </td>
                                     <td style="color:var(--text-muted);font-size:.78rem">
@@ -270,23 +270,23 @@
                                     <td>
                                         <div class="review-actions">
                                             <a href="${pageContext.request.contextPath}${d.filePath}" class="btn-view" target="_blank">
-                                                <i class="bi bi-eye"></i> View
+                                                <i class="bi bi-eye"></i> Xem
                                             </a>
                                             <c:if test="${d.status == 'PENDING'}">
                                                 <form method="post" action="${pageContext.request.contextPath}/hr/documents/review" style="display:inline">
                                                     <input type="hidden" name="id"     value="${d.id}">
                                                     <input type="hidden" name="action" value="APPROVED">
-                                                    <button type="submit" class="btn-approve"><i class="bi bi-check-lg"></i> Approve</button>
+                                                    <button type="submit" class="btn-approve"><i class="bi bi-check-lg"></i> Duyệt</button>
                                                 </form>
                                                 <form method="post" action="${pageContext.request.contextPath}/hr/documents/review" style="display:inline"
-                                                      onsubmit="return confirm('Reject this document?')">
+                                                      onsubmit="return confirm('Từ chối tài liệu này?')">
                                                     <input type="hidden" name="id"     value="${d.id}">
                                                     <input type="hidden" name="action" value="REJECTED">
-                                                    <button type="submit" class="btn-reject"><i class="bi bi-x-lg"></i> Reject</button>
+                                                    <button type="submit" class="btn-reject"><i class="bi bi-x-lg"></i> Từ chối</button>
                                                 </form>
                                             </c:if>
                                             <c:if test="${d.status != 'PENDING'}">
-                                                <span class="already-reviewed">Reviewed</span>
+                                                <span class="already-reviewed">Đã xử lý</span>
                                             </c:if>
                                         </div>
                                     </td>

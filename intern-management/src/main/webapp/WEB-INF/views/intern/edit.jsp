@@ -2,11 +2,11 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Edit Intern Profile — HR</title>
+    <title>Chỉnh sửa hồ sơ Thực tập sinh — HR</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
@@ -157,16 +157,16 @@
 <aside class="sidebar">
     <div class="sidebar-brand">
         <div class="brand-icon"><i class="bi bi-building"></i></div>
-        <h1>Human Resource</h1>
+        <h1>Nhân sự (HR)</h1>
     </div>
 
-    <div class="sidebar-section-label">Management</div>
+    <div class="sidebar-section-label">Quản lý</div>
     <ul class="sidebar-nav">
-        <li><a href="${pageContext.request.contextPath}/hr/dashboard"><i class="bi bi-grid"></i> Dashboard</a></li>
-        <li><a href="${pageContext.request.contextPath}/hr/mentors"><i class="bi bi-mortarboard"></i> Mentors</a></li>
-        <li><a href="${pageContext.request.contextPath}/hr/applications"><i class="bi bi-clipboard-check"></i> Applications</a></li>
-        <li><a href="${pageContext.request.contextPath}/hr/contracts"><i class="bi bi-file-earmark-text"></i> Contracts</a></li>
-        <li><a href="${pageContext.request.contextPath}/hr/documents"><i class="bi bi-folder-check"></i> Document Review</a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/dashboard"><i class="bi bi-grid"></i> Tổng quan</a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/mentors"><i class="bi bi-mortarboard"></i> Mentor</a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/applications"><i class="bi bi-clipboard-check"></i> Đơn xét tuyển</a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/contracts"><i class="bi bi-file-earmark-text"></i> Hợp đồng</a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/documents"><i class="bi bi-folder-check"></i> Duyệt tài liệu</a></li>
     </ul>
 
     <div class="sidebar-footer">
@@ -174,9 +174,9 @@
             <div class="avatar">${fn:substring(sessionScope.currentUser.fullName, 0, 1)}</div>
             <div class="sidebar-user-info">
                 <div class="sidebar-user-name">${sessionScope.currentUser.fullName}</div>
-                <div class="sidebar-user-role">HR Staff</div>
+                <div class="sidebar-user-role">Nhân sự</div>
             </div>
-            <a href="${pageContext.request.contextPath}/logout" class="logout-btn" title="Logout"><i class="bi bi-box-arrow-right"></i></a>
+            <a href="${pageContext.request.contextPath}/logout" class="logout-btn" title="Đăng xuất"><i class="bi bi-box-arrow-right"></i></a>
         </div>
     </div>
 </aside>
@@ -185,12 +185,12 @@
 <div class="main">
     <div class="topbar">
         <a href="${pageContext.request.contextPath}/hr/dashboard" class="topbar-back">
-            <i class="bi bi-arrow-left"></i> Back to Dashboard
+            <i class="bi bi-arrow-left"></i> Quay lại Tổng quan
         </a>
         <div style="border-left:1px solid var(--border);height:24px"></div>
         <div>
-            <div class="page-title">Edit Intern Profile</div>
-            <div class="page-sub">Update details for ${intern.studentCode}</div>
+            <div class="page-title">Chỉnh sửa hồ sơ Thực tập sinh</div>
+            <div class="page-sub">Cập nhật thông tin cho ${intern.studentCode}</div>
         </div>
     </div>
 
@@ -199,9 +199,9 @@
             <div class="form-card-header">
                 <div class="form-card-title">
                     <div class="icon"><i class="bi bi-pencil-square"></i></div>
-                    Edit Intern Profile
+                    Chỉnh sửa hồ sơ Thực tập sinh
                 </div>
-                <div class="form-card-sub">All marked (*) fields are required.</div>
+                <div class="form-card-sub">Tất cả các trường đánh dấu (*) là bắt buộc.</div>
             </div>
 
             <c:if test="${not empty error}">
@@ -212,13 +212,13 @@
                 <input type="hidden" name="id" value="${intern.id}">
 
                 <%-- 1. Personal Information --%>
-                <div class="section-label"><i class="bi bi-person-fill"></i> Personal Information</div>
+                <div class="section-label"><i class="bi bi-person-fill"></i> 1. Thông tin cá nhân</div>
                 <div class="form-grid">
                     <div class="form-group full">
-                        <label class="form-label">Full Name <span class="required">*</span></label>
+                        <label class="form-label">Họ và tên <span class="required">*</span></label>
                         <div class="input-wrap">
                             <i class="bi bi-person-fill input-icon"></i>
-                            <input type="text" name="fullName" class="form-input" value="${intern.fullName}" required placeholder="e.g. Nguyen Van A">
+                            <input type="text" name="fullName" class="form-input" value="${intern.fullName}" required placeholder="VD: Nguyễn Văn A">
                         </div>
                     </div>
                     <div class="form-group">
@@ -229,94 +229,94 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Phone <span class="required">*</span></label>
+                        <label class="form-label">Số điện thoại <span class="required">*</span></label>
                         <div class="input-wrap">
                             <i class="bi bi-phone input-icon"></i>
                             <input type="tel" name="phone" class="form-input" value="${intern.phone}" required placeholder="0901234567">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Date of Birth</label>
+                        <label class="form-label">Ngày sinh</label>
                         <div class="input-wrap">
                             <i class="bi bi-calendar3 input-icon"></i>
                             <input type="date" name="dateOfBirth" class="form-input" value="${intern.dateOfBirth}">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Gender <span class="required">*</span></label>
+                        <label class="form-label">Giới tính <span class="required">*</span></label>
                         <div class="input-wrap">
                             <i class="bi bi-gender-ambiguous input-icon"></i>
                             <select name="gender" class="form-select" required>
-                                <option value="">-- Select --</option>
-                                <option value="MALE"   ${intern.gender == 'MALE'   ? 'selected' : ''}>Male</option>
-                                <option value="FEMALE" ${intern.gender == 'FEMALE' ? 'selected' : ''}>Female</option>
-                                <option value="OTHER"  ${intern.gender == 'OTHER'  ? 'selected' : ''}>Other</option>
+                                <option value="">-- Chọn --</option>
+                                <option value="MALE"   ${intern.gender == 'MALE'   ? 'selected' : ''}>Nam</option>
+                                <option value="FEMALE" ${intern.gender == 'FEMALE' ? 'selected' : ''}>Nữ</option>
+                                <option value="OTHER"  ${intern.gender == 'OTHER'  ? 'selected' : ''}>Khác</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group full">
-                        <label class="form-label">Address</label>
+                        <label class="form-label">Địa chỉ</label>
                         <div class="input-wrap">
                             <i class="bi bi-geo-alt input-icon"></i>
-                            <input type="text" name="address" class="form-input" value="${intern.address}" placeholder="Address">
+                            <input type="text" name="address" class="form-input" value="${intern.address}" placeholder="Địa chỉ thường trú / tạm trú">
                         </div>
                     </div>
                 </div>
 
                 <%-- 2. Academic Details --%>
-                <div class="section-label"><i class="bi bi-mortarboard"></i> Academic Details</div>
+                <div class="section-label"><i class="bi bi-mortarboard"></i> 2. Thông tin học vấn</div>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label class="form-label">Student Code</label>
+                        <label class="form-label">Mã sinh viên</label>
                         <div class="input-wrap">
                             <i class="bi bi-card-text input-icon"></i>
-                            <input type="text" name="studentCode" class="form-input" value="${intern.studentCode}" placeholder="e.g. SV001">
+                            <input type="text" name="studentCode" class="form-input" value="${intern.studentCode}" placeholder="VD: SV001">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Status</label>
+                        <label class="form-label">Trạng thái</label>
                         <div class="input-wrap">
                             <i class="bi bi-flag input-icon"></i>
                             <select name="status" class="form-select">
-                                <option value="PENDING"   ${intern.status == 'PENDING'   ? 'selected' : ''}>Pending</option>
-                                <option value="APPROVED"  ${intern.status == 'APPROVED'  ? 'selected' : ''}>Approved</option>
-                                <option value="REJECTED"  ${intern.status == 'REJECTED'  ? 'selected' : ''}>Rejected</option>
-                                <option value="INTERNING" ${intern.status == 'INTERNING' ? 'selected' : ''}>Interning</option>
-                                <option value="COMPLETED" ${intern.status == 'COMPLETED' ? 'selected' : ''}>Completed</option>
+                                <option value="PENDING"   ${intern.status == 'PENDING'   ? 'selected' : ''}>Chờ duyệt</option>
+                                <option value="APPROVED"  ${intern.status == 'APPROVED'  ? 'selected' : ''}>Đã duyệt</option>
+                                <option value="REJECTED"  ${intern.status == 'REJECTED'  ? 'selected' : ''}>Từ chối</option>
+                                <option value="INTERNING" ${intern.status == 'INTERNING' ? 'selected' : ''}>Đang thực tập</option>
+                                <option value="COMPLETED" ${intern.status == 'COMPLETED' ? 'selected' : ''}>Hoàn thành</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group full">
-                        <label class="form-label">University <span class="required">*</span></label>
+                        <label class="form-label">Trường đại học <span class="required">*</span></label>
                         <div class="input-wrap">
                             <i class="bi bi-building input-icon"></i>
-                            <input type="text" name="university" class="form-input" value="${intern.university}" required placeholder="e.g. Hanoi University of Science and Technology">
+                            <input type="text" name="university" class="form-input" value="${intern.university}" required placeholder="VD: Đại học Bách Khoa Hà Nội">
                         </div>
                     </div>
                     <div class="form-group full">
-                        <label class="form-label">Major <span class="required">*</span></label>
+                        <label class="form-label">Chuyên ngành <span class="required">*</span></label>
                         <div class="input-wrap">
                             <i class="bi bi-book input-icon"></i>
-                            <input type="text" name="major" class="form-input" value="${intern.major}" required placeholder="e.g. Computer Science">
+                            <input type="text" name="major" class="form-input" value="${intern.major}" required placeholder="VD: Công nghệ thông tin">
                         </div>
                     </div>
                 </div>
 
                 <%-- 3. Login Credentials --%>
-                <div class="section-label"><i class="bi bi-shield-lock"></i> Login Credentials</div>
+                <div class="section-label"><i class="bi bi-shield-lock"></i> 3. Thông tin đăng nhập</div>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label class="form-label">Username <span class="required">*</span></label>
+                        <label class="form-label">Tên đăng nhập <span class="required">*</span></label>
                         <div class="input-wrap">
                             <i class="bi bi-at input-icon"></i>
-                            <input type="text" name="username" class="form-input" value="${not empty user.username ? user.username : (not empty param.username ? param.username : '')}" required placeholder="e.g. intern01" autocomplete="off">
+                            <input type="text" name="username" class="form-input" value="${not empty user.username ? user.username : (not empty param.username ? param.username : '')}" required placeholder="VD: intern01" autocomplete="off">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Password</label>
+                        <label class="form-label">Mật khẩu</label>
                         <div class="input-wrap" style="position:relative;">
                             <i class="bi bi-lock input-icon"></i>
-                            <input type="password" name="password" id="pwField" class="form-input" placeholder="Leave blank to keep current password" autocomplete="new-password" style="padding-right:40px;">
+                            <input type="password" name="password" id="pwField" class="form-input" placeholder="Để trống nếu muốn giữ nguyên mật khẩu hiện tại" autocomplete="new-password" style="padding-right:40px;">
                             <button type="button" class="pw-toggle" onclick="togglePw()">
                                 <i class="bi bi-eye" id="pwEye"></i>
                             </button>
@@ -326,10 +326,10 @@
 
                 <div class="form-actions">
                     <a href="${pageContext.request.contextPath}/hr/dashboard" class="btn-cancel">
-                        <i class="bi bi-x"></i> Cancel
+                        <i class="bi bi-x"></i> Hủy
                     </a>
                     <button type="submit" class="btn-save" id="saveEditBtn">
-                        <i class="bi bi-check-lg"></i> Update Profile
+                        <i class="bi bi-check-lg"></i> Cập nhật hồ sơ
                     </button>
                 </div>
             </form>
@@ -347,7 +347,7 @@
     document.getElementById('internEditForm').addEventListener('submit', function() {
         var btn = document.getElementById('saveEditBtn');
         btn.disabled = true;
-        btn.innerHTML = '<i class="bi bi-arrow-repeat"></i> Saving...';
+        btn.innerHTML = '<i class="bi bi-arrow-repeat"></i> Đang lưu...';
     });
 </script>
 </body>

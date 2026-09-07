@@ -2,11 +2,11 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Applications — HR</title>
+    <title>Đơn xét tuyển — HR</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
@@ -172,19 +172,19 @@
 <aside class="sidebar">
     <div class="sidebar-brand">
         <div class="brand-icon"><i class="bi bi-building"></i></div>
-        <h1>Human Resource</h1>
+        <h1>Nhân sự (HR)</h1>
     </div>
 
-    <div class="sidebar-section-label">Management</div>
+    <div class="sidebar-section-label">Quản lý</div>
     <ul class="sidebar-nav">
-        <li><a href="${pageContext.request.contextPath}/hr/dashboard"><i class="bi bi-grid"></i> Dashboard</a></li>
-        <li><a href="${pageContext.request.contextPath}/hr/mentors"><i class="bi bi-mortarboard"></i> Mentors</a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/dashboard"><i class="bi bi-grid"></i> Tổng quan</a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/mentors"><i class="bi bi-mortarboard"></i> Mentor</a></li>
         <li><a href="${pageContext.request.contextPath}/hr/applications" class="active">
-            <i class="bi bi-clipboard-check"></i> Applications
+            <i class="bi bi-clipboard-check"></i> Đơn xét tuyển
             <c:if test="${pendingCount > 0}"><span class="sidebar-badge">${pendingCount}</span></c:if>
         </a></li>
-        <li><a href="${pageContext.request.contextPath}/hr/contracts"><i class="bi bi-file-earmark-text"></i> Contracts</a></li>
-        <li><a href="${pageContext.request.contextPath}/hr/documents"><i class="bi bi-folder-check"></i> Document Review</a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/contracts"><i class="bi bi-file-earmark-text"></i> Hợp đồng</a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/documents"><i class="bi bi-folder-check"></i> Duyệt tài liệu</a></li>
     </ul>
 
     <div class="sidebar-footer">
@@ -192,9 +192,9 @@
             <div class="avatar">${fn:substring(sessionScope.currentUser.fullName, 0, 1)}</div>
             <div class="sidebar-user-info">
                 <div class="sidebar-user-name">${sessionScope.currentUser.fullName}</div>
-                <div class="sidebar-user-role">HR Staff</div>
+                <div class="sidebar-user-role">Nhân sự</div>
             </div>
-            <a href="${pageContext.request.contextPath}/logout" class="logout-btn" title="Logout"><i class="bi bi-box-arrow-right"></i></a>
+            <a href="${pageContext.request.contextPath}/logout" class="logout-btn" title="Đăng xuất"><i class="bi bi-box-arrow-right"></i></a>
         </div>
     </div>
 </aside>
@@ -203,12 +203,12 @@
 <div class="main">
     <div class="topbar">
         <div>
-            <div class="page-title">Internship Applications</div>
-            <div class="page-sub">View intern application statuses and reviews</div>
+            <div class="page-title">Đơn xét tuyển thực tập</div>
+            <div class="page-sub">Xem trạng thái đơn ứng tuyển và kết quả xét duyệt</div>
         </div>
         <c:if test="${pendingCount > 0}">
             <span style="background:#fefce8;color:#a16207;border-radius:20px;padding:6px 16px;font-size:.82rem;font-weight:700;border:1px solid #fde68a">
-                <i class="bi bi-clock-fill" style="margin-right:5px"></i>${pendingCount} Pending
+                <i class="bi bi-clock-fill" style="margin-right:5px"></i>${pendingCount} Chờ duyệt
             </span>
         </c:if>
     </div>
@@ -222,37 +222,37 @@
         <%-- Filter tabs --%>
         <div class="filter-tabs">
             <a href="${pageContext.request.contextPath}/hr/applications"
-               class="tab-btn ${empty statusFilter ? 'active' : ''}">All</a>
+               class="tab-btn ${empty statusFilter ? 'active' : ''}">Tất cả</a>
             <a href="${pageContext.request.contextPath}/hr/applications?status=PENDING"
                class="tab-btn pending ${statusFilter == 'PENDING' ? 'active' : ''}">
-                <i class="bi bi-clock"></i> Pending
+                <i class="bi bi-clock"></i> Chờ duyệt
                 <c:if test="${pendingCount > 0}"> (${pendingCount})</c:if>
             </a>
             <a href="${pageContext.request.contextPath}/hr/applications?status=APPROVED"
                class="tab-btn ${statusFilter == 'APPROVED' ? 'active' : ''}">
-                <i class="bi bi-check-circle"></i> Approved
+                <i class="bi bi-check-circle"></i> Đã duyệt
             </a>
             <a href="${pageContext.request.contextPath}/hr/applications?status=REJECTED"
                class="tab-btn ${statusFilter == 'REJECTED' ? 'active' : ''}">
-                <i class="bi bi-x-circle"></i> Rejected
+                <i class="bi bi-x-circle"></i> Từ chối
             </a>
         </div>
 
         <div class="sec-card">
             <div class="sec-header">
                 <div class="sec-icon"><i class="bi bi-clipboard-check"></i></div>
-                <span class="sec-title">Applications
-                    <span style="font-size:.75rem;color:var(--text-muted);font-weight:500;margin-left:6px">(${fn:length(applications)} records)</span>
+                <span class="sec-title">Danh sách đơn ứng tuyển
+                    <span style="font-size:.75rem;color:var(--text-muted);font-weight:500;margin-left:6px">(${fn:length(applications)} bản ghi)</span>
                 </span>
             </div>
             <table class="data-table">
                 <thead><tr>
                     <th>#</th>
-                    <th>Applicant</th>
-                    <th>University / Major</th>
-                    <th>Applied At</th>
-                    <th>Status</th>
-                    <th>Reviewed By</th>
+                    <th>Ứng viên</th>
+                    <th>Trường / Chuyên ngành</th>
+                    <th>Ngày nộp</th>
+                    <th>Trạng thái</th>
+                    <th>Người duyệt</th>
                 </tr></thead>
                 <tbody>
                     <c:choose>
@@ -260,7 +260,7 @@
                             <tr><td colspan="6">
                                 <div class="empty-state">
                                     <i class="bi bi-clipboard"></i>
-                                    No applications found.
+                                    Không tìm thấy đơn ứng tuyển nào.
                                 </div>
                             </td></tr>
                         </c:when>
@@ -291,9 +291,9 @@
                                     </td>
                                     <td>
                                         <c:choose>
-                                            <c:when test="${app.status == 'PENDING'}"><span class="badge badge-pending"><i class="bi bi-clock-fill" style="font-size:.4rem"></i>Pending</span></c:when>
-                                            <c:when test="${app.status == 'APPROVED'}"><span class="badge badge-approved"><i class="bi bi-check-circle-fill" style="font-size:.4rem"></i>Approved</span></c:when>
-                                            <c:otherwise><span class="badge badge-rejected"><i class="bi bi-x-circle-fill" style="font-size:.4rem"></i>Rejected</span></c:otherwise>
+                                            <c:when test="${app.status == 'PENDING'}"><span class="badge badge-pending"><i class="bi bi-clock-fill" style="font-size:.4rem"></i>Chờ duyệt</span></c:when>
+                                            <c:when test="${app.status == 'APPROVED'}"><span class="badge badge-approved"><i class="bi bi-check-circle-fill" style="font-size:.4rem"></i>Đã duyệt</span></c:when>
+                                            <c:otherwise><span class="badge badge-rejected"><i class="bi bi-x-circle-fill" style="font-size:.4rem"></i>Từ chối</span></c:otherwise>
                                         </c:choose>
                                     </td>
                                     <td style="font-size:.8rem;color:var(--text-muted)">
@@ -311,7 +311,7 @@
                                     <tr>
                                         <td></td>
                                         <td colspan="5" style="padding:0 16px 12px;font-size:.78rem;color:#dc2626;background:#fef2f2">
-                                            <i class="bi bi-info-circle" style="margin-right:4px"></i>Reason: ${app.rejectionReason}
+                                            <i class="bi bi-info-circle" style="margin-right:4px"></i>Lý do: ${app.rejectionReason}
                                         </td>
                                     </tr>
                                 </c:if>

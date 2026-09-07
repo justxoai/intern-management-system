@@ -1,12 +1,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
+<%@ taglib prefix="c"   uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn"  uri="jakarta.tags.functions" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<fmt:setLocale value="vi" />
+<fmt:setBundle basename="messages" />
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Edit User Account — Admin</title>
+    <title><fmt:message key="admin.edit.title"/></title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
@@ -96,27 +99,26 @@
 <aside class="sidebar">
     <div class="sidebar-brand">
         <div class="brand-icon"><i class="bi bi-shield-check"></i></div>
-        <h1>Account<br>Management</h1>
+        <h1><fmt:message key="app.name"/></h1>
         <span>Admin Panel</span>
     </div>
-    <div class="sidebar-section-label">Management</div>
+    <div class="sidebar-section-label"><fmt:message key="label.role"/></div>
     <ul class="sidebar-nav">
         <li><a href="${pageContext.request.contextPath}/admin/users">
-            <i class="bi bi-people"></i> User Accounts
+            <i class="bi bi-people"></i> <fmt:message key="nav.users"/>
         </a></li>
         <li><a href="${pageContext.request.contextPath}/admin/users/create">
-            <i class="bi bi-person-plus"></i> Add New User
+            <i class="bi bi-person-plus"></i> <fmt:message key="nav.addUser"/>
         </a></li>
     </ul>
-
     <div class="sidebar-footer">
         <div class="sidebar-user">
             <div class="avatar">${fn:substring(sessionScope.currentUser.fullName, 0, 1)}</div>
             <div class="sidebar-user-info">
                 <div class="sidebar-user-name">${sessionScope.currentUser.fullName}</div>
-                <div class="sidebar-user-role">Administrator</div>
+                <div class="sidebar-user-role"><fmt:message key="role.admin"/></div>
             </div>
-            <a href="${pageContext.request.contextPath}/logout" class="logout-btn" title="Logout">
+            <a href="${pageContext.request.contextPath}/logout" class="logout-btn" title="<fmt:message key='nav.logout'/>">
                 <i class="bi bi-box-arrow-right"></i>
             </a>
         </div>
@@ -126,23 +128,24 @@
 <div class="main">
     <div class="topbar">
         <a href="${pageContext.request.contextPath}/admin/users" class="topbar-back">
-            <i class="bi bi-arrow-left"></i> Back to Users
+            <i class="bi bi-arrow-left"></i> <fmt:message key="btn.back"/>
         </a>
         <div style="border-left:1px solid var(--border);height:28px;margin:0 4px"></div>
-        <div>
-            <div class="page-title">Edit User Account</div>
-            <div class="page-sub">Update account details, role, and login credentials</div>
+        <div style="flex:1">
+            <div class="page-title"><fmt:message key="admin.edit.heading"/></div>
+            <div class="page-sub"><fmt:message key="admin.edit.subheading"/></div>
         </div>
     </div>
+
 
     <div class="content">
         <div class="form-card">
             <div class="form-card-header">
                 <div class="form-card-title">
                     <div class="icon"><i class="bi bi-person-gear"></i></div>
-                    Edit User Account
+                    <fmt:message key="admin.edit.card.title"/>
                 </div>
-                <div class="form-card-sub">All marked (*) fields are required.</div>
+                <div class="form-card-sub"><fmt:message key="admin.edit.card.sub"/></div>
             </div>
 
             <c:if test="${not empty error}">
@@ -153,24 +156,24 @@
                 <input type="hidden" name="id" value="${user.id}">
 
                 <%-- 1. Personal Information --%>
-                <div class="section-label"><i class="bi bi-person-fill"></i> Personal Information</div>
+                <div class="section-label"><i class="bi bi-person-fill"></i> <fmt:message key="admin.edit.section.personal"/></div>
                 <div class="form-grid">
                     <div class="form-group full">
-                        <label class="form-label">Full Name <span class="required">*</span></label>
+                        <label class="form-label"><fmt:message key="label.fullname"/> <span class="required">*</span></label>
                         <div class="input-wrap">
                             <i class="bi bi-person input-icon"></i>
                             <input type="text" name="fullName" class="form-input" value="${user.fullName}" required placeholder="e.g. Nguyen Van A">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Email Address <span class="required">*</span></label>
+                        <label class="form-label"><fmt:message key="label.email"/> <span class="required">*</span></label>
                         <div class="input-wrap">
                             <i class="bi bi-envelope input-icon"></i>
                             <input type="email" name="email" class="form-input" value="${user.email}" required placeholder="user@company.com">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Phone Number</label>
+                        <label class="form-label"><fmt:message key="label.phone"/></label>
                         <div class="input-wrap">
                             <i class="bi bi-telephone input-icon"></i>
                             <input type="tel" name="phone" class="form-input" value="${user.phone}" placeholder="e.g. 0901234567">
@@ -179,46 +182,48 @@
                 </div>
 
                 <%-- 2. Account & Credentials --%>
-                <div class="section-label"><i class="bi bi-shield-lock"></i> Account &amp; Credentials</div>
+                <div class="section-label"><i class="bi bi-shield-lock"></i> <fmt:message key="admin.edit.section.credentials"/></div>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label class="form-label">Username <span class="required">*</span></label>
+                        <label class="form-label"><fmt:message key="label.username"/> <span class="required">*</span></label>
                         <div class="input-wrap">
                             <i class="bi bi-at input-icon"></i>
                             <input type="text" name="username" class="form-input" value="${user.username}" required placeholder="e.g. hr02" autocomplete="off">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Password</label>
+                        <label class="form-label"><fmt:message key="label.password"/></label>
                         <div class="input-wrap" style="position:relative;">
                             <i class="bi bi-lock input-icon"></i>
-                            <input type="password" name="password" id="pwField" class="form-input" placeholder="Leave blank to keep current password" autocomplete="new-password" style="padding-right:40px;">
+                            <input type="password" name="password" id="pwField" class="form-input"
+                                   placeholder="<fmt:message key='admin.edit.pw.placeholder'/>"
+                                   autocomplete="new-password" style="padding-right:40px;">
                             <button type="button" class="toggle-pw" onclick="togglePw()">
                                 <i class="bi bi-eye" id="pwEye"></i>
                             </button>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Role <span class="required">*</span></label>
+                        <label class="form-label"><fmt:message key="label.role"/> <span class="required">*</span></label>
                         <div class="input-wrap">
                             <i class="bi bi-person-badge input-icon"></i>
                             <select name="role" class="form-select" required>
-                                <option value="HR"     ${user.role == 'HR'     ? 'selected' : ''}>HR</option>
-                                <option value="MENTOR" ${user.role == 'MENTOR' ? 'selected' : ''}>Mentor</option>
-                                <option value="INTERN" ${user.role == 'INTERN' ? 'selected' : ''}>Intern</option>
+                                <option value="HR"     ${user.role == 'HR'     ? 'selected' : ''}><fmt:message key="role.hr"/></option>
+                                <option value="MENTOR" ${user.role == 'MENTOR' ? 'selected' : ''}><fmt:message key="role.mentor"/></option>
+                                <option value="INTERN" ${user.role == 'INTERN' ? 'selected' : ''}><fmt:message key="role.intern"/></option>
                                 <c:if test="${user.role == 'ADMIN'}">
-                                    <option value="ADMIN" selected>Admin</option>
+                                    <option value="ADMIN" selected><fmt:message key="role.admin"/></option>
                                 </c:if>
                             </select>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Status <span class="required">*</span></label>
+                        <label class="form-label"><fmt:message key="label.status"/> <span class="required">*</span></label>
                         <div class="input-wrap">
                             <i class="bi bi-toggle-on input-icon"></i>
                             <select name="status" class="form-select" required>
-                                <option value="ACTIVE"   ${user.status == 'ACTIVE'   ? 'selected' : ''}>Active</option>
-                                <option value="INACTIVE" ${user.status == 'INACTIVE' ? 'selected' : ''}>Inactive</option>
+                                <option value="ACTIVE"   ${user.status == 'ACTIVE'   ? 'selected' : ''}><fmt:message key="status.active"/></option>
+                                <option value="INACTIVE" ${user.status == 'INACTIVE' ? 'selected' : ''}><fmt:message key="status.inactive"/></option>
                             </select>
                         </div>
                     </div>
@@ -226,10 +231,10 @@
 
                 <div class="form-actions">
                     <a href="${pageContext.request.contextPath}/admin/users" class="btn-cancel">
-                        <i class="bi bi-x"></i> Cancel
+                        <i class="bi bi-x"></i> <fmt:message key="btn.cancel"/>
                     </a>
                     <button type="submit" class="btn-save" id="submitBtn">
-                        <i class="bi bi-check-lg"></i> Save Changes
+                        <i class="bi bi-check-lg"></i> <fmt:message key="admin.edit.btn.submit"/>
                     </button>
                 </div>
             </form>

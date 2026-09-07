@@ -2,11 +2,11 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>End-of-Term Report — HR Portal</title>
+    <title>Báo cáo Cuối kỳ — HR</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
@@ -133,22 +133,22 @@
 <aside class="sidebar">
     <div class="sidebar-brand">
         <div class="brand-icon"><i class="bi bi-building"></i></div>
-        <h1>Human Resource</h1>
+        <h1>Nhân sự (HR)</h1>
     </div>
-    <div class="sidebar-section-label">Management</div>
+    <div class="sidebar-section-label">Quản lý</div>
     <ul class="sidebar-nav">
-        <li><a href="${pageContext.request.contextPath}/hr/dashboard"><i class="bi bi-grid"></i> Dashboard</a></li>
-        <li><a href="${pageContext.request.contextPath}/hr/applications"><i class="bi bi-clipboard-check"></i> Applications</a></li>
-        <li><a href="${pageContext.request.contextPath}/hr/documents"><i class="bi bi-folder-check"></i> Document Review</a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/dashboard"><i class="bi bi-grid"></i> Tổng quan</a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/applications"><i class="bi bi-clipboard-check"></i> Đơn xét tuyển</a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/documents"><i class="bi bi-folder-check"></i> Duyệt tài liệu</a></li>
     </ul>
     <div class="sidebar-footer">
         <div class="sidebar-user">
             <div class="avatar">${fn:substring(sessionScope.currentUser.fullName, 0, 1)}</div>
             <div class="sidebar-user-info">
                 <div class="sidebar-user-name">${sessionScope.currentUser.fullName}</div>
-                <div class="sidebar-user-role">HR Staff</div>
+                <div class="sidebar-user-role">Nhân sự</div>
             </div>
-            <a href="${pageContext.request.contextPath}/logout" class="logout-btn" title="Logout"><i class="bi bi-box-arrow-right"></i></a>
+            <a href="${pageContext.request.contextPath}/logout" class="logout-btn" title="Đăng xuất"><i class="bi bi-box-arrow-right"></i></a>
         </div>
     </div>
 </aside>
@@ -157,44 +157,51 @@
 <div class="main">
     <div class="topbar">
         <div>
-            <div class="page-title"><i class="bi bi-bar-chart-line" style="color:var(--accent);margin-right:8px"></i>End-of-Term Report</div>
-            <div class="page-sub">Comprehensive intern evaluation summary for department heads &amp; university</div>
+            <div class="page-title"><i class="bi bi-bar-chart-line" style="color:var(--accent);margin-right:8px"></i>Báo cáo Cuối kỳ</div>
+            <div class="page-sub">Tổng hợp đánh giá kết quả thực tập dành cho Trưởng bộ phận &amp; Trường đại học</div>
         </div>
         <button class="btn-print no-print" onclick="window.print()">
-            <i class="bi bi-printer"></i> Print / Export PDF
+            <i class="bi bi-printer"></i> In / Xuất PDF
         </button>
     </div>
 
     <div class="content">
 
         <%-- Summary strip --%>
-        <div class="summary-strip">
+        <div class="summary-strip" style="grid-template-columns: repeat(5, 1fr)">
             <div class="sum-card">
                 <div class="sum-icon si-blue"><i class="bi bi-people"></i></div>
                 <div>
                     <div class="sum-num">${totalInterns}</div>
-                    <div class="sum-lbl">Total Interns</div>
+                    <div class="sum-lbl">Tổng số TTS</div>
                 </div>
             </div>
             <div class="sum-card">
                 <div class="sum-icon si-green"><i class="bi bi-person-workspace"></i></div>
                 <div>
                     <div class="sum-num">${activeInterns}</div>
-                    <div class="sum-lbl">Currently Active</div>
+                    <div class="sum-lbl">Đang thực tập</div>
                 </div>
             </div>
             <div class="sum-card">
-                <div class="sum-icon si-amber"><i class="bi bi-list-task"></i></div>
+                <div class="sum-icon si-purple"><i class="bi bi-patch-check"></i></div>
                 <div>
-                    <div class="sum-num">${totalTasks}</div>
-                    <div class="sum-lbl">Tasks Assigned</div>
+                    <div class="sum-num">${evaluatedInterns} / ${totalInterns}</div>
+                    <div class="sum-lbl">Đã có đánh giá</div>
                 </div>
             </div>
             <div class="sum-card">
-                <div class="sum-icon si-purple"><i class="bi bi-check2-circle"></i></div>
+                <div class="sum-icon si-blue"><i class="bi bi-trophy"></i></div>
                 <div>
-                    <div class="sum-num">${doneTasks}</div>
-                    <div class="sum-lbl">Tasks Completed</div>
+                    <div class="sum-num">${avgOverallScore} <span style="font-size:.9rem;font-weight:600;color:var(--text-muted)">/ 10</span></div>
+                    <div class="sum-lbl">Điểm TB toàn khóa</div>
+                </div>
+            </div>
+            <div class="sum-card">
+                <div class="sum-icon si-amber"><i class="bi bi-check2-circle"></i></div>
+                <div>
+                    <div class="sum-num">${doneTasks} / ${totalTasks}</div>
+                    <div class="sum-lbl">Nhiệm vụ hoàn thành</div>
                 </div>
             </div>
         </div>
@@ -202,38 +209,52 @@
         <%-- Filter bar --%>
         <form class="filter-bar no-print" method="get" action="${pageContext.request.contextPath}/hr/report">
             <div class="filter-group">
-                <span class="filter-label">Intern Status</span>
+                <span class="filter-label">Trạng thái TTS</span>
                 <select name="internStatus" class="filter-select">
-                    <option value="">All Statuses</option>
-                    <option value="INTERNING"  ${filterStatus == 'INTERNING'  ? 'selected' : ''}>Interning</option>
-                    <option value="APPROVED"   ${filterStatus == 'APPROVED'   ? 'selected' : ''}>Approved</option>
-                    <option value="COMPLETED"  ${filterStatus == 'COMPLETED'  ? 'selected' : ''}>Completed</option>
-                    <option value="PENDING"    ${filterStatus == 'PENDING'    ? 'selected' : ''}>Pending</option>
-                    <option value="REJECTED"   ${filterStatus == 'REJECTED'   ? 'selected' : ''}>Rejected</option>
+                    <option value="">Tất cả trạng thái</option>
+                    <option value="INTERNING"  ${filterStatus == 'INTERNING'  ? 'selected' : ''}>Đang thực tập</option>
+                    <option value="APPROVED"   ${filterStatus == 'APPROVED'   ? 'selected' : ''}>Đã duyệt</option>
+                    <option value="COMPLETED"  ${filterStatus == 'COMPLETED'  ? 'selected' : ''}>Hoàn thành</option>
+                    <option value="PENDING"    ${filterStatus == 'PENDING'    ? 'selected' : ''}>Chờ duyệt</option>
+                    <option value="REJECTED"   ${filterStatus == 'REJECTED'   ? 'selected' : ''}>Từ chối</option>
                 </select>
             </div>
             <div class="filter-group">
-                <span class="filter-label">University</span>
-                <input class="filter-input" type="text" name="university" value="${filterUniversity}" placeholder="Search university…">
+                <span class="filter-label">Trường đại học</span>
+                <input class="filter-input" type="text" name="university" value="${filterUniversity}" placeholder="Tìm theo trường…">
             </div>
             <div class="filter-group">
-                <span class="filter-label">Major</span>
-                <input class="filter-input" type="text" name="major" value="${filterMajor}" placeholder="Search major…">
+                <span class="filter-label">Chuyên ngành</span>
+                <input class="filter-input" type="text" name="major" value="${filterMajor}" placeholder="Tìm theo chuyên ngành…">
             </div>
-            <button type="submit" class="btn-filter blue"><i class="bi bi-funnel"></i> Filter</button>
-            <a href="${pageContext.request.contextPath}/hr/report" class="btn-filter ghost" style="text-decoration:none">Clear</a>
+            <button type="submit" class="btn-filter blue"><i class="bi bi-funnel"></i> Lọc</button>
+            <a href="${pageContext.request.contextPath}/hr/report" class="btn-filter ghost" style="text-decoration:none">Xóa lọc</a>
         </form>
+
+        <%-- Official Header for Print Mode --%>
+        <div class="print-official-header" style="display:none">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;border-bottom:2px solid #0f172a;padding-bottom:14px">
+                <div>
+                    <div style="font-weight:800;font-size:1rem;text-transform:uppercase">CÔNG TY CỔ PHẦN CÔNG NGHỆ &amp; ĐÀO TẠO</div>
+                    <div style="font-size:.85rem;color:#475569">Ban Nhân sự &amp; Quản lý Thực tập sinh</div>
+                </div>
+                <div style="text-align:right">
+                    <div style="font-weight:700;font-size:.85rem">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</div>
+                    <div style="font-size:.8rem;color:#475569">Độc lập - Tự do - Hạnh phúc</div>
+                </div>
+            </div>
+            <div style="text-align:center;margin-bottom:24px">
+                <h2 style="font-size:1.3rem;font-weight:800;text-transform:uppercase;margin-bottom:4px">BÁO CÁO TỔNG KẾT KẾT QUẢ THỰC TẬP TỐT NGHIỆP</h2>
+                <div style="font-size:.85rem;font-style:italic;color:#475569">Kính gửi: Ban Giám hiệu / Ban Chủ nhiệm Khoa &amp; Ban Lãnh đạo Công ty</div>
+            </div>
+        </div>
 
         <%-- Report table --%>
         <div class="report-card">
             <div class="report-card-header">
                 <div class="rh-icon"><i class="bi bi-table"></i></div>
-                <span class="rh-title">Intern Performance Report
-                    <span style="font-size:.75rem;color:var(--text-muted);font-weight:500;margin-left:6px">(${fn:length(reportRows)} interns)</span>
-                </span>
-                <span style="font-size:.75rem;color:var(--text-muted)">Generated: ${pageContext.response.contentType != null ? '' : ''}
-                    <%-- Current date --%>
-                    <c:set var="now" value="<%= new java.util.Date() %>"/>
+                <span class="rh-title">Báo cáo Đánh giá Kết quả Thực tập sinh Toàn khóa
+                    <span style="font-size:.75rem;color:var(--text-muted);font-weight:500;margin-left:6px">(${fn:length(reportRows)} thực tập sinh)</span>
                 </span>
             </div>
             <div style="overflow-x:auto">
@@ -241,15 +262,15 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Intern</th>
-                            <th>University / Major</th>
-                            <th>Status</th>
+                            <th>Thực tập sinh</th>
+                            <th>Trường / Ngành</th>
                             <th>Mentor</th>
-                            <th>Tasks</th>
-                            <th>Completion</th>
-                            <th>Performance</th>
-                            <th>Contract</th>
-                            <th>Docs ✓</th>
+                            <th>Tiến độ NV</th>
+                            <th style="text-align:center">Điểm chi tiết (KT - TĐ - GT)</th>
+                            <th style="text-align:center">Tổng kết</th>
+                            <th>Xếp loại</th>
+                            <th>Nhận xét của Mentor</th>
+                            <th class="no-print">Phiếu ĐG</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -258,31 +279,12 @@
                                 <tr><td colspan="10">
                                     <div class="empty-state">
                                         <i class="bi bi-bar-chart"></i>
-                                        No intern data found matching the filters.
+                                        Không tìm thấy dữ liệu thực tập sinh phù hợp với bộ lọc.
                                     </div>
                                 </td></tr>
                             </c:when>
                             <c:otherwise>
                                 <c:forEach var="r" items="${reportRows}" varStatus="st">
-                                    <%-- Grade CSS class --%>
-                                    <c:set var="gradeClass" value="${
-                                        r.grade == 'Excellent'          ? 'grade-excellent' :
-                                        r.grade == 'Good'               ? 'grade-good'      :
-                                        r.grade == 'Average'            ? 'grade-average'   :
-                                        r.grade == 'Needs Improvement'  ? 'grade-bad'       : 'grade-na'
-                                    }"/>
-                                    <c:set var="fillClass" value="${
-                                        r.grade == 'Excellent'          ? 'fill-excellent' :
-                                        r.grade == 'Good'               ? 'fill-good'      :
-                                        r.grade == 'Average'            ? 'fill-average'   :
-                                        r.grade == 'Needs Improvement'  ? 'fill-bad'       : 'fill-na'
-                                    }"/>
-                                    <c:set var="statusClass" value="${
-                                        r.internStatus == 'INTERNING'  ? 'badge-interning' :
-                                        r.internStatus == 'APPROVED'   ? 'badge-approved'  :
-                                        r.internStatus == 'COMPLETED'  ? 'badge-completed' :
-                                        r.internStatus == 'PENDING'    ? 'badge-pending'   : 'badge-rejected'
-                                    }"/>
                                     <tr>
                                         <td style="color:var(--text-muted);font-size:.75rem">${st.index + 1}</td>
                                         <td>
@@ -291,9 +293,6 @@
                                                 <div>
                                                     <div class="intern-name">${r.internName}</div>
                                                     <div class="intern-sub">${r.internEmail}</div>
-                                                    <c:if test="${not empty r.studentCode}">
-                                                        <div class="intern-sub"><code style="background:#f1f5f9;padding:1px 5px;border-radius:4px;font-size:.68rem">${r.studentCode}</code></div>
-                                                    </c:if>
                                                 </div>
                                             </div>
                                         </td>
@@ -301,7 +300,6 @@
                                             <div style="font-size:.82rem;font-weight:500">${r.major}</div>
                                             <div class="intern-sub">${r.university}</div>
                                         </td>
-                                        <td><span class="badge ${statusClass}">${r.internStatus}</span></td>
                                         <td style="font-size:.82rem">
                                             <c:choose>
                                                 <c:when test="${not empty r.mentorName}">
@@ -311,45 +309,62 @@
                                             </c:choose>
                                         </td>
                                         <td>
-                                            <span style="font-weight:700;color:var(--text-primary)">${r.completedTasks}</span>
-                                            <span style="color:var(--text-muted)"> / ${r.totalTasks}</span>
-                                            <div class="intern-sub">${r.inprogressTasks} in progress</div>
-                                        </td>
-                                        <td>
-                                            <div class="mini-bar-wrap">
-                                                <div class="mini-bar">
-                                                    <div class="mini-fill ${fillClass}" style="width:${r.completionRate}%"></div>
+                                            <div style="font-weight:600;font-size:.8rem">${r.completedTasks} / ${r.totalTasks} task</div>
+                                            <div class="mini-bar-wrap" style="margin-top:3px">
+                                                <div class="mini-bar" style="height:5px">
+                                                    <div class="mini-fill fill-good" style="width:${r.completionRate}%"></div>
                                                 </div>
-                                                <span class="mini-pct">${r.completionRate}%</span>
+                                                <span class="mini-pct" style="font-size:.68rem">${r.completionRate}%</span>
                                             </div>
-                                            <div class="intern-sub">Avg progress: ${r.avgProgress}%</div>
                                         </td>
-                                        <td>
-                                            <span class="grade-badge ${gradeClass}">${r.grade}</span>
-                                        </td>
-                                        <td style="font-size:.8rem">
+                                        <td style="text-align:center">
                                             <c:choose>
-                                                <c:when test="${not empty r.contractStatus}">
-                                                    <c:set var="cStatus" value="${r.contractStatus}"/>
-                                                    <span class="badge ${cStatus == 'CONFIRMED' ? 'badge-approved' : (cStatus == 'PENDING' ? 'badge-pending' : 'badge-rejected')}">${cStatus}</span>
-                                                    <c:if test="${not empty r.startDate}">
-                                                        <div class="intern-sub">${r.startDate} → ${r.endDate}</div>
-                                                    </c:if>
+                                                <c:when test="${not empty r.technicalScore || not empty r.attitudeScore}">
+                                                    <div style="font-size:.78rem;font-weight:700">
+                                                        <span title="Kỹ thuật" style="color:#0284c7">${not empty r.technicalScore ? r.technicalScore : '—'}</span> /
+                                                        <span title="Thái độ" style="color:#16a34a">${not empty r.attitudeScore ? r.attitudeScore : '—'}</span> /
+                                                        <span title="Giao tiếp" style="color:#9333ea">${not empty r.communicationScore ? r.communicationScore : '—'}</span>
+                                                    </div>
+                                                    <div style="font-size:.66rem;color:var(--text-muted)">KT / TĐ / GT</div>
                                                 </c:when>
-                                                <c:otherwise><span style="color:var(--text-muted)">No contract</span></c:otherwise>
+                                                <c:otherwise><span style="color:var(--text-muted);font-size:.78rem">—</span></c:otherwise>
                                             </c:choose>
                                         </td>
                                         <td style="text-align:center">
-                                            <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
-                                                <span class="check-icon" title="CV ${r.cvOk ? 'Approved' : 'Pending'}">
-                                                    <i class="bi ${r.cvOk ? 'bi-file-earmark-check-fill ci-yes' : 'bi-file-earmark-x ci-no'}"></i>
-                                                    <span style="font-size:.65rem;color:var(--text-muted)">CV</span>
-                                                </span>
-                                                <span class="check-icon" title="Application ${r.appOk ? 'Approved' : 'Pending'}">
-                                                    <i class="bi ${r.appOk ? 'bi-clipboard-check-fill ci-yes' : 'bi-clipboard-x ci-no'}"></i>
-                                                    <span style="font-size:.65rem;color:var(--text-muted)">App</span>
-                                                </span>
-                                            </div>
+                                            <c:choose>
+                                                <c:when test="${not empty r.overallScore}">
+                                                    <span style="display:inline-block;padding:3px 8px;border-radius:6px;background:#f0fdf4;color:#15803d;font-weight:800;font-size:.85rem">
+                                                        ${r.overallScore}
+                                                    </span>
+                                                </c:when>
+                                                <c:otherwise><span style="color:var(--text-muted);font-size:.78rem">—</span></c:otherwise>
+                                            </c:choose>
+                                        </td>
+                                        <td>
+                                            <c:choose>
+                                                <c:when test="${r.evalGrade == 'Xuất sắc'}"><span class="badge badge-approved"><i class="bi bi-award-fill"></i> Xuất sắc</span></c:when>
+                                                <c:when test="${r.evalGrade == 'Giỏi'}"><span class="badge badge-interning"><i class="bi bi-check-circle-fill"></i> Giỏi</span></c:when>
+                                                <c:when test="${r.evalGrade == 'Khá'}"><span class="badge badge-completed"><i class="bi bi-check"></i> Khá</span></c:when>
+                                                <c:when test="${r.evalGrade == 'Trung bình'}"><span class="badge badge-pending">Trung bình</span></c:when>
+                                                <c:when test="${r.evalGrade == 'Chưa đạt'}"><span class="badge badge-rejected">Chưa đạt</span></c:when>
+                                                <c:otherwise><span class="badge" style="background:#f1f5f9;color:#64748b">Chưa ĐG</span></c:otherwise>
+                                            </c:choose>
+                                        </td>
+                                        <td style="max-width:200px">
+                                            <c:choose>
+                                                <c:when test="${not empty r.mentorComments}">
+                                                    <div style="font-size:.76rem;color:#334155;line-height:1.4;max-height:45px;overflow:hidden;text-overflow:ellipsis" title="${r.mentorComments}">
+                                                        ${r.mentorComments}
+                                                    </div>
+                                                </c:when>
+                                                <c:otherwise><span style="color:var(--text-muted);font-size:.74rem;font-style:italic">Chưa có nhận xét</span></c:otherwise>
+                                            </c:choose>
+                                        </td>
+                                        <td class="no-print">
+                                            <button class="btn-filter ghost" style="padding:4px 10px;font-size:.74rem"
+                                                    onclick="openCertModal('${fn:escapeXml(r.internName)}', '${fn:escapeXml(r.studentCode)}', '${fn:escapeXml(r.university)}', '${fn:escapeXml(r.major)}', '${fn:escapeXml(r.mentorName)}', '${r.technicalScore}', '${r.attitudeScore}', '${r.communicationScore}', '${r.overallScore}', '${r.evalGrade}', '${fn:escapeXml(r.mentorComments)}', '${r.completedTasks}/${r.totalTasks}')">
+                                                <i class="bi bi-file-earmark-person"></i> Phiếu
+                                            </button>
                                         </td>
                                     </tr>
                                 </c:forEach>
@@ -360,12 +375,111 @@
             </div>
         </div>
 
+        <%-- Signatures for Print Mode --%>
+        <div class="print-signatures" style="display:none;margin-top:40px;page-break-inside:avoid">
+            <div style="display:flex;justify-content:space-between;text-align:center;padding:0 30px">
+                <div>
+                    <div style="font-weight:700;font-size:.88rem">NGƯỜI HƯỚNG DẪN (MENTOR)</div>
+                    <div style="font-size:.76rem;font-style:italic;color:#64748b;margin-bottom:60px">(Ký và ghi rõ họ tên)</div>
+                </div>
+                <div>
+                    <div style="font-size:.82rem;font-style:italic;margin-bottom:4px">Hà Nội, ngày ..... tháng ..... năm 2026</div>
+                    <div style="font-weight:700;font-size:.88rem">ĐẠI DIỆN PHÒNG NHÂN SỰ (HR)</div>
+                    <div style="font-size:.76rem;font-style:italic;color:#64748b;margin-bottom:60px">(Ký, đóng dấu và ghi rõ họ tên)</div>
+                    <div style="font-weight:700">${sessionScope.currentUser.fullName}</div>
+                </div>
+            </div>
+        </div>
+
         <%-- Print footer --%>
-        <div style="margin-top:20px;padding:14px 20px;background:var(--card-bg);border-radius:10px;border:1px solid var(--border);font-size:.78rem;color:var(--text-muted);display:flex;justify-content:space-between;align-items:center">
-            <span><i class="bi bi-building" style="margin-right:5px"></i>Internship Management System — End-of-Term Report</span>
-            <span>Prepared by: ${sessionScope.currentUser.fullName} (HR)</span>
+        <div class="no-print" style="margin-top:20px;padding:14px 20px;background:var(--card-bg);border-radius:10px;border:1px solid var(--border);font-size:.78rem;color:var(--text-muted);display:flex;justify-content:space-between;align-items:center">
+            <span><i class="bi bi-building" style="margin-right:5px"></i>Hệ thống Quản lý Thực tập — Báo cáo Cuối kỳ</span>
+            <span>Người lập báo cáo: ${sessionScope.currentUser.fullName} (HR)</span>
         </div>
     </div>
 </div>
+
+<%-- Modal: Phiếu Đánh Giá Chi Tiết Từng TTS --%>
+<div class="modal-overlay no-print" id="certModal">
+    <div class="modal-box" style="width:680px;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.25)">
+        <div style="padding:18px 24px;background:linear-gradient(135deg, #0ea5e9, #38bdf8);display:flex;align-items:center;justify-content:space-between">
+            <h3 style="color:#fff;font-size:1.05rem;font-weight:700;display:flex;align-items:center;gap:8px">
+                <i class="bi bi-file-earmark-person-fill"></i> Phiếu Đánh Giá Kết Quả Thực Tập
+            </h3>
+            <button style="background:none;border:none;color:#fff;font-size:1.3rem;cursor:pointer" onclick="closeCertModal()">&#x2715;</button>
+        </div>
+        <div style="padding:24px;max-height:75vh;overflow-y:auto">
+            <div style="border:2px solid #e2e8f0;border-radius:12px;padding:20px;background:#fafafa">
+                <div style="text-align:center;margin-bottom:16px;border-bottom:1px dashed #cbd5e1;padding-bottom:12px">
+                    <h4 style="font-size:1.1rem;font-weight:800;color:#0f172a;text-transform:uppercase" id="cName"></h4>
+                    <div style="font-size:.82rem;color:#475569" id="cSub"></div>
+                </div>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px;font-size:.84rem">
+                    <div><strong>Trường:</strong> <span id="cUni"></span></div>
+                    <div><strong>Chuyên ngành:</strong> <span id="cMajor"></span></div>
+                    <div><strong>Người hướng dẫn:</strong> <span id="cMentor"></span></div>
+                    <div><strong>Nhiệm vụ hoàn thành:</strong> <span id="cTasks"></span></div>
+                </div>
+
+                <div style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:14px;margin-bottom:16px">
+                    <div style="font-weight:700;font-size:.8rem;text-transform:uppercase;color:#64748b;margin-bottom:10px">Kết quả đánh giá năng lực:</div>
+                    <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:10px;text-align:center">
+                        <div style="background:#eff6ff;padding:10px;border-radius:8px">
+                            <div style="font-size:.72rem;color:#0284c7;font-weight:700">KỸ THUẬT CHUYÊN MÔN</div>
+                            <div style="font-size:1.3rem;font-weight:800;color:#0369a1" id="cTech">-</div>
+                        </div>
+                        <div style="background:#f0fdf4;padding:10px;border-radius:8px">
+                            <div style="font-size:.72rem;color:#16a34a;font-weight:700">THÁI ĐỘ &amp; TÁC PHONG</div>
+                            <div style="font-size:1.3rem;font-weight:800;color:#15803d" id="cAtt">-</div>
+                        </div>
+                        <div style="background:#faf5ff;padding:10px;border-radius:8px">
+                            <div style="font-size:.72rem;color:#9333ea;font-weight:700">GIAO TIẾP &amp; NHÓM</div>
+                            <div style="font-size:1.3rem;font-weight:800;color:#7e22ce" id="cComm">-</div>
+                        </div>
+                    </div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding-top:12px;border-top:1px solid #f1f5f9">
+                        <span style="font-weight:700;font-size:.9rem">Điểm Tổng Kết &amp; Xếp Loại:</span>
+                        <div>
+                            <span style="font-size:1.3rem;font-weight:800;color:#0ea5e9" id="cOver">-</span>
+                            <span style="margin-left:6px;font-weight:700;font-size:.85rem;padding:3px 10px;border-radius:20px;background:#e0f2fe;color:#0369a1" id="cGrade">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div style="font-weight:700;font-size:.8rem;text-transform:uppercase;color:#64748b;margin-bottom:6px">Nhận xét chi tiết từ Mentor:</div>
+                    <div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:12px;font-size:.85rem;color:#334155;line-height:1.5" id="cComments">Chưa có nhận xét.</div>
+                </div>
+            </div>
+        </div>
+        <div style="padding:14px 24px;background:#f8fafc;display:flex;justify-content:flex-end;gap:10px;border-top:1px solid #e2e8f0">
+            <button type="button" class="btn-filter ghost" onclick="closeCertModal()">Đóng</button>
+            <button type="button" class="btn-filter blue" onclick="window.print()"><i class="bi bi-printer"></i> In báo cáo</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openCertModal(name, code, uni, major, mentor, tech, att, comm, overall, grade, comments, tasks) {
+        document.getElementById('cName').textContent = name;
+        document.getElementById('cSub').textContent = 'Mã sinh viên: ' + (code || '—');
+        document.getElementById('cUni').textContent = uni || '—';
+        document.getElementById('cMajor').textContent = major || '—';
+        document.getElementById('cMentor').textContent = mentor || '—';
+        document.getElementById('cTasks').textContent = tasks || '—';
+        document.getElementById('cTech').textContent = tech || '—';
+        document.getElementById('cAtt').textContent = att || '—';
+        document.getElementById('cComm').textContent = comm || '—';
+        document.getElementById('cOver').textContent = overall || '—';
+        document.getElementById('cGrade').textContent = grade || '—';
+        document.getElementById('cComments').textContent = comments || 'Chưa có nhận xét từ Mentor.';
+        document.getElementById('certModal').classList.add('open');
+    }
+    function closeCertModal() { document.getElementById('certModal').classList.remove('open'); }
+    document.getElementById('certModal').addEventListener('click', function(e) {
+        if (e.target === this) closeCertModal();
+    });
+</script>
 </body>
 </html>

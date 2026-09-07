@@ -95,15 +95,16 @@ public class TaskDAO {
     }
 
     public boolean update(Task task) {
-        String sql = "UPDATE tasks SET title=?, description=?, intern_id=?, status=?, due_date=? WHERE id=?";
+        String sql = "UPDATE tasks SET title=?, description=?, intern_id=?, status=?, progress=?, due_date=? WHERE id=?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, task.getTitle());
             ps.setString(2, task.getDescription());
             ps.setObject(3, task.getInternId());
             ps.setString(4, task.getStatus());
-            ps.setObject(5, task.getDueDate() != null ? Date.valueOf(task.getDueDate()) : null);
-            ps.setLong(6, task.getId());
+            ps.setInt(5, task.getProgress());
+            ps.setObject(6, task.getDueDate() != null ? Date.valueOf(task.getDueDate()) : null);
+            ps.setLong(7, task.getId());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) { e.printStackTrace(); }
         return false;

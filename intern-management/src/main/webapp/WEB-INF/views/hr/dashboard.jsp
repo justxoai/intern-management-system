@@ -1,12 +1,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
+<%@ taglib prefix="c"   uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn"  uri="jakarta.tags.functions" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ page import="java.time.format.DateTimeFormatter, java.time.LocalDateTime" %>
+<fmt:setLocale value="vi" />
+<fmt:setBundle basename="messages" />
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>HR Dashboard — Human Resource</title>
+    <title>Tổng quan Nhân sự — Quản lý Thực tập</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
@@ -147,25 +151,28 @@
 <aside class="sidebar">
     <div class="sidebar-brand">
         <div class="brand-icon"><i class="bi bi-building"></i></div>
-        <h1>Human Resource</h1>
+        <h1>Nhân sự (HR)</h1>
     </div>
 
-    <div class="sidebar-section-label">Management</div>
+    <div class="sidebar-section-label">Quản lý</div>
     <ul class="sidebar-nav">
         <li><a href="${pageContext.request.contextPath}/hr/dashboard" class="active">
-            <i class="bi bi-grid"></i> Dashboard
+            <i class="bi bi-grid"></i> Tổng quan
         </a></li>
         <li><a href="${pageContext.request.contextPath}/hr/mentors">
-            <i class="bi bi-mortarboard"></i> Mentors
+            <i class="bi bi-mortarboard"></i> Mentor
         </a></li>
         <li><a href="${pageContext.request.contextPath}/hr/applications">
-            <i class="bi bi-clipboard-check"></i> Applications
+            <i class="bi bi-clipboard-check"></i> Đơn xét tuyển
         </a></li>
         <li><a href="${pageContext.request.contextPath}/hr/contracts">
-            <i class="bi bi-file-earmark-text"></i> Contracts
+            <i class="bi bi-file-earmark-text"></i> Hợp đồng
         </a></li>
         <li><a href="${pageContext.request.contextPath}/hr/documents">
-            <i class="bi bi-folder-check"></i> Document Review
+            <i class="bi bi-folder-check"></i> Duyệt tài liệu
+        </a></li>
+        <li><a href="${pageContext.request.contextPath}/hr/report">
+            <i class="bi bi-bar-chart-line"></i> Báo cáo cuối kỳ
         </a></li>
     </ul>
 
@@ -174,9 +181,9 @@
             <div class="avatar">${fn:substring(sessionScope.currentUser.fullName, 0, 1)}</div>
             <div class="sidebar-user-info">
                 <div class="sidebar-user-name">${sessionScope.currentUser.fullName}</div>
-                <div class="sidebar-user-role">HR Staff</div>
+                <div class="sidebar-user-role">Nhân sự</div>
             </div>
-            <a href="${pageContext.request.contextPath}/logout" class="logout-btn" title="Logout">
+            <a href="${pageContext.request.contextPath}/logout" class="logout-btn" title="Đăng xuất">
                 <i class="bi bi-box-arrow-right"></i>
             </a>
         </div>
@@ -187,12 +194,12 @@
 <div class="main">
     <div class="topbar">
         <div>
-            <div class="page-title">Human Resource</div>
-            <div class="page-sub">Manage intern profiles and monitor mentors</div>
+            <div class="page-title">Nhân sự</div>
+            <div class="page-sub">Quản lý hồ sơ thực tập sinh và theo dõi mentor</div>
         </div>
         <a href="${pageContext.request.contextPath}/hr/interns/create"
            style="padding:8px 18px;background:linear-gradient(135deg,#0ea5e9,#38bdf8);color:#fff;border-radius:9px;text-decoration:none;font-size:.82rem;font-weight:600;display:flex;align-items:center;gap:6px;box-shadow:0 3px 10px rgba(14,165,233,.35)">
-            <i class="bi bi-plus-lg"></i> Add Intern
+            <i class="bi bi-plus-lg"></i> Thêm Thực tập sinh
         </a>
     </div>
 
@@ -204,16 +211,16 @@
                 <div class="stat-icon blue"><i class="bi bi-person-workspace"></i></div>
                 <div>
                     <div class="stat-count">${fn:length(interns)}</div>
-                    <div class="stat-label">Intern Profiles</div>
-                    <div class="stat-hint">Across all statuses</div>
+                    <div class="stat-label">Hồ sơ Thực tập sinh</div>
+                    <div class="stat-hint">Tất cả các trạng thái</div>
                 </div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon green"><i class="bi bi-mortarboard"></i></div>
                 <div>
                     <div class="stat-count">${fn:length(mentors)}</div>
-                    <div class="stat-label">Active Mentors</div>
-                    <div class="stat-hint">Available to assign</div>
+                    <div class="stat-label">Mentor hoạt động</div>
+                    <div class="stat-hint">Sẵn sàng hướng dẫn</div>
                 </div>
             </div>
         </div>
@@ -223,48 +230,48 @@
             <div class="sec-header">
                 <div class="sec-header-left">
                     <div class="sec-icon si-intern"><i class="bi bi-person-workspace"></i></div>
-                    <span class="sec-title">Intern Management</span>
+                    <span class="sec-title">Quản lý Thực tập sinh</span>
                     <span class="sec-count count-intern">${fn:length(interns)}</span>
                 </div>
                 <a href="${pageContext.request.contextPath}/hr/interns/create" class="btn-add blue">
-                    <i class="bi bi-plus-lg"></i> Add Intern
+                    <i class="bi bi-plus-lg"></i> Thêm Thực tập sinh
                 </a>
             </div>
             <form class="filter-bar" method="get" action="${pageContext.request.contextPath}/hr/dashboard">
                 <div class="filter-group">
-                    <span class="filter-label">Keyword</span>
-                    <input class="filter-input" type="text" name="internKeyword" value="${internKeyword}" placeholder="Code / Name / Email" style="width:170px">
+                    <span class="filter-label">Từ khóa</span>
+                    <input class="filter-input" type="text" name="internKeyword" value="${internKeyword}" placeholder="Mã SV / Tên / Email" style="width:170px">
                 </div>
                 <div class="filter-group">
-                    <span class="filter-label">University</span>
-                    <input class="filter-input" type="text" name="internUniversity" value="${internUniversity}" placeholder="e.g. HUST">
+                    <span class="filter-label">Trường ĐH</span>
+                    <input class="filter-input" type="text" name="internUniversity" value="${internUniversity}" placeholder="VD: HUST">
                 </div>
                 <div class="filter-group">
-                    <span class="filter-label">Major</span>
-                    <input class="filter-input" type="text" name="internMajor" value="${internMajor}" placeholder="e.g. CS">
+                    <span class="filter-label">Chuyên ngành</span>
+                    <input class="filter-input" type="text" name="internMajor" value="${internMajor}" placeholder="VD: CNTT">
                 </div>
                 <div class="filter-group">
-                    <span class="filter-label">Status</span>
+                    <span class="filter-label">Trạng thái</span>
                     <select class="filter-select" name="internStatus" style="width:130px">
-                        <option value="">All Status</option>
-                        <option value="PENDING"   ${internStatus == 'PENDING'   ? 'selected' : ''}>Pending</option>
-                        <option value="APPROVED"  ${internStatus == 'APPROVED'  ? 'selected' : ''}>Approved</option>
-                        <option value="REJECTED"  ${internStatus == 'REJECTED'  ? 'selected' : ''}>Rejected</option>
-                        <option value="INTERNING" ${internStatus == 'INTERNING' ? 'selected' : ''}>Interning</option>
-                        <option value="COMPLETED" ${internStatus == 'COMPLETED' ? 'selected' : ''}>Completed</option>
+                        <option value="">Tất cả</option>
+                        <option value="PENDING"   ${internStatus == 'PENDING'   ? 'selected' : ''}>Chờ duyệt</option>
+                        <option value="APPROVED"  ${internStatus == 'APPROVED'  ? 'selected' : ''}>Đã duyệt</option>
+                        <option value="REJECTED"  ${internStatus == 'REJECTED'  ? 'selected' : ''}>Từ chối</option>
+                        <option value="INTERNING" ${internStatus == 'INTERNING' ? 'selected' : ''}>Đang thực tập</option>
+                        <option value="COMPLETED" ${internStatus == 'COMPLETED' ? 'selected' : ''}>Hoàn thành</option>
                     </select>
                 </div>
-                <button type="submit" class="btn-filter primary"><i class="bi bi-search"></i> Search</button>
-                <a href="${pageContext.request.contextPath}/hr/dashboard" class="btn-filter ghost" style="text-decoration:none">Clear</a>
+                <button type="submit" class="btn-filter primary"><i class="bi bi-search"></i> Tìm kiếm</button>
+                <a href="${pageContext.request.contextPath}/hr/dashboard" class="btn-filter ghost" style="text-decoration:none">Xóa lọc</a>
             </form>
             <table class="data-table">
                 <thead><tr>
-                    <th>Intern</th><th>Code</th><th>University / Major</th><th>Phone</th><th>Status</th><th>Actions</th>
+                    <th>Thực tập sinh</th><th>Mã SV</th><th>Trường / Ngành</th><th>Số điện thoại</th><th>Trạng thái</th><th>Thao tác</th>
                 </tr></thead>
                 <tbody>
                     <c:choose>
                         <c:when test="${empty interns}">
-                            <tr><td colspan="6"><div class="empty-state"><i class="bi bi-inbox"></i>No intern profiles found.</div></td></tr>
+                            <tr><td colspan="6"><div class="empty-state"><i class="bi bi-inbox"></i>Không tìm thấy hồ sơ thực tập sinh nào.</div></td></tr>
                         </c:when>
                         <c:otherwise>
                             <c:forEach var="i" items="${interns}">
@@ -286,17 +293,17 @@
                                     <td style="color:var(--text-muted)">${i.phone}</td>
                                     <td>
                                         <c:choose>
-                                            <c:when test="${i.status == 'APPROVED'}"><span class="badge badge-approved"><i class="bi bi-check-circle-fill" style="font-size:.65rem"></i>Approved</span></c:when>
-                                            <c:when test="${i.status == 'REJECTED'}"><span class="badge badge-rejected"><i class="bi bi-x-circle-fill" style="font-size:.65rem"></i>Rejected</span></c:when>
-                                            <c:when test="${i.status == 'INTERNING'}"><span class="badge badge-interning"><i class="bi bi-play-circle-fill" style="font-size:.65rem"></i>Interning</span></c:when>
-                                            <c:when test="${i.status == 'COMPLETED'}"><span class="badge badge-completed"><i class="bi bi-patch-check-fill" style="font-size:.65rem"></i>Completed</span></c:when>
-                                            <c:otherwise><span class="badge badge-pending"><i class="bi bi-clock-fill" style="font-size:.65rem"></i>Pending</span></c:otherwise>
+                                            <c:when test="${i.status == 'APPROVED'}"><span class="badge badge-approved"><i class="bi bi-check-circle-fill" style="font-size:.65rem"></i>Đã duyệt</span></c:when>
+                                            <c:when test="${i.status == 'REJECTED'}"><span class="badge badge-rejected"><i class="bi bi-x-circle-fill" style="font-size:.65rem"></i>Từ chối</span></c:when>
+                                            <c:when test="${i.status == 'INTERNING'}"><span class="badge badge-interning"><i class="bi bi-play-circle-fill" style="font-size:.65rem"></i>Đang thực tập</span></c:when>
+                                            <c:when test="${i.status == 'COMPLETED'}"><span class="badge badge-completed"><i class="bi bi-patch-check-fill" style="font-size:.65rem"></i>Hoàn thành</span></c:when>
+                                            <c:otherwise><span class="badge badge-pending"><i class="bi bi-clock-fill" style="font-size:.65rem"></i>Chờ duyệt</span></c:otherwise>
                                         </c:choose>
                                     </td>
                                     <td>
                                         <div class="action-group">
-                                            <a href="${pageContext.request.contextPath}/hr/interns/edit?id=${i.id}" class="btn-icon edit" title="Edit"><i class="bi bi-pencil"></i></a>
-                                            <a href="${pageContext.request.contextPath}/hr/interns/delete?id=${i.id}" class="btn-icon delete" title="Delete" onclick="return confirm('Delete intern ${i.studentCode}?')"><i class="bi bi-trash"></i></a>
+                                            <a href="${pageContext.request.contextPath}/hr/interns/edit?id=${i.id}" class="btn-icon edit" title="Sửa"><i class="bi bi-pencil"></i></a>
+                                            <a href="${pageContext.request.contextPath}/hr/interns/delete?id=${i.id}" class="btn-icon delete" title="Xóa" onclick="return confirm('Xóa thực tập sinh ${i.studentCode}?')"><i class="bi bi-trash"></i></a>
                                         </div>
                                     </td>
                                 </tr>
@@ -312,54 +319,54 @@
             <div class="sec-header">
                 <div class="sec-header-left">
                     <div class="sec-icon si-mentor"><i class="bi bi-mortarboard"></i></div>
-                    <span class="sec-title">Mentor Management</span>
+                    <span class="sec-title">Quản lý Mentor</span>
                     <span class="sec-count count-mentor">${fn:length(mentors)}</span>
                 </div>
                 <div style="display:flex;align-items:center;gap:8px">
                     <a href="${pageContext.request.contextPath}/hr/mentors" class="btn-add" style="background:#f1f5f9;color:#334155;border:1px solid #cbd5e1">
-                        <i class="bi bi-person-gear"></i> Assign Interns
+                        <i class="bi bi-person-gear"></i> Phân công TTS
                     </a>
                     <a href="${pageContext.request.contextPath}/hr/mentors/create" class="btn-add green">
-                        <i class="bi bi-plus-lg"></i> Add Mentor
+                        <i class="bi bi-plus-lg"></i> Thêm Mentor
                     </a>
                 </div>
             </div>
             <form class="filter-bar" method="get" action="${pageContext.request.contextPath}/hr/dashboard">
                 <div class="filter-group">
                     <span class="filter-label">ID</span>
-                    <input class="filter-input" type="text" name="mentorId" value="${mentorId}" placeholder="e.g. 3" style="width:80px">
+                    <input class="filter-input" type="text" name="mentorId" value="${mentorId}" placeholder="VD: 3" style="width:80px">
                 </div>
                 <div class="filter-group">
-                    <span class="filter-label">Name</span>
-                    <input class="filter-input" type="text" name="mentorName" value="${mentorName}" placeholder="Full name">
+                    <span class="filter-label">Họ tên</span>
+                    <input class="filter-input" type="text" name="mentorName" value="${mentorName}" placeholder="Họ và tên">
                 </div>
                 <div class="filter-group">
                     <span class="filter-label">Email</span>
                     <input class="filter-input" type="text" name="mentorEmail" value="${mentorEmail}" placeholder="email@...">
                 </div>
                 <div class="filter-group">
-                    <span class="filter-label">Phone</span>
+                    <span class="filter-label">Số điện thoại</span>
                     <input class="filter-input" type="text" name="mentorPhone" value="${mentorPhone}" placeholder="090...">
                 </div>
                 <div class="filter-group">
-                    <span class="filter-label">Status</span>
+                    <span class="filter-label">Trạng thái</span>
                     <select class="filter-select" name="mentorStatus" style="width:120px">
-                        <option value="">All</option>
-                        <option value="ACTIVE"   ${mentorStatus == 'ACTIVE'   ? 'selected' : ''}>Active</option>
-                        <option value="INACTIVE" ${mentorStatus == 'INACTIVE' ? 'selected' : ''}>Inactive</option>
+                        <option value="">Tất cả</option>
+                        <option value="ACTIVE"   ${mentorStatus == 'ACTIVE'   ? 'selected' : ''}>Hoạt động</option>
+                        <option value="INACTIVE" ${mentorStatus == 'INACTIVE' ? 'selected' : ''}>Không hoạt động</option>
                     </select>
                 </div>
-                <button type="submit" class="btn-filter green"><i class="bi bi-search"></i> Search</button>
-                <a href="${pageContext.request.contextPath}/hr/dashboard" class="btn-filter ghost" style="text-decoration:none">Clear</a>
+                <button type="submit" class="btn-filter green"><i class="bi bi-search"></i> Tìm kiếm</button>
+                <a href="${pageContext.request.contextPath}/hr/dashboard" class="btn-filter ghost" style="text-decoration:none">Xóa lọc</a>
             </form>
             <table class="data-table">
                 <thead><tr>
-                    <th>Mentor</th><th>Phone</th><th>Status</th><th>Joined</th>
+                    <th>Mentor</th><th>Số điện thoại</th><th>Trạng thái</th><th>Ngày tham gia</th>
                 </tr></thead>
                 <tbody>
                     <c:choose>
                         <c:when test="${empty mentors}">
-                            <tr><td colspan="4"><div class="empty-state"><i class="bi bi-inbox"></i>No mentors found.</div></td></tr>
+                            <tr><td colspan="4"><div class="empty-state"><i class="bi bi-inbox"></i>Không tìm thấy mentor nào.</div></td></tr>
                         </c:when>
                         <c:otherwise>
                             <c:forEach var="m" items="${mentors}">
@@ -376,11 +383,22 @@
                                     <td style="color:var(--text-muted)">${m.phone}</td>
                                     <td>
                                         <c:choose>
-                                            <c:when test="${m.status == 'ACTIVE'}"><span class="badge badge-active"><i class="bi bi-circle-fill" style="font-size:.4rem"></i>Active</span></c:when>
-                                            <c:otherwise><span class="badge badge-inactive"><i class="bi bi-circle-fill" style="font-size:.4rem"></i>${m.status}</span></c:otherwise>
+                                            <c:when test="${m.userStatus == 'ACTIVE'}"><span class="badge badge-active"><i class="bi bi-circle-fill" style="font-size:.4rem"></i>Hoạt động</span></c:when>
+                                            <c:otherwise><span class="badge badge-inactive"><i class="bi bi-circle-fill" style="font-size:.4rem"></i>${m.userStatus}</span></c:otherwise>
                                         </c:choose>
                                     </td>
-                                    <td style="color:var(--text-muted);font-size:.78rem">${m.createdAt}</td>
+                                    <td style="color:var(--text-muted);font-size:.78rem">
+                                        <%
+                                            java.time.LocalDateTime _ca = (java.time.LocalDateTime)
+                                                ((codegym.vn.internmanagement.entity.Mentor)
+                                                    pageContext.getAttribute("m")).getCreatedAt();
+                                            if (_ca != null) {
+                                                out.print(_ca.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
+                                            } else {
+                                                out.print("—");
+                                            }
+                                        %>
+                                    </td>
                                 </tr>
                             </c:forEach>
                         </c:otherwise>

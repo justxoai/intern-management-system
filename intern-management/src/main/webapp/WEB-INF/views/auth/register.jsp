@@ -1,11 +1,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="c"   uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<fmt:setLocale value="vi" />
+<fmt:setBundle basename="messages" />
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Register — Internship Management System</title>
+    <title><fmt:message key="register.title"/></title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
@@ -19,6 +22,7 @@
         .brand-icon { width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(135deg, #8b5cf6, #a78bfa); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: #fff; margin: 0 auto 12px; box-shadow: 0 6px 20px rgba(139,92,246,.4); }
         .brand h1 { color: #fff; font-size: 1.4rem; font-weight: 700; margin-bottom: 4px; }
         .brand p { color: rgba(255,255,255,.6); font-size: .87rem; }
+
 
         .card { background: #fff; border-radius: 20px; padding: 36px 40px; box-shadow: 0 20px 60px rgba(0,0,0,.3); }
 
@@ -68,15 +72,17 @@
 </head>
 <body>
 <div class="register-wrap">
+
+
     <div class="brand">
         <div class="brand-icon"><i class="bi bi-person-workspace"></i></div>
-        <h1>Join as an Intern</h1>
-        <p>Create your account and submit your application</p>
+        <h1><fmt:message key="register.heading"/></h1>
+        <p><fmt:message key="register.subheading"/></p>
     </div>
 
     <div class="card">
-        <div class="card-title">Create Intern Account</div>
-        <div class="card-sub">Fill in all required fields to register and submit your internship application.</div>
+        <div class="card-title"><fmt:message key="register.card.title"/></div>
+        <div class="card-sub"><fmt:message key="register.card.sub"/></div>
 
         <c:if test="${not empty error}">
             <div class="alert-error"><i class="bi bi-exclamation-circle-fill"></i>${error}</div>
@@ -85,53 +91,57 @@
         <form method="post" action="${pageContext.request.contextPath}/register" id="regForm">
 
             <%-- Account Info --%>
-            <div class="section-label"><i class="bi bi-lock"></i> Account Information</div>
+            <div class="section-label"><i class="bi bi-lock"></i> <fmt:message key="register.section.account"/></div>
             <div class="form-grid">
                 <div class="form-group">
-                    <label class="form-label">Username <span class="required">*</span></label>
+                    <label class="form-label"><fmt:message key="label.username"/> <span class="required">*</span></label>
                     <div class="input-wrap">
                         <i class="bi bi-at input-icon"></i>
-                        <input type="text" name="username" class="form-input" value="${username}" required placeholder="e.g. nguyenvan01" autocomplete="username">
+                        <input type="text" name="username" class="form-input" value="${username}" required
+                               placeholder="e.g. nguyenvan01" autocomplete="username">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Full Name <span class="required">*</span></label>
+                    <label class="form-label"><fmt:message key="label.fullname"/> <span class="required">*</span></label>
                     <div class="input-wrap">
                         <i class="bi bi-person input-icon"></i>
                         <input type="text" name="fullName" class="form-input" value="${fullName}" required placeholder="Nguyen Van A">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Password <span class="required">*</span></label>
+                    <label class="form-label"><fmt:message key="label.password"/> <span class="required">*</span></label>
                     <div class="input-wrap">
                         <i class="bi bi-lock input-icon"></i>
-                        <input type="password" name="password" id="pwField" class="form-input" required placeholder="Min 6 characters" oninput="validatePwLive(this.value)" autocomplete="new-password">
+                        <input type="password" name="password" id="pwField" class="form-input" required
+                               placeholder="<fmt:message key='register.field.password.placeholder'/>"
+                               oninput="validatePwLive(this.value)" autocomplete="new-password">
                         <button type="button" class="toggle-btn" onclick="togglePw('pwField','eyeIcon1')"><i class="bi bi-eye" id="eyeIcon1"></i></button>
                     </div>
                     <div class="pw-hints">
-                        <span class="pw-hint" id="hintUpper"><i class="bi bi-circle" id="icoUpper"></i> 1 Uppercase (A-Z)</span>
-                        <span class="pw-hint" id="hintLower"><i class="bi bi-circle" id="icoLower"></i> 1 Normal (a-z)</span>
-                        <span class="pw-hint" id="hintNum"><i class="bi bi-circle" id="icoNum"></i> 1 Number (0-9)</span>
-                        <span class="pw-hint" id="hintSpec"><i class="bi bi-circle" id="icoSpec"></i> 1 Special key (!@#$)</span>
+                        <span class="pw-hint" id="hintUpper"><i class="bi bi-circle" id="icoUpper"></i> <fmt:message key="register.hint.upper"/></span>
+                        <span class="pw-hint" id="hintLower"><i class="bi bi-circle" id="icoLower"></i> <fmt:message key="register.hint.lower"/></span>
+                        <span class="pw-hint" id="hintNum">  <i class="bi bi-circle" id="icoNum"></i>   <fmt:message key="register.hint.num"/></span>
+                        <span class="pw-hint" id="hintSpec"> <i class="bi bi-circle" id="icoSpec"></i>  <fmt:message key="register.hint.special"/></span>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Confirm Password <span class="required">*</span></label>
+                    <label class="form-label"><fmt:message key="register.field.confirmPassword"/> <span class="required">*</span></label>
                     <div class="input-wrap">
                         <i class="bi bi-lock-fill input-icon"></i>
-                        <input type="password" name="confirmPassword" id="cpField" class="form-input" required placeholder="Repeat password" autocomplete="new-password">
+                        <input type="password" name="confirmPassword" id="cpField" class="form-input" required
+                               placeholder="<fmt:message key='register.field.confirmPassword.placeholder'/>" autocomplete="new-password">
                         <button type="button" class="toggle-btn" onclick="togglePw('cpField','eyeIcon2')"><i class="bi bi-eye" id="eyeIcon2"></i></button>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Email <span class="required">*</span></label>
+                    <label class="form-label"><fmt:message key="label.email"/> <span class="required">*</span></label>
                     <div class="input-wrap">
                         <i class="bi bi-envelope input-icon"></i>
                         <input type="email" name="email" class="form-input" value="${email}" required placeholder="example@email.com">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Phone <span class="required">*</span></label>
+                    <label class="form-label"><fmt:message key="label.phone"/> <span class="required">*</span></label>
                     <div class="input-wrap">
                         <i class="bi bi-phone input-icon"></i>
                         <input type="tel" name="phone" class="form-input" value="${phone}" required placeholder="0901234567">
@@ -140,43 +150,44 @@
             </div>
 
             <%-- Academic Info --%>
-            <div class="section-label"><i class="bi bi-mortarboard"></i> Academic Information</div>
+            <div class="section-label"><i class="bi bi-mortarboard"></i> <fmt:message key="register.section.academic"/></div>
             <div class="form-grid">
                 <div class="form-group">
-                    <label class="form-label">Student Code <span class="required">*</span></label>
+                    <label class="form-label"><fmt:message key="register.field.studentCode"/> <span class="required">*</span></label>
                     <div class="input-wrap">
                         <i class="bi bi-card-text input-icon"></i>
                         <input type="text" name="studentCode" class="form-input" value="${studentCode}" required placeholder="e.g. SV003">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Gender</label>
+                    <label class="form-label"><fmt:message key="gender.select"/></label>
                     <div class="input-wrap">
                         <i class="bi bi-gender-ambiguous input-icon"></i>
                         <select name="gender" class="form-select">
-                            <option value="">-- Select --</option>
-                            <option value="MALE"   ${gender == 'MALE'   ? 'selected' : ''}>Male</option>
-                            <option value="FEMALE" ${gender == 'FEMALE' ? 'selected' : ''}>Female</option>
-                            <option value="OTHER"  ${gender == 'OTHER'  ? 'selected' : ''}>Other</option>
+                            <option value=""><fmt:message key="gender.select"/></option>
+                            <option value="MALE"   ${gender == 'MALE'   ? 'selected' : ''}><fmt:message key="gender.male"/></option>
+                            <option value="FEMALE" ${gender == 'FEMALE' ? 'selected' : ''}><fmt:message key="gender.female"/></option>
+                            <option value="OTHER"  ${gender == 'OTHER'  ? 'selected' : ''}><fmt:message key="gender.other"/></option>
                         </select>
                     </div>
                 </div>
                 <div class="form-group full">
-                    <label class="form-label">University <span class="required">*</span></label>
+                    <label class="form-label"><fmt:message key="register.field.university"/> <span class="required">*</span></label>
                     <div class="input-wrap">
                         <i class="bi bi-building-fill-check input-icon"></i>
-                        <input type="text" name="university" class="form-input" value="${university}" required placeholder="e.g. Hanoi University of Science and Technology">
+                        <input type="text" name="university" class="form-input" value="${university}" required
+                               placeholder="e.g. Hanoi University of Science and Technology">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Major <span class="required">*</span></label>
+                    <label class="form-label"><fmt:message key="register.field.major"/> <span class="required">*</span></label>
                     <div class="input-wrap">
                         <i class="bi bi-book input-icon"></i>
                         <input type="text" name="major" class="form-input" value="${major}" required placeholder="e.g. Computer Science">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Date of Birth</label>
+                    <label class="form-label"><fmt:message key="register.field.dob"/></label>
                     <div class="input-wrap">
                         <i class="bi bi-calendar3 input-icon"></i>
                         <input type="date" name="dateOfBirth" class="form-input" value="${dateOfBirth}">
@@ -185,12 +196,13 @@
             </div>
 
             <button type="submit" class="btn-register" id="submitBtn">
-                <i class="bi bi-send-fill me-1"></i> Submit Registration
+                <i class="bi bi-send-fill"></i>&nbsp;<fmt:message key="register.submit"/>
             </button>
         </form>
 
         <div class="login-link">
-            Already have an account? <a href="${pageContext.request.contextPath}/login">Sign In</a>
+            <fmt:message key="register.login.prompt"/>
+            <a href="${pageContext.request.contextPath}/login"><fmt:message key="register.login.link"/></a>
         </div>
     </div>
 </div>
@@ -206,13 +218,8 @@
     function setHintStatus(hintId, icoId, isValid) {
         var hint = document.getElementById(hintId);
         var ico  = document.getElementById(icoId);
-        if (isValid) {
-            hint.className = 'pw-hint valid';
-            ico.className  = 'bi bi-check-circle-fill';
-        } else {
-            hint.className = 'pw-hint';
-            ico.className  = 'bi bi-circle';
-        }
+        if (isValid) { hint.className = 'pw-hint valid'; ico.className = 'bi bi-check-circle-fill'; }
+        else         { hint.className = 'pw-hint';       ico.className = 'bi bi-circle'; }
     }
 
     function validatePwLive(val) {
@@ -223,15 +230,15 @@
     }
 
     document.getElementById('regForm').addEventListener('submit', function(e) {
-        var pw  = document.getElementById('pwField').value;
-        var cp  = document.getElementById('cpField').value;
+        var pw = document.getElementById('pwField').value;
+        var cp = document.getElementById('cpField').value;
         if (pw !== cp) {
             e.preventDefault();
-            alert('Passwords do not match!');
+            alert('<fmt:message key="register.error.passwordMismatch"/>');
             return;
         }
         document.getElementById('submitBtn').disabled = true;
-        document.getElementById('submitBtn').innerHTML = '<i class="bi bi-arrow-repeat me-1"></i> Submitting...';
+        document.getElementById('submitBtn').innerHTML = '<i class="bi bi-arrow-repeat"></i> ...';
     });
 </script>
 </body>
